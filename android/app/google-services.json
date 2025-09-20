@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "674148004091",
+    "project_id": "safedest-driver",
+    "storage_bucket": "safedest-driver.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:674148004091:android:a46eb418ef3672a94e405e",
+        "android_client_info": {
+          "package_name": "com.safedest.driver"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBSRutvov1Z_-61giEbmnKWyTVIntWppw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,675 @@
+{
+  "@@locale": "en",
+  "appName": "SafeDests - Driver",
+  "@appName": {
+    "description": "Application name"
+  },
+
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings screen title"
+  },
+
+  "appSettings": "App Settings",
+  "@appSettings": {
+    "description": "App settings section"
+  },
+
+  "language": "App Language",
+  "@language": {
+    "description": "Language setting"
+  },
+
+  "chooseLanguage": "Choose app interface language",
+  "@chooseLanguage": {
+    "description": "Language setting description"
+  },
+
+  "arabic": "العربية",
+  "@arabic": {
+    "description": "Arabic language"
+  },
+
+  "english": "English",
+  "@english": {
+    "description": "English language"
+  },
+
+  "theme": "App Theme",
+  "@theme": {
+    "description": "Theme setting"
+  },
+
+  "chooseTheme": "Choose between light and dark mode",
+  "@chooseTheme": {
+    "description": "Theme setting description"
+  },
+
+  "lightMode": "Light Mode",
+  "@lightMode": {
+    "description": "Light mode"
+  },
+
+  "darkMode": "Dark Mode",
+  "@darkMode": {
+    "description": "Dark mode"
+  },
+
+  "systemMode": "System Default",
+  "@systemMode": {
+    "description": "System mode"
+  },
+
+  "notifications": "Notification Settings",
+  "@notifications": {
+    "description": "Notifications section"
+  },
+
+  "taskNotifications": "Task Notifications",
+  "@taskNotifications": {
+    "description": "Task notifications"
+  },
+
+  "taskNotificationsDesc": "Receive notifications when new tasks arrive",
+  "@taskNotificationsDesc": {
+    "description": "Task notifications description"
+  },
+
+  "walletNotifications": "Wallet Notifications",
+  "@walletNotifications": {
+    "description": "Wallet notifications"
+  },
+
+  "walletNotificationsDesc": "Receive notifications when wallet is updated",
+  "@walletNotificationsDesc": {
+    "description": "Wallet notifications description"
+  },
+
+  "systemNotifications": "System Notifications",
+  "@systemNotifications": {
+    "description": "System notifications"
+  },
+
+  "systemNotificationsDesc": "Receive system notifications and updates",
+  "@systemNotificationsDesc": {
+    "description": "System notifications description"
+  },
+
+  "about": "About App",
+  "@about": {
+    "description": "About section"
+  },
+
+  "version": "Version",
+  "@version": {
+    "description": "App version"
+  },
+
+  "termsOfService": "Terms of Service",
+  "@termsOfService": {
+    "description": "Terms of service"
+  },
+
+  "termsOfServiceDesc": "Read app terms of service",
+  "@termsOfServiceDesc": {
+    "description": "Terms of service description"
+  },
+
+  "privacyPolicy": "Privacy Policy",
+  "@privacyPolicy": {
+    "description": "Privacy policy"
+  },
+
+  "privacyPolicyDesc": "Read privacy policy",
+  "@privacyPolicyDesc": {
+    "description": "Privacy policy description"
+  },
+
+  "helpSupport": "Help & Support",
+  "@helpSupport": {
+    "description": "Help and support"
+  },
+
+  "helpSupportDesc": "Get help and support",
+  "@helpSupportDesc": {
+    "description": "Help and support description"
+  },
+
+  "resetSettings": "Reset Settings",
+  "@resetSettings": {
+    "description": "Reset settings"
+  },
+
+  "resetSettingsDesc": "Reset all settings to default values",
+  "@resetSettingsDesc": {
+    "description": "Reset settings description"
+  },
+
+  "reset": "Reset",
+  "@reset": {
+    "description": "Reset button"
+  },
+
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button"
+  },
+
+  "confirm": "Confirm",
+  "@confirm": {
+    "description": "Confirm button"
+  },
+
+  "resetConfirmTitle": "Reset Settings",
+  "@resetConfirmTitle": {
+    "description": "Reset confirmation title"
+  },
+
+  "resetConfirmMessage": "Are you sure you want to reset all settings to default values?\n\nThis action cannot be undone.",
+  "@resetConfirmMessage": {
+    "description": "Reset confirmation message"
+  },
+
+  "resetSuccess": "Settings reset successfully",
+  "@resetSuccess": {
+    "description": "Reset success message"
+  },
+
+  "home": "Home",
+  "@home": {
+    "description": "Home tab"
+  },
+
+  "tasks": "Tasks",
+  "@tasks": {
+    "description": "Tasks tab"
+  },
+
+  "wallet": "Wallet",
+  "@wallet": {
+    "description": "Wallet tab"
+  },
+
+  "profile": "Profile",
+  "@profile": {
+    "description": "Profile tab"
+  },
+
+  "welcomeDriver": "Welcome {driverName}",
+  "@welcomeDriver": {
+    "description": "Welcome message for driver",
+    "placeholders": {
+      "driverName": {
+        "type": "String",
+        "description": "Driver name"
+      }
+    }
+  },
+
+  "driver": "Driver",
+  "@driver": {
+    "description": "Default driver word"
+  },
+
+  "dataRefreshSuccess": "Data refreshed successfully",
+  "@dataRefreshSuccess": {
+    "description": "Data refresh success message"
+  },
+
+  "dataRefreshFailed": "Failed to refresh data",
+  "@dataRefreshFailed": {
+    "description": "Data refresh failed message"
+  },
+
+  "taskAds": "Task Ads",
+  "@taskAds": {
+    "description": "Task ads section title"
+  },
+
+  "taskAdsDescription": "Browse available ads and submit your offers",
+  "@taskAdsDescription": {
+    "description": "Task ads section description"
+  },
+
+  "availableAds": "Available Ads",
+  "@availableAds": {
+    "description": "Number of available ads"
+  },
+
+  "myOffers": "My Offers",
+  "@myOffers": {
+    "description": "Number of submitted offers"
+  },
+
+  "acceptedOffers": "Accepted Offers",
+  "@acceptedOffers": {
+    "description": "Number of accepted offers"
+  },
+
+  "browseAds": "Browse Ads",
+  "@browseAds": {
+    "description": "Browse ads button"
+  },
+
+  "notificationsComingSoon": "Notifications screen coming soon",
+  "@notificationsComingSoon": {
+    "description": "Notifications coming soon message"
+  },
+
+  "exitConfirmation": "Exit Confirmation",
+  "@exitConfirmation": {
+    "description": "Exit confirmation title"
+  },
+
+  "exitConfirmMessage": "Are you sure you want to exit the app?",
+  "@exitConfirmMessage": {
+    "description": "Exit confirmation message"
+  },
+
+  "exitConfirmDescription": "The app will be closed completely.",
+  "@exitConfirmDescription": {
+    "description": "Exit confirmation description"
+  },
+
+  "exit": "Exit",
+  "@exit": {
+    "description": "Exit button"
+  },
+
+  "refreshTasks": "Refresh Tasks",
+  "@refreshTasks": {
+    "description": "Refresh tasks tooltip"
+  },
+
+  "availableTasks": "Available",
+  "@availableTasks": {
+    "description": "Available tasks tab"
+  },
+
+  "currentTasks": "Current",
+  "@currentTasks": {
+    "description": "Current tasks tab"
+  },
+
+  "completedTasks": "Completed",
+  "@completedTasks": {
+    "description": "Completed tasks tab"
+  },
+
+  "loadingTasks": "Loading tasks...",
+  "@loadingTasks": {
+    "description": "Loading tasks message"
+  },
+
+  "unexpectedError": "An unexpected error occurred",
+  "@unexpectedError": {
+    "description": "Unexpected error message"
+  },
+
+  "retry": "Retry",
+  "@retry": {
+    "description": "Retry button"
+  },
+
+  "noAvailableTasks": "No available tasks",
+  "@noAvailableTasks": {
+    "description": "No available tasks message"
+  },
+
+  "noAvailableTasksDescription": "There are no tasks available to accept at the moment",
+  "@noAvailableTasksDescription": {
+    "description": "No available tasks description"
+  },
+
+  "noCurrentTasks": "No current tasks",
+  "@noCurrentTasks": {
+    "description": "No current tasks message"
+  },
+
+  "noCompletedTasks": "No completed tasks",
+  "@noCompletedTasks": {
+    "description": "No completed tasks message"
+  },
+
+  "taskAcceptedSuccess": "Task accepted successfully",
+  "@taskAcceptedSuccess": {
+    "description": "Task accepted success message"
+  },
+
+  "taskRejected": "Task rejected",
+  "@taskRejected": {
+    "description": "Task rejected message"
+  },
+
+  "taskStatusUpdated": "Task status updated",
+  "@taskStatusUpdated": {
+    "description": "Task status updated message"
+  },
+
+  "transactionHistory": "Transaction History",
+  "@transactionHistory": {
+    "description": "Transaction history tooltip"
+  },
+
+  "quickActions": "Quick Actions",
+  "@quickActions": {
+    "description": "Quick actions title"
+  },
+
+  "cashWithdrawal": "Cash Withdrawal",
+  "@cashWithdrawal": {
+    "description": "Cash withdrawal button"
+  },
+
+  "accountStatement": "Account Statement",
+  "@accountStatement": {
+    "description": "Account statement button"
+  },
+
+  "support": "Support",
+  "@support": {
+    "description": "Support button"
+  },
+
+  "withdrawalComingSoon": "Cash withdrawal feature coming soon",
+  "@withdrawalComingSoon": {
+    "description": "Cash withdrawal coming soon message"
+  },
+
+  "statementComingSoon": "Account statement coming soon",
+  "@statementComingSoon": {
+    "description": "Account statement coming soon message"
+  },
+
+  "supportComingSoon": "Technical support coming soon",
+  "@supportComingSoon": {
+    "description": "Technical support coming soon message"
+  },
+
+  "noDriverData": "No driver data available",
+  "@noDriverData": {
+    "description": "No driver data message"
+  },
+
+  "active": "Active",
+  "@active": {
+    "description": "Active driver status"
+  },
+
+  "inactive": "Inactive",
+  "@inactive": {
+    "description": "Inactive driver status"
+  },
+
+  "online": "Online",
+  "@online": {
+    "description": "Online status"
+  },
+
+  "offline": "Offline",
+  "@offline": {
+    "description": "Offline status"
+  },
+
+  "accountInfo": "Account Information",
+  "@accountInfo": {
+    "description": "Account information title"
+  },
+
+  "email": "Email",
+  "@email": {
+    "description": "Email label"
+  },
+
+  "phone": "Phone",
+  "@phone": {
+    "description": "Phone label"
+  },
+
+  "address": "Address",
+  "@address": {
+    "description": "Address label"
+  },
+
+  "team": "Team",
+  "@team": {
+    "description": "Team label"
+  },
+
+  "vehicleSize": "Vehicle Size",
+  "@vehicleSize": {
+    "description": "Vehicle size label"
+  },
+
+  "additionalData": "Additional Data",
+  "@additionalData": {
+    "description": "Additional data title"
+  },
+
+  "additionalDataDescription": "View supplementary information",
+  "@additionalDataDescription": {
+    "description": "Additional data description"
+  },
+
+  "systemDiagnostics": "System Diagnostics",
+  "@systemDiagnostics": {
+    "description": "System diagnostics title"
+  },
+
+  "systemDiagnosticsDescription": "Check app status and connections",
+  "@systemDiagnosticsDescription": {
+    "description": "System diagnostics description"
+  },
+
+  "logout": "Logout",
+  "@logout": {
+    "description": "Logout button"
+  },
+
+  "loggingOut": "Logging out...",
+  "@loggingOut": {
+    "description": "Logging out message"
+  },
+
+  "logoutConfirmation": "Logout",
+  "@logoutConfirmation": {
+    "description": "Logout confirmation title"
+  },
+
+  "logoutConfirmMessage": "Are you sure you want to logout?",
+  "@logoutConfirmMessage": {
+    "description": "Logout confirmation message"
+  },
+
+  "safeDriveApp": "SafeDests Driver App",
+  "@safeDriveApp": {
+    "description": "App name"
+  },
+
+  "appDescription": "An app dedicated to task management and delivery for drivers",
+  "@appDescription": {
+    "description": "App description"
+  },
+
+  "driverStatus": "Driver Status",
+  "connected": "Connected",
+  "disconnected": "Disconnected",
+  "availableForTasks": "Available for Tasks",
+  "busy": "Busy",
+  "setBusy": "Set as Busy",
+  "setAvailable": "Set as Available",
+  "name": "Name",
+  "status": "Status",
+  "vehicleType": "Vehicle Type",
+  "notSpecified": "Not Specified",
+
+  "earningsStatistics": "Earnings Statistics",
+  "today": "Today",
+  "week": "Week",
+  "month": "Month",
+  "year": "Year",
+  "periodSelected": "Period selected: {period}",
+  "earningsChart": "Earnings Chart",
+  "comingSoon": "Coming Soon",
+  "highestEarning": "Highest Earning",
+  "dailyAverage": "Daily Average",
+  "totalEarnings": "Total Earnings",
+  "noTransactionsYet": "No financial transactions yet",
+
+  "earningsSummary": "Earnings Summary",
+  "details": "Details",
+  "earningsDetailsComingSoon": "Earnings details coming soon",
+  "noEarningsData": "No earnings data currently",
+  "thisMonth": "This Month",
+  "totalTasks": "Total Tasks",
+  "averageEarningPerTask": "Average Earning Per Task",
+  "totalPeriod": "Total Period",
+
+  "errorOccurred": "An Error Occurred",
+  "quickStats": "Quick Stats",
+  "activeTasks": "Active Tasks",
+  "currentBalance": "Current Balance",
+
+  "recentTasks": "Recent Tasks",
+  "viewAll": "View All",
+  "viewAllTasks": "View All Tasks",
+  "noTasksCurrently": "No tasks currently",
+  "taskNumber": "Task #{taskId}",
+
+  "pending": "Pending",
+  "accepted": "Accepted",
+  "pickedUp": "Picked Up",
+  "inTransit": "In Transit",
+  "delivered": "Delivered",
+  "cancelled": "Cancelled",
+  "days": "day",
+  "hours": "hour",
+  "minutes": "minute",
+  "now": "Now",
+
+  "pickupPoint": "Pickup Point",
+  "deliveryPoint": "Delivery Point",
+  "items": "Items",
+  "yourEarnings": "Your earnings: {amount} SAR",
+  "viewDetails": "View Details",
+  "reject": "Reject",
+  "accept": "Accept",
+  "arrivedAtPickup": "Arrived at Pickup",
+  "startLoading": "Start Loading",
+  "onTheWay": "On the Way",
+  "arrivedAtDelivery": "Arrived at Delivery",
+  "startUnloading": "Start Unloading",
+  "completeTask": "Complete Task",
+
+  "recentTransactions": "Recent Transactions",
+  "allTransactionsComingSoon": "All transactions coming soon",
+  "noTransactions": "No Transactions",
+  "noTransactionsRecorded": "No financial transactions recorded yet",
+  "loadingTransactions": "Loading transactions...",
+  "noTransactionsCurrently": "No transactions currently",
+
+  "deposit": "Deposit",
+  "withdrawal": "Withdrawal",
+  "commission": "Commission",
+  "cashWithdrawal": "Cash Withdrawal",
+  "cashDeposit": "Cash Deposit",
+  "completed": "Completed",
+  "failed": "Failed",
+
+  "walletBalance": "Wallet Balance",
+  "availableBalance": "Available Balance",
+  "withdrawals": "Withdrawals",
+  "income": "Income",
+
+  "newTask": "New Task!",
+  "respondWithin": "Respond within: {time}",
+  "responseTimeExpired": "Response time expired, task transferred to another driver",
+  "from": "From: {address}",
+  "to": "To: {address}",
+  "amount": "Amount: {amount} SAR",
+  "taskAcceptedSuccessfully": "Task accepted successfully",
+  "taskRejected": "Task rejected",
+
+  "taskDetails": "Task Details",
+  "taskId": "Task ID",
+  "paymentMethod": "Payment Method",
+  "pickupAddress": "Pickup Address",
+  "deliveryAddress": "Delivery Address",
+  "totalAmount": "Total Amount",
+  "creationDate": "Creation Date",
+  "notes": "Notes",
+
+  "myOffer": "My Offer",
+  "driver": "Driver",
+  "myOfferPending": "My offer pending",
+  "myOfferAccepted": "My offer accepted",
+  "myOfferRejected": "My offer rejected",
+  "suggestedPrice": "Suggested price: {price} SAR",
+  "offerDescription": "Offer description:",
+  "netEarningsCalculation": "Net earnings calculation:",
+  "offerPrice": "Offer price",
+  "serviceCommission": "Service commission",
+  "vat": "VAT",
+  "netEarnings": "Net earnings",
+  "submittedOn": "Submitted on: {date}",
+  "lastUpdated": "Last updated: {date}",
+
+  "adNumber": "Ad #{adId}",
+  "running": "Running",
+  "closed": "Closed",
+  "pickup": "Pickup",
+  "delivery": "Delivery",
+  "priceRange": "Price range: {min} - {max} SAR",
+  "offersCount": "Offers count: {count}",
+  "offerAccepted": "Offer accepted",
+  "submitOffer": "Submit Offer",
+  "acceptTask": "Accept Task",
+  "acceptTaskConfirm": "Are you sure you want to accept this task?",
+  "taskAcceptedSuccess": "Task accepted successfully",
+  "taskAcceptFailed": "Failed to accept task",
+
+  "taskHistory": "Task History #{taskId}",
+  "noTaskHistory": "No task history",
+  "addNote": "Add Note",
+  "writeNoteHere": "Write your note here...",
+  "attachFile": "Attach File",
+  "adding": "Adding...",
+  "add": "Add",
+  "pleaseWriteNote": "Please write a note",
+  "noteAddedSuccess": "Note added successfully",
+  "noteAddFailed": "Failed to add note",
+  "errorAddingNote": "Error adding note: {error}",
+  "errorSelectingFile": "Error selecting file: {error}",
+  "errorOpeningAttachment": "Error opening attachment: {error}",
+  "errorLoadingImage": "Error loading image: {error}",
+  "clickOpenToView": "Click \"Open\" to view file",
+  "download": "Download",
+  "open": "Open",
+  "errorDownloadingFile": "Error downloading file: {error}",
+  "errorOpeningFile": "Error opening file: {error}",
+
+  "taskStages": "Task Stages",
+  "assigned": "Assigned",
+  "assignedDescription": "Task assigned to driver",
+  "started": "Started",
+  "startedDescription": "Driver started executing the task",
+  "inPickupPoint": "At Pickup Point",
+  "inPickupPointDescription": "Driver arrived at pickup point",
+  "loading": "Loading",
+  "loadingDescription": "Loading goods",
+  "inTheWay": "On the Way",
+  "inTheWayDescription": "Driver on the way to delivery point",
+  "inDeliveryPoint": "At Delivery Point",
+  "inDeliveryPointDescription": "Driver arrived at delivery point",
+  "unloading": "Unloading",
+  "unloadingDescription": "Unloading goods",
+  "taskCompleted": "Completed",
+  "taskCompletedDescription": "Task completed successfully",
+
+  "phoneNumber": "Phone Number",
+  "whatsappNumber": "WhatsApp Number",
+
+  "highestEarning": "Highest Earning",
+  "averagePerTask": "Average Per Task",
+  "totalEarnings": "Total Earnings"
+}

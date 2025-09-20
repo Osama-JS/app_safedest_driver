@@ -1,0 +1,1436 @@
+{
+  "@@locale": "ar",
+  "appName": "سيف ديستس - السائق",
+  "@appName": {
+    "description": "اسم التطبيق"
+  },
+
+  "settings": "الإعدادات",
+  "@settings": {
+    "description": "عنوان شاشة الإعدادات"
+  },
+
+  "appSettings": "إعدادات التطبيق",
+  "@appSettings": {
+    "description": "قسم إعدادات التطبيق"
+  },
+
+  "language": "لغة التطبيق",
+  "@language": {
+    "description": "إعداد اللغة"
+  },
+
+  "chooseLanguage": "اختر لغة واجهة التطبيق",
+  "@chooseLanguage": {
+    "description": "وصف إعداد اللغة"
+  },
+
+  "arabic": "العربية",
+  "@arabic": {
+    "description": "اللغة العربية"
+  },
+
+  "english": "English",
+  "@english": {
+    "description": "اللغة الإنجليزية"
+  },
+
+  "theme": "مظهر التطبيق",
+  "@theme": {
+    "description": "إعداد المظهر"
+  },
+
+  "chooseTheme": "اختر بين الوضع الفاتح والداكن",
+  "@chooseTheme": {
+    "description": "وصف إعداد المظهر"
+  },
+
+  "lightMode": "الوضع الفاتح",
+  "@lightMode": {
+    "description": "الوضع الفاتح"
+  },
+
+  "darkMode": "الوضع الداكن",
+  "@darkMode": {
+    "description": "الوضع الداكن"
+  },
+
+  "systemMode": "تلقائي (حسب النظام)",
+  "@systemMode": {
+    "description": "الوضع التلقائي"
+  },
+
+  "notifications": "إعدادات الإشعارات",
+  "@notifications": {
+    "description": "قسم الإشعارات"
+  },
+
+  "taskNotifications": "إشعارات المهام",
+  "@taskNotifications": {
+    "description": "إشعارات المهام"
+  },
+
+  "taskNotificationsDesc": "تلقي إشعارات عند وصول مهام جديدة",
+  "@taskNotificationsDesc": {
+    "description": "وصف إشعارات المهام"
+  },
+
+  "walletNotifications": "إشعارات المحفظة",
+  "@walletNotifications": {
+    "description": "إشعارات المحفظة"
+  },
+
+  "walletNotificationsDesc": "تلقي إشعارات عند تحديث المحفظة",
+  "@walletNotificationsDesc": {
+    "description": "وصف إشعارات المحفظة"
+  },
+
+  "systemNotifications": "إشعارات النظام",
+  "@systemNotifications": {
+    "description": "إشعارات النظام"
+  },
+
+  "systemNotificationsDesc": "تلقي إشعارات النظام والتحديثات",
+  "@systemNotificationsDesc": {
+    "description": "وصف إشعارات النظام"
+  },
+
+  "about": "حول التطبيق",
+  "@about": {
+    "description": "قسم حول التطبيق"
+  },
+
+  "version": "الإصدار",
+  "@version": {
+    "description": "إصدار التطبيق"
+  },
+
+  "termsOfService": "شروط الاستخدام",
+  "@termsOfService": {
+    "description": "شروط الاستخدام"
+  },
+
+  "termsOfServiceDesc": "اقرأ شروط استخدام التطبيق",
+  "@termsOfServiceDesc": {
+    "description": "وصف شروط الاستخدام"
+  },
+
+  "privacyPolicy": "سياسة الخصوصية",
+  "@privacyPolicy": {
+    "description": "سياسة الخصوصية"
+  },
+
+  "privacyPolicyDesc": "اقرأ سياسة الخصوصية",
+  "@privacyPolicyDesc": {
+    "description": "وصف سياسة الخصوصية"
+  },
+
+  "helpSupport": "المساعدة والدعم",
+  "@helpSupport": {
+    "description": "المساعدة والدعم"
+  },
+
+  "helpSupportDesc": "الحصول على المساعدة",
+  "@helpSupportDesc": {
+    "description": "وصف المساعدة والدعم"
+  },
+
+  "resetSettings": "إعادة تعيين الإعدادات",
+  "@resetSettings": {
+    "description": "إعادة تعيين الإعدادات"
+  },
+
+  "resetSettingsDesc": "إعادة جميع الإعدادات إلى القيم الافتراضية",
+  "@resetSettingsDesc": {
+    "description": "وصف إعادة تعيين الإعدادات"
+  },
+
+  "reset": "إعادة تعيين",
+  "@reset": {
+    "description": "زر إعادة التعيين"
+  },
+
+  "cancel": "إلغاء",
+  "@cancel": {
+    "description": "زر الإلغاء"
+  },
+
+  "confirm": "تأكيد",
+  "@confirm": {
+    "description": "زر التأكيد"
+  },
+
+  "resetConfirmTitle": "إعادة تعيين الإعدادات",
+  "@resetConfirmTitle": {
+    "description": "عنوان تأكيد إعادة التعيين"
+  },
+
+  "resetConfirmMessage": "هل أنت متأكد من أنك تريد إعادة جميع الإعدادات إلى القيم الافتراضية؟\n\nلا يمكن التراجع عن هذا الإجراء.",
+  "@resetConfirmMessage": {
+    "description": "رسالة تأكيد إعادة التعيين"
+  },
+
+  "resetSuccess": "تم إعادة تعيين الإعدادات بنجاح",
+  "@resetSuccess": {
+    "description": "رسالة نجاح إعادة التعيين"
+  },
+
+  "home": "الرئيسية",
+  "@home": {
+    "description": "تبويب الشاشة الرئيسية"
+  },
+
+  "tasks": "المهام",
+  "@tasks": {
+    "description": "تبويب المهام"
+  },
+
+  "wallet": "المحفظة",
+  "@wallet": {
+    "description": "تبويب المحفظة"
+  },
+
+  "profile": "الملف الشخصي",
+  "@profile": {
+    "description": "تبويب الملف الشخصي"
+  },
+
+  "welcomeDriver": "مرحباً {driverName}",
+  "@welcomeDriver": {
+    "description": "رسالة الترحيب بالسائق",
+    "placeholders": {
+      "driverName": {
+        "type": "String",
+        "description": "اسم السائق"
+      }
+    }
+  },
+
+  "driver": "السائق",
+  "@driver": {
+    "description": "كلمة السائق الافتراضية"
+  },
+
+  "dataRefreshSuccess": "تم تحديث البيانات بنجاح",
+  "@dataRefreshSuccess": {
+    "description": "رسالة نجاح تحديث البيانات"
+  },
+
+  "dataRefreshFailed": "فشل في تحديث البيانات",
+  "@dataRefreshFailed": {
+    "description": "رسالة فشل تحديث البيانات"
+  },
+
+  "taskAds": "إعلانات المهام",
+  "@taskAds": {
+    "description": "عنوان قسم إعلانات المهام"
+  },
+
+  "taskAdsDescription": "تصفح الإعلانات المتاحة وقدم عروضك",
+  "@taskAdsDescription": {
+    "description": "وصف قسم إعلانات المهام"
+  },
+
+  "availableAds": "الإعلانات المتاحة",
+  "@availableAds": {
+    "description": "عدد الإعلانات المتاحة"
+  },
+
+  "myOffers": "عروضي المقدمة",
+  "@myOffers": {
+    "description": "عدد العروض المقدمة"
+  },
+
+  "acceptedOffers": "العروض المقبولة",
+  "@acceptedOffers": {
+    "description": "عدد العروض المقبولة"
+  },
+
+  "browseAds": "تصفح الإعلانات",
+  "@browseAds": {
+    "description": "زر تصفح الإعلانات"
+  },
+
+  "notificationsComingSoon": "شاشة الإشعارات قريباً",
+  "@notificationsComingSoon": {
+    "description": "رسالة الإشعارات قريباً"
+  },
+
+  "exitConfirmation": "تأكيد الخروج",
+  "@exitConfirmation": {
+    "description": "عنوان تأكيد الخروج"
+  },
+
+  "exitConfirmMessage": "هل أنت متأكد من أنك تريد الخروج من التطبيق؟",
+  "@exitConfirmMessage": {
+    "description": "رسالة تأكيد الخروج"
+  },
+
+  "exitConfirmDescription": "سيتم إغلاق التطبيق نهائياً.",
+  "@exitConfirmDescription": {
+    "description": "وصف تأكيد الخروج"
+  },
+
+  "exit": "خروج",
+  "@exit": {
+    "description": "زر الخروج"
+  },
+
+  "refreshTasks": "تحديث المهام",
+  "@refreshTasks": {
+    "description": "تلميح تحديث المهام"
+  },
+
+  "availableTasks": "المتاحة",
+  "@availableTasks": {
+    "description": "تبويب المهام المتاحة"
+  },
+
+  "currentTasks": "الحالية",
+  "@currentTasks": {
+    "description": "تبويب المهام الحالية"
+  },
+
+  "completedTasks": "المكتملة",
+  "@completedTasks": {
+    "description": "تبويب المهام المكتملة"
+  },
+
+  "loadingTasks": "جاري تحميل المهام...",
+  "@loadingTasks": {
+    "description": "رسالة تحميل المهام"
+  },
+
+  "unexpectedError": "حدث خطأ غير متوقع",
+  "@unexpectedError": {
+    "description": "رسالة خطأ غير متوقع"
+  },
+
+  "retry": "إعادة المحاولة",
+  "@retry": {
+    "description": "زر إعادة المحاولة"
+  },
+
+  "noAvailableTasks": "لا توجد مهام متاحة",
+  "@noAvailableTasks": {
+    "description": "رسالة عدم وجود مهام متاحة"
+  },
+
+  "noAvailableTasksDescription": "لا توجد مهام متاحة للقبول في الوقت الحالي",
+  "@noAvailableTasksDescription": {
+    "description": "وصف عدم وجود مهام متاحة"
+  },
+
+  "noCurrentTasks": "لا توجد مهام حالية",
+  "@noCurrentTasks": {
+    "description": "رسالة عدم وجود مهام حالية"
+  },
+
+  "noCompletedTasks": "لا توجد مهام مكتملة",
+  "@noCompletedTasks": {
+    "description": "رسالة عدم وجود مهام مكتملة"
+  },
+
+  "taskAcceptedSuccess": "تم قبول المهمة بنجاح",
+  "@taskAcceptedSuccess": {
+    "description": "رسالة نجاح قبول المهمة"
+  },
+
+  "taskRejected": "تم رفض المهمة",
+  "@taskRejected": {
+    "description": "رسالة رفض المهمة"
+  },
+
+  "taskStatusUpdated": "تم تحديث حالة المهمة",
+  "@taskStatusUpdated": {
+    "description": "رسالة تحديث حالة المهمة"
+  },
+
+  "transactionHistory": "سجل المعاملات",
+  "@transactionHistory": {
+    "description": "تلميح سجل المعاملات"
+  },
+
+  "quickActions": "إجراءات سريعة",
+  "@quickActions": {
+    "description": "عنوان الإجراءات السريعة"
+  },
+
+  "cashWithdrawal": "سحب نقدي",
+  "@cashWithdrawal": {
+    "description": "زر السحب النقدي"
+  },
+
+  "accountStatement": "كشف حساب",
+  "@accountStatement": {
+    "description": "زر كشف الحساب"
+  },
+
+  "support": "الدعم",
+  "@support": {
+    "description": "زر الدعم"
+  },
+
+  "withdrawalComingSoon": "ميزة السحب النقدي قريباً",
+  "@withdrawalComingSoon": {
+    "description": "رسالة السحب النقدي قريباً"
+  },
+
+  "statementComingSoon": "كشف الحساب قريباً",
+  "@statementComingSoon": {
+    "description": "رسالة كشف الحساب قريباً"
+  },
+
+  "supportComingSoon": "الدعم الفني قريباً",
+  "@supportComingSoon": {
+    "description": "رسالة الدعم الفني قريباً"
+  },
+
+  "noDriverData": "لا توجد بيانات للسائق",
+  "@noDriverData": {
+    "description": "رسالة عدم وجود بيانات السائق"
+  },
+
+  "active": "نشط",
+  "@active": {
+    "description": "حالة السائق النشط"
+  },
+
+  "inactive": "غير نشط",
+  "@inactive": {
+    "description": "حالة السائق غير النشط"
+  },
+
+  "online": "متصل",
+  "@online": {
+    "description": "حالة الاتصال"
+  },
+
+  "offline": "غير متصل",
+  "@offline": {
+    "description": "حالة عدم الاتصال"
+  },
+
+  "accountInfo": "معلومات الحساب",
+  "@accountInfo": {
+    "description": "عنوان معلومات الحساب"
+  },
+
+  "email": "البريد الإلكتروني",
+  "@email": {
+    "description": "تسمية البريد الإلكتروني"
+  },
+
+  "phone": "رقم الهاتف",
+  "@phone": {
+    "description": "تسمية رقم الهاتف"
+  },
+
+  "address": "العنوان",
+  "@address": {
+    "description": "تسمية العنوان"
+  },
+
+  "team": "الفريق",
+  "@team": {
+    "description": "تسمية الفريق"
+  },
+
+  "vehicleSize": "حجم المركبة",
+  "@vehicleSize": {
+    "description": "تسمية حجم المركبة"
+  },
+
+  "additionalData": "البيانات الإضافية",
+  "@additionalData": {
+    "description": "عنوان البيانات الإضافية"
+  },
+
+  "additionalDataDescription": "عرض المعلومات التكميلية",
+  "@additionalDataDescription": {
+    "description": "وصف البيانات الإضافية"
+  },
+
+  "systemDiagnostics": "تشخيص النظام",
+  "@systemDiagnostics": {
+    "description": "عنوان تشخيص النظام"
+  },
+
+  "systemDiagnosticsDescription": "فحص حالة التطبيق والاتصالات",
+  "@systemDiagnosticsDescription": {
+    "description": "وصف تشخيص النظام"
+  },
+
+  "logout": "تسجيل الخروج",
+  "@logout": {
+    "description": "زر تسجيل الخروج"
+  },
+
+  "loggingOut": "جاري تسجيل الخروج...",
+  "@loggingOut": {
+    "description": "رسالة جاري تسجيل الخروج"
+  },
+
+  "logoutConfirmation": "تسجيل الخروج",
+  "@logoutConfirmation": {
+    "description": "عنوان تأكيد تسجيل الخروج"
+  },
+
+  "logoutConfirmMessage": "هل أنت متأكد من رغبتك في تسجيل الخروج؟",
+  "@logoutConfirmMessage": {
+    "description": "رسالة تأكيد تسجيل الخروج"
+  },
+
+  "safeDriveApp": "تطبيق SafeDests للسائقين",
+  "@safeDriveApp": {
+    "description": "اسم التطبيق"
+  },
+
+  "appDescription": "تطبيق مخصص لإدارة المهام والتوصيل للسائقين",
+  "@appDescription": {
+    "description": "وصف التطبيق"
+  },
+
+  "driverStatus": "حالة السائق",
+  "@driverStatus": {
+    "description": "عنوان حالة السائق"
+  },
+
+  "connected": "متصل",
+  "@connected": {
+    "description": "حالة الاتصال"
+  },
+
+  "disconnected": "غير متصل",
+  "@disconnected": {
+    "description": "حالة عدم الاتصال"
+  },
+
+  "availableForTasks": "متاح للمهام",
+  "@availableForTasks": {
+    "description": "حالة متاح للمهام"
+  },
+
+  "busy": "مشغول",
+  "@busy": {
+    "description": "حالة مشغول"
+  },
+
+  "setBusy": "تعيين كمشغول",
+  "@setBusy": {
+    "description": "زر تعيين كمشغول"
+  },
+
+  "setAvailable": "تعيين كمتاح",
+  "@setAvailable": {
+    "description": "زر تعيين كمتاح"
+  },
+
+  "name": "الاسم",
+  "@name": {
+    "description": "تسمية الاسم"
+  },
+
+  "status": "الحالة",
+  "@status": {
+    "description": "تسمية الحالة"
+  },
+
+  "vehicleType": "نوع المركبة",
+  "@vehicleType": {
+    "description": "تسمية نوع المركبة"
+  },
+
+  "notSpecified": "غير محدد",
+  "@notSpecified": {
+    "description": "قيمة غير محدد"
+  },
+
+  "earningsStatistics": "إحصائيات الأرباح",
+  "@earningsStatistics": {
+    "description": "عنوان إحصائيات الأرباح"
+  },
+
+  "today": "اليوم",
+  "@today": {
+    "description": "فترة اليوم"
+  },
+
+  "week": "الأسبوع",
+  "@week": {
+    "description": "فترة الأسبوع"
+  },
+
+  "month": "الشهر",
+  "@month": {
+    "description": "فترة الشهر"
+  },
+
+  "year": "السنة",
+  "@year": {
+    "description": "فترة السنة"
+  },
+
+  "periodSelected": "تم اختيار فترة: {period}",
+  "@periodSelected": {
+    "description": "رسالة اختيار الفترة",
+    "placeholders": {
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+
+  "earningsChart": "الرسم البياني للأرباح",
+  "@earningsChart": {
+    "description": "عنوان الرسم البياني للأرباح"
+  },
+
+  "comingSoon": "قريباً",
+  "@comingSoon": {
+    "description": "رسالة قريباً"
+  },
+
+  "highestEarning": "أعلى ربح",
+  "@highestEarning": {
+    "description": "تسمية أعلى ربح"
+  },
+
+  "dailyAverage": "متوسط يومي",
+  "@dailyAverage": {
+    "description": "تسمية المتوسط اليومي"
+  },
+
+  "totalEarnings": "إجمالي الأرباح",
+  "@totalEarnings": {
+    "description": "تسمية إجمالي الأرباح"
+  },
+
+  "noTransactionsYet": "لا توجد معاملات مالية بعد",
+  "@noTransactionsYet": {
+    "description": "رسالة عدم وجود معاملات"
+  },
+
+  "earningsSummary": "ملخص الأرباح",
+  "@earningsSummary": {
+    "description": "عنوان ملخص الأرباح"
+  },
+
+  "details": "التفاصيل",
+  "@details": {
+    "description": "زر التفاصيل"
+  },
+
+  "earningsDetailsComingSoon": "تفاصيل الأرباح قريباً",
+  "@earningsDetailsComingSoon": {
+    "description": "رسالة تفاصيل الأرباح قريباً"
+  },
+
+  "noEarningsData": "لا توجد بيانات أرباح حالياً",
+  "@noEarningsData": {
+    "description": "رسالة عدم وجود بيانات أرباح"
+  },
+
+  "thisMonth": "هذا الشهر",
+  "@thisMonth": {
+    "description": "فترة هذا الشهر"
+  },
+
+  "totalTasks": "عدد المهام",
+  "@totalTasks": {
+    "description": "تسمية عدد المهام"
+  },
+
+  "averageEarningPerTask": "متوسط الربح لكل مهمة",
+  "@averageEarningPerTask": {
+    "description": "تسمية متوسط الربح لكل مهمة"
+  },
+
+  "totalPeriod": "إجمالي الفترة",
+  "@totalPeriod": {
+    "description": "تسمية إجمالي الفترة"
+  },
+
+  "errorOccurred": "حدث خطأ",
+  "@errorOccurred": {
+    "description": "رسالة حدوث خطأ"
+  },
+
+  "quickStats": "إحصائيات سريعة",
+  "@quickStats": {
+    "description": "عنوان الإحصائيات السريعة"
+  },
+
+  "activeTasks": "المهام النشطة",
+  "@activeTasks": {
+    "description": "تسمية المهام النشطة"
+  },
+
+  "currentBalance": "الرصيد الحالي",
+  "@currentBalance": {
+    "description": "تسمية الرصيد الحالي"
+  },
+
+  "recentTasks": "المهام الأخيرة",
+  "@recentTasks": {
+    "description": "عنوان المهام الأخيرة"
+  },
+
+  "viewAll": "عرض الكل",
+  "@viewAll": {
+    "description": "زر عرض الكل"
+  },
+
+  "viewAllTasks": "عرض جميع المهام",
+  "@viewAllTasks": {
+    "description": "رسالة عرض جميع المهام"
+  },
+
+  "noTasksCurrently": "لا توجد مهام حالياً",
+  "@noTasksCurrently": {
+    "description": "رسالة عدم وجود مهام"
+  },
+
+  "taskNumber": "مهمة #{taskId}",
+  "@taskNumber": {
+    "description": "رقم المهمة",
+    "placeholders": {
+      "taskId": {
+        "type": "String"
+      }
+    }
+  },
+
+  "pending": "في الانتظار",
+  "@pending": {
+    "description": "حالة في الانتظار"
+  },
+
+  "accepted": "مقبولة",
+  "@accepted": {
+    "description": "حالة مقبولة"
+  },
+
+  "pickedUp": "تم الاستلام",
+  "@pickedUp": {
+    "description": "حالة تم الاستلام"
+  },
+
+  "inTransit": "في الطريق",
+  "@inTransit": {
+    "description": "حالة في الطريق"
+  },
+
+  "delivered": "تم التسليم",
+  "@delivered": {
+    "description": "حالة تم التسليم"
+  },
+
+  "cancelled": "ملغية",
+  "@cancelled": {
+    "description": "حالة ملغية"
+  },
+
+  "days": "يوم",
+  "@days": {
+    "description": "وحدة الأيام"
+  },
+
+  "hours": "ساعة",
+  "@hours": {
+    "description": "وحدة الساعات"
+  },
+
+  "minutes": "دقيقة",
+  "@minutes": {
+    "description": "وحدة الدقائق"
+  },
+
+  "now": "الآن",
+  "@now": {
+    "description": "كلمة الآن"
+  },
+
+  "pickupPoint": "نقطة الاستلام",
+  "@pickupPoint": {
+    "description": "تسمية نقطة الاستلام"
+  },
+
+  "deliveryPoint": "نقطة التسليم",
+  "@deliveryPoint": {
+    "description": "تسمية نقطة التسليم"
+  },
+
+  "items": "العناصر",
+  "@items": {
+    "description": "تسمية العناصر"
+  },
+
+  "yourEarnings": "مستحقاتك: {amount} ر.س",
+  "@yourEarnings": {
+    "description": "مستحقات السائق",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+
+  "viewDetails": "عرض التفاصيل",
+  "@viewDetails": {
+    "description": "زر عرض التفاصيل"
+  },
+
+  "reject": "رفض",
+  "@reject": {
+    "description": "زر الرفض"
+  },
+
+  "accept": "قبول",
+  "@accept": {
+    "description": "زر القبول"
+  },
+
+  "arrivedAtPickup": "وصلت لنقطة الاستلام",
+  "@arrivedAtPickup": {
+    "description": "زر وصلت لنقطة الاستلام"
+  },
+
+  "startLoading": "بدء التحميل",
+  "@startLoading": {
+    "description": "زر بدء التحميل"
+  },
+
+  "onTheWay": "في الطريق",
+  "@onTheWay": {
+    "description": "زر في الطريق"
+  },
+
+  "arrivedAtDelivery": "وصلت لنقطة التسليم",
+  "@arrivedAtDelivery": {
+    "description": "زر وصلت لنقطة التسليم"
+  },
+
+  "startUnloading": "بدء التفريغ",
+  "@startUnloading": {
+    "description": "زر بدء التفريغ"
+  },
+
+  "completeTask": "إكمال المهمة",
+  "@completeTask": {
+    "description": "زر إكمال المهمة"
+  },
+
+  "recentTransactions": "المعاملات الأخيرة",
+  "@recentTransactions": {
+    "description": "عنوان المعاملات الأخيرة"
+  },
+
+  "allTransactionsComingSoon": "جميع المعاملات قريباً",
+  "@allTransactionsComingSoon": {
+    "description": "رسالة جميع المعاملات قريباً"
+  },
+
+  "noTransactions": "لا توجد معاملات",
+  "@noTransactions": {
+    "description": "رسالة عدم وجود معاملات"
+  },
+
+  "noTransactionsRecorded": "لم يتم تسجيل أي معاملات مالية بعد",
+  "@noTransactionsRecorded": {
+    "description": "وصف عدم وجود معاملات"
+  },
+
+  "loadingTransactions": "جاري تحميل المعاملات...",
+  "@loadingTransactions": {
+    "description": "رسالة تحميل المعاملات"
+  },
+
+  "noTransactionsCurrently": "لا توجد معاملات حالياً",
+  "@noTransactionsCurrently": {
+    "description": "رسالة عدم وجود معاملات حالياً"
+  },
+
+  "deposit": "إيداع",
+  "@deposit": {
+    "description": "نوع معاملة إيداع"
+  },
+
+  "withdrawal": "سحب",
+  "@withdrawal": {
+    "description": "نوع معاملة سحب"
+  },
+
+  "commission": "عمولة",
+  "@commission": {
+    "description": "نوع معاملة عمولة"
+  },
+
+  "cashWithdrawal": "سحب نقدي",
+  "@cashWithdrawal": {
+    "description": "نوع معاملة سحب نقدي"
+  },
+
+  "cashDeposit": "إيداع نقدي",
+  "@cashDeposit": {
+    "description": "نوع معاملة إيداع نقدي"
+  },
+
+  "completed": "مكتمل",
+  "@completed": {
+    "description": "حالة مكتمل"
+  },
+
+  "failed": "فاشل",
+  "@failed": {
+    "description": "حالة فاشل"
+  },
+
+  "walletBalance": "رصيد المحفظة",
+  "@walletBalance": {
+    "description": "عنوان رصيد المحفظة"
+  },
+
+  "availableBalance": "الرصيد المتاح",
+  "@availableBalance": {
+    "description": "تسمية الرصيد المتاح"
+  },
+
+  "withdrawals": "السحب",
+  "@withdrawals": {
+    "description": "تسمية السحب"
+  },
+
+  "income": "الدخل",
+  "@income": {
+    "description": "تسمية الدخل"
+  },
+
+  "newTask": "مهمة جديدة!",
+  "@newTask": {
+    "description": "عنوان مهمة جديدة"
+  },
+
+  "respondWithin": "الرد خلال: {time}",
+  "@respondWithin": {
+    "description": "وقت الاستجابة المتبقي",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+
+  "responseTimeExpired": "انتهت مهلة الاستجابة، تم تحويل المهمة لسائق آخر",
+  "@responseTimeExpired": {
+    "description": "رسالة انتهاء مهلة الاستجابة"
+  },
+
+  "from": "من: {address}",
+  "@from": {
+    "description": "من العنوان",
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+
+  "to": "إلى: {address}",
+  "@to": {
+    "description": "إلى العنوان",
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+
+  "amount": "المبلغ: {amount} ر.س",
+  "@amount": {
+    "description": "المبلغ بالريال السعودي",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+
+  "taskAcceptedSuccessfully": "تم قبول المهمة بنجاح",
+  "@taskAcceptedSuccessfully": {
+    "description": "رسالة نجاح قبول المهمة"
+  },
+
+  "taskRejected": "تم رفض المهمة",
+  "@taskRejected": {
+    "description": "رسالة رفض المهمة"
+  },
+
+  "taskDetails": "تفاصيل المهمة",
+  "@taskDetails": {
+    "description": "عنوان تفاصيل المهمة"
+  },
+
+  "taskId": "رقم المهمة",
+  "@taskId": {
+    "description": "تسمية رقم المهمة"
+  },
+
+  "paymentMethod": "طريقة الدفع",
+  "@paymentMethod": {
+    "description": "تسمية طريقة الدفع"
+  },
+
+  "pickupAddress": "عنوان الاستلام",
+  "@pickupAddress": {
+    "description": "تسمية عنوان الاستلام"
+  },
+
+  "deliveryAddress": "عنوان التسليم",
+  "@deliveryAddress": {
+    "description": "تسمية عنوان التسليم"
+  },
+
+  "totalAmount": "المبلغ الإجمالي",
+  "@totalAmount": {
+    "description": "تسمية المبلغ الإجمالي"
+  },
+
+  "creationDate": "تاريخ الإنشاء",
+  "@creationDate": {
+    "description": "تسمية تاريخ الإنشاء"
+  },
+
+  "notes": "ملاحظات",
+  "@notes": {
+    "description": "تسمية الملاحظات"
+  },
+
+  "myOffer": "عرضي",
+  "@myOffer": {
+    "description": "تسمية عرضي"
+  },
+
+  "driver": "سائق",
+  "@driver": {
+    "description": "كلمة سائق"
+  },
+
+  "myOfferPending": "عرضي في الانتظار",
+  "@myOfferPending": {
+    "description": "حالة عرضي في الانتظار"
+  },
+
+  "myOfferAccepted": "تم قبول عرضي",
+  "@myOfferAccepted": {
+    "description": "حالة تم قبول عرضي"
+  },
+
+  "myOfferRejected": "تم رفض عرضي",
+  "@myOfferRejected": {
+    "description": "حالة تم رفض عرضي"
+  },
+
+  "suggestedPrice": "السعر المقترح: {price} ر.س",
+  "@suggestedPrice": {
+    "description": "السعر المقترح",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+
+  "offerDescription": "وصف العرض:",
+  "@offerDescription": {
+    "description": "تسمية وصف العرض"
+  },
+
+  "netEarningsCalculation": "حساب صافي المستحقات:",
+  "@netEarningsCalculation": {
+    "description": "عنوان حساب صافي المستحقات"
+  },
+
+  "offerPrice": "سعر العرض",
+  "@offerPrice": {
+    "description": "تسمية سعر العرض"
+  },
+
+  "serviceCommission": "عمولة الخدمة",
+  "@serviceCommission": {
+    "description": "تسمية عمولة الخدمة"
+  },
+
+  "vat": "ضريبة القيمة المضافة",
+  "@vat": {
+    "description": "تسمية ضريبة القيمة المضافة"
+  },
+
+  "netEarnings": "صافي المستحقات",
+  "@netEarnings": {
+    "description": "تسمية صافي المستحقات"
+  },
+
+  "submittedOn": "تم التقديم: {date}",
+  "@submittedOn": {
+    "description": "تاريخ التقديم",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+
+  "lastUpdated": "آخر تحديث: {date}",
+  "@lastUpdated": {
+    "description": "تاريخ آخر تحديث",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+
+  "adNumber": "إعلان #{adId}",
+  "@adNumber": {
+    "description": "رقم الإعلان",
+    "placeholders": {
+      "adId": {
+        "type": "String"
+      }
+    }
+  },
+
+  "running": "جاري",
+  "@running": {
+    "description": "حالة جاري"
+  },
+
+  "closed": "مغلق",
+  "@closed": {
+    "description": "حالة مغلق"
+  },
+
+  "pickup": "الاستلام",
+  "@pickup": {
+    "description": "تسمية الاستلام"
+  },
+
+  "delivery": "التسليم",
+  "@delivery": {
+    "description": "تسمية التسليم"
+  },
+
+  "priceRange": "نطاق الأسعار: {min} - {max} ر.س",
+  "@priceRange": {
+    "description": "نطاق الأسعار",
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+
+  "offersCount": "عدد العروض: {count}",
+  "@offersCount": {
+    "description": "عدد العروض",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+
+  "offerAccepted": "تم قبول عرض",
+  "@offerAccepted": {
+    "description": "رسالة تم قبول عرض"
+  },
+
+  "offerPrice": "سعر العرض: {price} ر.س",
+  "@offerPrice": {
+    "description": "سعر العرض",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+
+  "submitOffer": "تقديم عرض",
+  "@submitOffer": {
+    "description": "زر تقديم عرض"
+  },
+
+  "acceptTask": "قبول المهمة",
+  "@acceptTask": {
+    "description": "زر قبول المهمة"
+  },
+
+  "acceptTaskConfirm": "هل أنت متأكد من رغبتك في قبول هذه المهمة؟",
+  "@acceptTaskConfirm": {
+    "description": "رسالة تأكيد قبول المهمة"
+  },
+
+  "taskAcceptedSuccess": "تم قبول المهمة بنجاح",
+  "@taskAcceptedSuccess": {
+    "description": "رسالة نجاح قبول المهمة"
+  },
+
+  "taskAcceptFailed": "فشل في قبول المهمة",
+  "@taskAcceptFailed": {
+    "description": "رسالة فشل قبول المهمة"
+  },
+
+  "errorOccurred": "حدث خطأ: {error}",
+  "@errorOccurred": {
+    "description": "رسالة حدوث خطأ",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "taskHistory": "سجل المهمة #{taskId}",
+  "@taskHistory": {
+    "description": "عنوان سجل المهمة",
+    "placeholders": {
+      "taskId": {
+        "type": "String"
+      }
+    }
+  },
+
+  "noTaskHistory": "لا يوجد سجل للمهمة",
+  "@noTaskHistory": {
+    "description": "رسالة عدم وجود سجل للمهمة"
+  },
+
+  "addNote": "إضافة ملاحظة",
+  "@addNote": {
+    "description": "عنوان إضافة ملاحظة"
+  },
+
+  "writeNoteHere": "اكتب ملاحظتك هنا...",
+  "@writeNoteHere": {
+    "description": "نص تلميح كتابة الملاحظة"
+  },
+
+  "attachFile": "إرفاق ملف",
+  "@attachFile": {
+    "description": "زر إرفاق ملف"
+  },
+
+  "adding": "جاري الإضافة...",
+  "@adding": {
+    "description": "رسالة جاري الإضافة"
+  },
+
+  "add": "إضافة",
+  "@add": {
+    "description": "زر الإضافة"
+  },
+
+  "pleaseWriteNote": "يرجى كتابة ملاحظة",
+  "@pleaseWriteNote": {
+    "description": "رسالة يرجى كتابة ملاحظة"
+  },
+
+  "noteAddedSuccess": "تم إضافة الملاحظة بنجاح",
+  "@noteAddedSuccess": {
+    "description": "رسالة نجاح إضافة الملاحظة"
+  },
+
+  "noteAddFailed": "فشل في إضافة الملاحظة",
+  "@noteAddFailed": {
+    "description": "رسالة فشل إضافة الملاحظة"
+  },
+
+  "errorAddingNote": "خطأ في إضافة الملاحظة: {error}",
+  "@errorAddingNote": {
+    "description": "رسالة خطأ إضافة الملاحظة",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "errorSelectingFile": "خطأ في اختيار الملف: {error}",
+  "@errorSelectingFile": {
+    "description": "رسالة خطأ اختيار الملف",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "errorOpeningAttachment": "خطأ في فتح المرفق: {error}",
+  "@errorOpeningAttachment": {
+    "description": "رسالة خطأ فتح المرفق",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "errorLoadingImage": "خطأ في تحميل الصورة: {error}",
+  "@errorLoadingImage": {
+    "description": "رسالة خطأ تحميل الصورة",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "clickOpenToView": "اضغط على \"فتح\" لعرض الملف",
+  "@clickOpenToView": {
+    "description": "تعليمات فتح الملف"
+  },
+
+  "download": "تحميل",
+  "@download": {
+    "description": "زر التحميل"
+  },
+
+  "open": "فتح",
+  "@open": {
+    "description": "زر الفتح"
+  },
+
+  "errorDownloadingFile": "خطأ في تحميل الملف: {error}",
+  "@errorDownloadingFile": {
+    "description": "رسالة خطأ تحميل الملف",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "errorOpeningFile": "خطأ في فتح الملف: {error}",
+  "@errorOpeningFile": {
+    "description": "رسالة خطأ فتح الملف",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "taskStages": "مراحل المهمة",
+  "@taskStages": {
+    "description": "عنوان مراحل المهمة"
+  },
+
+  "assigned": "مخصصة",
+  "@assigned": {
+    "description": "مرحلة مخصصة"
+  },
+
+  "assignedDescription": "تم تخصيص المهمة للسائق",
+  "@assignedDescription": {
+    "description": "وصف مرحلة مخصصة"
+  },
+
+  "started": "بدأت",
+  "@started": {
+    "description": "مرحلة بدأت"
+  },
+
+  "startedDescription": "بدأ السائق في تنفيذ المهمة",
+  "@startedDescription": {
+    "description": "وصف مرحلة بدأت"
+  },
+
+  "inPickupPoint": "في نقطة الاستلام",
+  "@inPickupPoint": {
+    "description": "مرحلة في نقطة الاستلام"
+  },
+
+  "inPickupPointDescription": "وصل السائق لنقطة الاستلام",
+  "@inPickupPointDescription": {
+    "description": "وصف مرحلة في نقطة الاستلام"
+  },
+
+  "loading": "جاري التحميل",
+  "@loading": {
+    "description": "مرحلة جاري التحميل"
+  },
+
+  "loadingDescription": "يتم تحميل البضائع",
+  "@loadingDescription": {
+    "description": "وصف مرحلة جاري التحميل"
+  },
+
+  "inTheWay": "في الطريق",
+  "@inTheWay": {
+    "description": "مرحلة في الطريق"
+  },
+
+  "inTheWayDescription": "السائق في طريقه لنقطة التسليم",
+  "@inTheWayDescription": {
+    "description": "وصف مرحلة في الطريق"
+  },
+
+  "inDeliveryPoint": "في نقطة التسليم",
+  "@inDeliveryPoint": {
+    "description": "مرحلة في نقطة التسليم"
+  },
+
+  "inDeliveryPointDescription": "وصل السائق لنقطة التسليم",
+  "@inDeliveryPointDescription": {
+    "description": "وصف مرحلة في نقطة التسليم"
+  },
+
+  "unloading": "جاري التفريغ",
+  "@unloading": {
+    "description": "مرحلة جاري التفريغ"
+  },
+
+  "unloadingDescription": "يتم تفريغ البضائع",
+  "@unloadingDescription": {
+    "description": "وصف مرحلة جاري التفريغ"
+  },
+
+  "taskCompleted": "مكتملة",
+  "@taskCompleted": {
+    "description": "مرحلة مكتملة"
+  },
+
+  "taskCompletedDescription": "تم إكمال المهمة بنجاح",
+  "@taskCompletedDescription": {
+    "description": "وصف مرحلة مكتملة"
+  },
+
+  "phoneNumber": "رقم الهاتف",
+  "@phoneNumber": {
+    "description": "تسمية رقم الهاتف"
+  },
+
+  "whatsappNumber": "رقم الواتساب",
+  "@whatsappNumber": {
+    "description": "تسمية رقم الواتساب"
+  },
+
+  "highestEarning": "أعلى ربح",
+  "@highestEarning": {
+    "description": "تسمية أعلى ربح"
+  },
+
+  "averagePerTask": "متوسط المهمة",
+  "@averagePerTask": {
+    "description": "تسمية متوسط المهمة"
+  },
+
+  "totalEarnings": "إجمالي الأرباح",
+  "@totalEarnings": {
+    "description": "تسمية إجمالي الأرباح"
+  }
+}
