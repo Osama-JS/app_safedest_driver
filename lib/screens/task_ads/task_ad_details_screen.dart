@@ -4,6 +4,7 @@ import '../../models/task_ad.dart';
 import '../../models/task_offer.dart';
 import '../../widgets/offer_card.dart';
 import 'submit_offer_screen.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class TaskAdDetailsScreen extends StatefulWidget {
   final int adId;
@@ -120,6 +121,10 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
         bottom: _taskAd != null
             ? TabBar(
                 controller: _tabController,
+                labelColor: Colors.white, // لون النص للتبويب المحدد
+                unselectedLabelColor: Colors.white
+                    .withValues(alpha: 0.7), // لون النص للتبويبات غير المحددة
+                indicatorColor: Colors.white, // لون المؤشر
                 tabs: const [
                   Tab(text: 'تفاصيل الإعلان'),
                   Tab(text: 'العروض المقدمة'),

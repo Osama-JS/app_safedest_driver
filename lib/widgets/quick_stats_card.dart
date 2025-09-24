@@ -3,12 +3,18 @@ import 'package:provider/provider.dart';
 import '../services/task_service.dart';
 import '../services/wallet_service.dart';
 import '../models/task.dart';
+import '../l10n/generated/app_localizations.dart';
 
 class QuickStatsCard extends StatelessWidget {
   const QuickStatsCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) {
+      // Fallback or error handling
+      return const SizedBox.shrink();
+    }
     return Consumer2<TaskService, WalletService>(
       builder: (context, taskService, walletService, child) {
         return Card(
@@ -26,7 +32,7 @@ class QuickStatsCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 12),
                     Text(
-                      'إحصائيات سريعة',
+                      l10n.quickStats,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -39,7 +45,7 @@ class QuickStatsCard extends StatelessWidget {
                     Expanded(
                       child: _buildStatItem(
                         context,
-                        'المهام المتاحة',
+                        l10n.availableTasks,
                         '${taskService.getTaskCountByStatus(TaskStatus.assign)}',
                         Icons.assignment_outlined,
                         Colors.blue,
@@ -49,7 +55,7 @@ class QuickStatsCard extends StatelessWidget {
                     Expanded(
                       child: _buildStatItem(
                         context,
-                        'المهام النشطة',
+                        l10n.activeTasks,
                         '${taskService.activeTasks.length}',
                         Icons.work_outline,
                         Colors.orange,
@@ -63,7 +69,7 @@ class QuickStatsCard extends StatelessWidget {
                     Expanded(
                       child: _buildStatItem(
                         context,
-                        'الرصيد الحالي',
+                        l10n.currentBalance,
                         '${walletService.currentBalance.toStringAsFixed(2)} ${walletService.currency}',
                         Icons.account_balance_wallet_outlined,
                         Colors.green,
@@ -73,7 +79,7 @@ class QuickStatsCard extends StatelessWidget {
                     Expanded(
                       child: _buildStatItem(
                         context,
-                        'إجمالي الأرباح',
+                        l10n.totalEarnings,
                         '${walletService.totalEarnings.toStringAsFixed(2)} ${walletService.currency}',
                         Icons.trending_up,
                         Colors.purple,

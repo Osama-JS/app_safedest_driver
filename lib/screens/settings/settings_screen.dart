@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/settings_service.dart';
 import '../../widgets/custom_button.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -13,9 +14,14 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) {
+      // Fallback or error handling
+      return const SizedBox.shrink();
+    }
     return Scaffold(
       appBar: AppBar(
-        title: const Text('الإعدادات'),
+        title: Text(l10n.settings),
         elevation: 0,
       ),
       body: Consumer<SettingsService>(
@@ -24,7 +30,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             padding: const EdgeInsets.all(16),
             children: [
               // App Settings Section
-              _buildSectionHeader('إعدادات التطبيق'),
+              _buildSectionHeader(l10n.appSettings),
               const SizedBox(height: 16),
 
               // Language Setting
@@ -36,11 +42,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SizedBox(height: 32),
 
               // Notification Settings Section
-              _buildSectionHeader('إعدادات الإشعارات'),
-              const SizedBox(height: 16),
+              // _buildSectionHeader(l10n.notifications),
+              // const SizedBox(height: 16),
 
-              _buildNotificationCard(settingsService),
-              const SizedBox(height: 32),
+              // _buildNotificationCard(settingsService),
+              // const SizedBox(height: 32),
 
               // Account Settings Section
               // _buildSectionHeader('إعدادات الحساب'),
@@ -50,7 +56,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               // const SizedBox(height: 32),
 
               // About Section
-              _buildSectionHeader('حول التطبيق'),
+              _buildSectionHeader(l10n.about),
               const SizedBox(height: 16),
 
               _buildAboutCard(),
@@ -76,6 +82,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildLanguageCard(SettingsService settingsService) {
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) {
+      // Fallback or error handling
+      return const SizedBox.shrink();
+    }
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -104,7 +115,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'لغة التطبيق',
+                        l10n.language,
                         style:
                             Theme.of(context).textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w600,
@@ -112,7 +123,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'اختر لغة واجهة التطبيق',
+                        l10n.chooseLanguage,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Colors.grey[600],
                             ),
@@ -200,6 +211,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildThemeCard(SettingsService settingsService) {
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) {
+      // Fallback or error handling
+      return const SizedBox.shrink();
+    }
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -230,7 +246,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'مظهر التطبيق',
+                        l10n.theme,
                         style:
                             Theme.of(context).textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w600,
@@ -238,7 +254,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'اختر بين الوضع الفاتح والداكن',
+                        l10n.chooseTheme,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Colors.grey[600],
                             ),
@@ -255,7 +271,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               children: [
                 _buildThemeOption(
                   settingsService,
-                  'الوضع الفاتح',
+                  l10n.lightMode,
                   false,
                   Icons.light_mode,
                   Colors.orange,
@@ -263,7 +279,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(height: 8),
                 _buildThemeOption(
                   settingsService,
-                  'الوضع الداكن',
+                  l10n.darkMode,
                   true,
                   Icons.dark_mode,
                   Colors.indigo,
@@ -271,7 +287,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(height: 8),
                 _buildThemeOption(
                   settingsService,
-                  'تلقائي (حسب النظام)',
+                  l10n.systemMode,
                   null,
                   Icons.auto_mode,
                   Colors.green,
@@ -477,21 +493,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildAboutCard() {
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) {
+      // Fallback or error handling
+      return const SizedBox.shrink();
+    }
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Column(
         children: [
           _buildAboutTile(
-            'الإصدار',
+            l10n.version,
             '1.0.0',
             Icons.info_outline,
             Colors.blue,
           ),
           const Divider(height: 1),
           _buildAboutTile(
-            'شروط الاستخدام',
-            'اقرأ شروط استخدام التطبيق',
+            l10n.termsOfService,
+            l10n.termsOfServiceDesc,
             Icons.description,
             Colors.green,
             () {
@@ -500,8 +521,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const Divider(height: 1),
           _buildAboutTile(
-            'سياسة الخصوصية',
-            'اقرأ سياسة الخصوصية',
+            l10n.privacyPolicy,
+            l10n.privacyPolicyDesc,
             Icons.privacy_tip,
             Colors.purple,
             () {
@@ -510,8 +531,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const Divider(height: 1),
           _buildAboutTile(
-            'المساعدة والدعم',
-            'الحصول على المساعدة',
+            l10n.helpSupport,
+            l10n.helpSupportDesc,
             Icons.description,
             Colors.green,
             () {
@@ -556,6 +577,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildResetCard(SettingsService settingsService) {
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) {
+      // Fallback or error handling
+      return const SizedBox.shrink();
+    }
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -583,7 +609,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'إعادة تعيين الإعدادات',
+                        l10n.resetSettings,
                         style:
                             Theme.of(context).textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w600,
@@ -591,7 +617,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'إعادة جميع الإعدادات إلى القيم الافتراضية',
+                        l10n.resetSettingsDesc,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Colors.grey[600],
                             ),
@@ -603,7 +629,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             const SizedBox(height: 16),
             CustomButton(
-              text: 'إعادة تعيين',
+              text: l10n.reset,
               onPressed: () => _showResetDialog(settingsService),
               backgroundColor: Colors.red,
               textColor: Colors.white,
@@ -643,28 +669,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('إعادة تعيين الإعدادات'),
-        content: const Text(
-          'هل أنت متأكد من أنك تريد إعادة جميع الإعدادات إلى القيم الافتراضية؟\n\nلا يمكن التراجع عن هذا الإجراء.',
+        title: Text(AppLocalizations.of(context).resetSettings),
+        content: Text(
+          AppLocalizations.of(context).resetConfirmMessage,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('إلغاء'),
+            child: Text(AppLocalizations.of(context).cancel),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
               settingsService.resetToDefaults();
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('تم إعادة تعيين الإعدادات بنجاح'),
+                SnackBar(
+                  content:
+                      Text(AppLocalizations.of(context).resetConfirmMessage),
                   backgroundColor: Colors.green,
                 ),
               );
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('إعادة تعيين',
+            child: Text(AppLocalizations.of(context).reset,
                 style: TextStyle(color: Colors.white)),
           ),
         ],

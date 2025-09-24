@@ -671,5 +671,2867 @@
 
   "highestEarning": "Highest Earning",
   "averagePerTask": "Average Per Task",
-  "totalEarnings": "Total Earnings"
+  "totalEarnings": "Total Earnings",
+
+  "notificationsTitle": "Notifications",
+  "@notificationsTitle": {
+    "description": "Notifications screen title"
+  },
+
+  "markAllAsRead": "Mark All as Read",
+  "@markAllAsRead": {
+    "description": "Mark all notifications as read tooltip"
+  },
+
+  "noNotifications": "No Notifications",
+  "@noNotifications": {
+    "description": "No notifications message"
+  },
+
+  "newNotificationsWillAppearHere": "New notifications will appear here",
+  "@newNotificationsWillAppearHere": {
+    "description": "No notifications description"
+  },
+
+  "newBadge": "New",
+  "@newBadge": {
+    "description": "New notification badge"
+  },
+
+  "closeDialog": "Close",
+  "@closeDialog": {
+    "description": "Close dialog button"
+  },
+
+  "allNotificationsMarkedAsRead": "All notifications marked as read",
+  "@allNotificationsMarkedAsRead": {
+    "description": "Success message for marking all notifications as read"
+  },
+
+  "failedToUpdateNotifications": "Failed to update notifications",
+  "@failedToUpdateNotifications": {
+    "description": "Failed to update notifications message"
+  },
+
+  "dayAgo": "day",
+  "@dayAgo": {
+    "description": "Day ago unit"
+  },
+
+  "daysAgo": "days",
+  "@daysAgo": {
+    "description": "Days ago unit"
+  },
+
+  "hourAgo": "hour",
+  "@hourAgo": {
+    "description": "Hour ago unit"
+  },
+
+  "hoursAgo": "hours",
+  "@hoursAgo": {
+    "description": "Hours ago unit"
+  },
+
+  "minuteAgo": "minute",
+  "@minuteAgo": {
+    "description": "Minute ago unit"
+  },
+
+  "minutesAgo": "minutes",
+  "@minutesAgo": {
+    "description": "Minutes ago unit"
+  },
+
+  "justNow": "now",
+  "@justNow": {
+    "description": "Just now - for current time"
+  },
+
+  "ago": "ago",
+  "@ago": {
+    "description": "Ago word"
+  },
+
+  "since": "since",
+  "@since": {
+    "description": "Since word"
+  },
+
+  "taskDetailError": "Error fetching task details",
+  "@taskDetailError": {
+    "description": "Task detail fetch error message"
+  },
+
+  "errorTitle": "Error",
+  "@errorTitle": {
+    "description": "Error title"
+  },
+
+  "taskNotFound": "Task not found",
+  "@taskNotFound": {
+    "description": "Task not found message"
+  },
+
+  "taskHistory": "Task History",
+  "@taskHistory": {
+    "description": "Task history tooltip"
+  },
+
+  "taskNumber": "Task #{taskId}",
+  "@taskNumber": {
+    "description": "Task number",
+    "placeholders": {
+      "taskId": {
+        "type": "String"
+      }
+    }
+  },
+
+  "yourEarnings": "Your Earnings",
+  "@yourEarnings": {
+    "description": "Driver earnings label"
+  },
+
+  "quickNavigation": "Quick Navigation",
+  "@quickNavigation": {
+    "description": "Quick navigation title"
+  },
+
+  "pickupLocation": "Pickup Location",
+  "@pickupLocation": {
+    "description": "Pickup location"
+  },
+
+  "deliveryLocation": "Delivery Location",
+  "@deliveryLocation": {
+    "description": "Delivery location"
+  },
+
+  "contactPersonName": "Contact Person",
+  "@contactPersonName": {
+    "description": "Contact person name"
+  },
+
+  "phoneNumber": "Phone Number",
+  "@phoneNumber": {
+    "description": "Phone number"
+  },
+
+  "openInGoogleMaps": "Open in Google Maps",
+  "@openInGoogleMaps": {
+    "description": "Open in Google Maps button"
+  },
+
+  "items": "Items",
+  "@items": {
+    "description": "Items"
+  },
+
+  "unspecifiedItem": "Unspecified item",
+  "@unspecifiedItem": {
+    "description": "Unspecified item"
+  },
+
+  "quantity": "Quantity",
+  "@quantity": {
+    "description": "Quantity"
+  },
+
+  "awaitingApproval": "Awaiting Approval",
+  "@awaitingApproval": {
+    "description": "Awaiting approval"
+  },
+
+  "startTask": "Start Task",
+  "@startTask": {
+    "description": "Start task button"
+  },
+
+  "arrivedAtPickupPoint": "Arrived at Pickup Point",
+  "@arrivedAtPickupPoint": {
+    "description": "Arrived at pickup point button"
+  },
+
+  "startLoadingGoods": "Start Loading",
+  "@startLoadingGoods": {
+    "description": "Start loading goods button"
+  },
+
+  "onTheWayToDelivery": "On the Way",
+  "@onTheWayToDelivery": {
+    "description": "On the way to delivery button"
+  },
+
+  "arrivedAtDeliveryPoint": "Arrived at Delivery Point",
+  "@arrivedAtDeliveryPoint": {
+    "description": "Arrived at delivery point button"
+  },
+
+  "startUnloadingGoods": "Start Unloading",
+  "@startUnloadingGoods": {
+    "description": "Start unloading goods button"
+  },
+
+  "completeTaskButton": "Complete Task",
+  "@completeTaskButton": {
+    "description": "Complete task button"
+  },
+
+  "cannotOpenGoogleMaps": "Cannot open Google Maps",
+  "@cannotOpenGoogleMaps": {
+    "description": "Cannot open Google Maps message"
+  },
+
+  "mapOpenError": "Error opening map",
+  "@mapOpenError": {
+    "description": "Map open error message"
+  },
+
+  "confirmStatusUpdate": "Confirm Status Update",
+  "@confirmStatusUpdate": {
+    "description": "Confirm status update title"
+  },
+
+  "confirmStatusUpdateMessage": "Are you sure you want to update the task status to:",
+  "@confirmStatusUpdateMessage": {
+    "description": "Confirm status update message"
+  },
+
+  "cannotUndoAction": "This action cannot be undone.",
+  "@cannotUndoAction": {
+    "description": "Cannot undo action warning"
+  },
+
+  "confirmButton": "Confirm",
+  "@confirmButton": {
+    "description": "Confirm button"
+  },
+
+  "updatingTaskStatus": "Updating task status...",
+  "@updatingTaskStatus": {
+    "description": "Updating task status message"
+  },
+
+  "unexpectedErrorOccurred": "An unexpected error occurred",
+  "@unexpectedErrorOccurred": {
+    "description": "Unexpected error message"
+  },
+
+  "updateSuccessful": "Update Successful",
+  "@updateSuccessful": {
+    "description": "Update successful message"
+  },
+
+  "taskStatusUpdatedTo": "Task status updated to: {statusName}",
+  "@taskStatusUpdatedTo": {
+    "description": "Task status updated message",
+    "placeholders": {
+      "statusName": {
+        "type": "String"
+      }
+    }
+  },
+
+  "okButton": "OK",
+  "@okButton": {
+    "description": "OK button"
+  },
+
+  "updateFailed": "Update Failed",
+  "@updateFailed": {
+    "description": "Update failed message"
+  },
+
+  "failedToLoadAdDetails": "Failed to load ad details",
+  "@failedToLoadAdDetails": {
+    "description": "Failed to load ad details message"
+  },
+
+  "adNumber": "Ad #{adId}",
+  "@adNumber": {
+    "description": "Ad number",
+    "placeholders": {
+      "adId": {
+        "type": "String"
+      }
+    }
+  },
+
+  "refreshTooltip": "Refresh",
+  "@refreshTooltip": {
+    "description": "Refresh button tooltip"
+  },
+
+  "adDetailsTab": "Ad Details",
+  "@adDetailsTab": {
+    "description": "Ad details tab"
+  },
+
+  "submittedOffersTab": "Submitted Offers",
+  "@submittedOffersTab": {
+    "description": "Submitted offers tab"
+  },
+
+  "loadingDetails": "Loading details...",
+  "@loadingDetails": {
+    "description": "Loading details message"
+  },
+
+  "retryButton": "Retry",
+  "@retryButton": {
+    "description": "Retry button"
+  },
+
+  "noDataToDisplay": "No data to display",
+  "@noDataToDisplay": {
+    "description": "No data to display message"
+  },
+
+  "cannotViewSubmittedOffers": "Cannot view submitted offers",
+  "@cannotViewSubmittedOffers": {
+    "description": "Cannot view submitted offers message"
+  },
+
+  "mustSubmitOfferFirst": "You must submit an offer first to view other offers",
+  "@mustSubmitOfferFirst": {
+    "description": "Must submit offer first message"
+  },
+
+  "noOffersSubmitted": "No offers submitted",
+  "@noOffersSubmitted": {
+    "description": "No offers submitted message"
+  },
+
+  "noOffersSubmittedYet": "No offers have been submitted for this ad yet",
+  "@noOffersSubmittedYet": {
+    "description": "No offers submitted yet description"
+  },
+
+  "creationDate": "Creation Date",
+  "@creationDate": {
+    "description": "Creation date"
+  },
+
+  "offersCount": "Offers Count",
+  "@offersCount": {
+    "description": "Offers count"
+  },
+
+  "offerAccepted": "Offer accepted",
+  "@offerAccepted": {
+    "description": "Offer accepted message"
+  },
+
+  "editOffer": "Edit Offer",
+  "@editOffer": {
+    "description": "Edit offer button"
+  },
+
+  "submitOffer": "Submit Offer",
+  "@submitOffer": {
+    "description": "Submit offer button"
+  },
+
+  "acceptTask": "Accept Task",
+  "@acceptTask": {
+    "description": "Accept task button"
+  },
+
+  "acceptTaskConfirmTitle": "Accept Task",
+  "@acceptTaskConfirmTitle": {
+    "description": "Accept task confirmation title"
+  },
+
+  "acceptTaskConfirmMessage": "Are you sure you want to accept this task?",
+  "@acceptTaskConfirmMessage": {
+    "description": "Accept task confirmation message"
+  },
+
+  "acceptButton": "Accept",
+  "@acceptButton": {
+    "description": "Accept button"
+  },
+
+  "taskAcceptedSuccessfully": "Task accepted successfully",
+  "@taskAcceptedSuccessfully": {
+    "description": "Task accepted successfully message"
+  },
+
+  "failedToAcceptTask": "Failed to accept task",
+  "@failedToAcceptTask": {
+    "description": "Failed to accept task message"
+  },
+
+  "statusRunning": "Running",
+  "@statusRunning": {
+    "description": "Running status"
+  },
+
+  "statusClosed": "Closed",
+  "@statusClosed": {
+    "description": "Closed status"
+  },
+
+  "taskDescription": "Task Description",
+  "@taskDescription": {
+    "description": "Task description"
+  },
+
+  "priceRange": "Price Range",
+  "@priceRange": {
+    "description": "Price range"
+  },
+
+  "fromPrice": "From {price} SAR",
+  "@fromPrice": {
+    "description": "From price",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+
+  "toPrice": "To {price} SAR",
+  "@toPrice": {
+    "description": "To price",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+
+  "taskDetails": "Task Details",
+  "@taskDetails": {
+    "description": "Task details"
+  },
+
+  "vehicleSize": "Vehicle Size",
+  "@vehicleSize": {
+    "description": "Vehicle size"
+  },
+
+  "commissionAndTaxInfo": "Commission and Tax Information",
+  "@commissionAndTaxInfo": {
+    "description": "Commission and tax information"
+  },
+
+  "serviceCommission": "Service Commission",
+  "@serviceCommission": {
+    "description": "Service commission"
+  },
+
+  "vatTax": "VAT Tax",
+  "@vatTax": {
+    "description": "VAT tax"
+  },
+
+  "statusPending": "Pending",
+  "@statusPending": {
+    "description": "Pending status"
+  },
+
+  "statusAccepted": "Accepted",
+  "@statusAccepted": {
+    "description": "Accepted status"
+  },
+
+  "statusRejected": "Rejected",
+  "@statusRejected": {
+    "description": "Rejected status"
+  },
+
+  "myOffer": "My Offer",
+  "@myOffer": {
+    "description": "My offer"
+  },
+
+  "proposedPrice": "Proposed Price",
+  "@proposedPrice": {
+    "description": "Proposed price"
+  },
+
+  "description": "Description",
+  "@description": {
+    "description": "Description"
+  },
+
+  "failedToLoadAds": "Failed to load ads",
+  "@failedToLoadAds": {
+    "description": "Failed to load ads message"
+  },
+
+  "taskAdsTitle": "Task Ads",
+  "@taskAdsTitle": {
+    "description": "Task ads screen title"
+  },
+
+  "filterTooltip": "Filter",
+  "@filterTooltip": {
+    "description": "Filter button tooltip"
+  },
+
+  "availableAdsTab": "Available Ads",
+  "@availableAdsTab": {
+    "description": "Available ads tab"
+  },
+
+  "myOffersTab": "My Offers",
+  "@myOffersTab": {
+    "description": "My offers tab"
+  },
+
+  "searchInAds": "Search in ads...",
+  "@searchInAds": {
+    "description": "Search in ads text"
+  },
+
+  "totalAds": "Total Ads",
+  "@totalAds": {
+    "description": "Total ads"
+  },
+
+  "myOffers": "My Offers",
+  "@myOffers": {
+    "description": "My offers"
+  },
+
+  "averagePrice": "Average Price",
+  "@averagePrice": {
+    "description": "Average price"
+  },
+
+  "loadingAds": "Loading ads...",
+  "@loadingAds": {
+    "description": "Loading ads message"
+  },
+
+  "noAvailableAds": "No available ads",
+  "@noAvailableAds": {
+    "description": "No available ads message"
+  },
+
+  "noAvailableAdsDescription": "No task ads are available at the moment",
+  "@noAvailableAdsDescription": {
+    "description": "No available ads description"
+  },
+
+  "filterAds": "Filter Ads",
+  "@filterAds": {
+    "description": "Filter ads title"
+  },
+
+  "minPrice": "Min Price",
+  "@minPrice": {
+    "description": "Min price"
+  },
+
+  "maxPrice": "Max Price",
+  "@maxPrice": {
+    "description": "Max price"
+  },
+
+  "sortBy": "Sort By",
+  "@sortBy": {
+    "description": "Sort by"
+  },
+
+  "sortByCreationDate": "Creation Date",
+  "@sortByCreationDate": {
+    "description": "Sort by creation date"
+  },
+
+  "sortByLowestPrice": "Lowest Price",
+  "@sortByLowestPrice": {
+    "description": "Sort by lowest price"
+  },
+
+  "sortByHighestPrice": "Highest Price",
+  "@sortByHighestPrice": {
+    "description": "Sort by highest price"
+  },
+
+  "sortByOffersCount": "Offers Count",
+  "@sortByOffersCount": {
+    "description": "Sort by offers count"
+  },
+
+  "sortOrder": "Sort Order",
+  "@sortOrder": {
+    "description": "Sort order"
+  },
+
+  "descending": "Descending",
+  "@descending": {
+    "description": "Descending order"
+  },
+
+  "ascending": "Ascending",
+  "@ascending": {
+    "description": "Ascending order"
+  },
+
+  "clearFilters": "Clear Filters",
+  "@clearFilters": {
+    "description": "Clear filters button"
+  },
+
+  "applyFilters": "Apply",
+  "@applyFilters": {
+    "description": "Apply filters button"
+  },
+
+  "offerUpdatedSuccessfully": "Offer updated successfully",
+  "@offerUpdatedSuccessfully": {
+    "description": "Offer updated successfully message"
+  },
+
+  "offerSubmittedSuccessfully": "Offer submitted successfully",
+  "@offerSubmittedSuccessfully": {
+    "description": "Offer submitted successfully message"
+  },
+
+  "failedToSubmitOffer": "Failed to submit offer",
+  "@failedToSubmitOffer": {
+    "description": "Failed to submit offer message"
+  },
+
+  "editOfferTitle": "Edit Offer",
+  "@editOfferTitle": {
+    "description": "Edit offer title"
+  },
+
+  "submitOfferTitle": "Submit Offer",
+  "@submitOfferTitle": {
+    "description": "Submit offer title"
+  },
+
+  "adSummary": "Ad Summary",
+  "@adSummary": {
+    "description": "Ad summary"
+  },
+
+  "priceRangeLabel": "Price Range",
+  "@priceRangeLabel": {
+    "description": "Price range label"
+  },
+
+  "proposedPriceRequired": "Proposed Price *",
+  "@proposedPriceRequired": {
+    "description": "Proposed price required"
+  },
+
+  "enterProposedPrice": "Enter proposed price",
+  "@enterProposedPrice": {
+    "description": "Enter proposed price text"
+  },
+
+  "pleaseEnterProposedPrice": "Please enter proposed price",
+  "@pleaseEnterProposedPrice": {
+    "description": "Please enter proposed price error message"
+  },
+
+  "pleaseEnterValidPrice": "Please enter a valid price",
+  "@pleaseEnterValidPrice": {
+    "description": "Please enter valid price error message"
+  },
+
+  "priceMustBeGreaterThanZero": "Price must be greater than zero",
+  "@priceMustBeGreaterThanZero": {
+    "description": "Price must be greater than zero error message"
+  },
+
+  "priceBelowMinimum": "Price is below minimum ({minPrice} SAR)",
+  "@priceBelowMinimum": {
+    "description": "Price below minimum error message",
+    "placeholders": {
+      "minPrice": {
+        "type": "String"
+      }
+    }
+  },
+
+  "priceAboveMaximum": "Price is above maximum ({maxPrice} SAR)",
+  "@priceAboveMaximum": {
+    "description": "Price above maximum error message",
+    "placeholders": {
+      "maxPrice": {
+        "type": "String"
+      }
+    }
+  },
+
+  "allowedRange": "Allowed Range",
+  "@allowedRange": {
+    "description": "Allowed range"
+  },
+
+  "netEarningsCalculation": "Net Earnings Calculation",
+  "@netEarningsCalculation": {
+    "description": "Net earnings calculation"
+  },
+
+  "offerPrice": "Offer Price",
+  "@offerPrice": {
+    "description": "Offer price"
+  },
+
+  "netEarnings": "Net Earnings",
+  "@netEarnings": {
+    "description": "Net earnings"
+  },
+
+  "offerDescriptionOptional": "Offer Description (Optional)",
+  "@offerDescriptionOptional": {
+    "description": "Offer description optional"
+  },
+
+  "addOfferDescription": "Add a description for your offer (optional)",
+  "@addOfferDescription": {
+    "description": "Add offer description text"
+  },
+
+  "updateOfferButton": "Update Offer",
+  "@updateOfferButton": {
+    "description": "Update offer button"
+  },
+
+  "submitOfferButton": "Submit Offer",
+  "@submitOfferButton": {
+    "description": "Submit offer button"
+  },
+
+  "unexpectedErrorTryAgain": "An unexpected error occurred. Please try again.",
+  "@unexpectedErrorTryAgain": {
+    "description": "Unexpected error try again message"
+  },
+
+  "loginError": "Login Error",
+  "@loginError": {
+    "description": "Login error title"
+  },
+
+  "agreeButton": "OK",
+  "@agreeButton": {
+    "description": "Agree button"
+  },
+
+  "welcomeToDriverApp": "Welcome to the Driver App",
+  "@welcomeToDriverApp": {
+    "description": "Welcome message to driver app"
+  },
+
+  "emailOrUsername": "Email or Username",
+  "@emailOrUsername": {
+    "description": "Email or username label"
+  },
+
+  "enterEmailOrUsername": "Enter your email or username",
+  "@enterEmailOrUsername": {
+    "description": "Enter email or username text"
+  },
+
+  "pleaseEnterEmail": "Please enter email",
+  "@pleaseEnterEmail": {
+    "description": "Please enter email error message"
+  },
+
+  "passwordLabel": "Password",
+  "@passwordLabel": {
+    "description": "Password label"
+  },
+
+  "enterPassword": "Enter password",
+  "@enterPassword": {
+    "description": "Enter password text"
+  },
+
+  "pleaseEnterPassword": "Please enter password",
+  "@pleaseEnterPassword": {
+    "description": "Please enter password error message"
+  },
+
+  "passwordMinLength": "Password must be at least 6 characters",
+  "@passwordMinLength": {
+    "description": "Password minimum length error message"
+  },
+
+  "loginButton": "Login",
+  "@loginButton": {
+    "description": "Login button"
+  },
+
+  "rememberMe": "Remember Me",
+  "@rememberMe": {
+    "description": "Remember me"
+  },
+
+  "forgotPassword": "Forgot Password?",
+  "@forgotPassword": {
+    "description": "Forgot password"
+  },
+
+  "dontHaveAccount": "Don't have an account?",
+  "@dontHaveAccount": {
+    "description": "Don't have account"
+  },
+
+  "createNewAccount": "Create New Account",
+  "@createNewAccount": {
+    "description": "Create new account"
+  },
+
+  "byLoggingInYouAgree": "By logging in, you agree to",
+  "@byLoggingInYouAgree": {
+    "description": "By logging in you agree to"
+  },
+
+  "termsOfService": "Terms of Service",
+  "@termsOfService": {
+    "description": "Terms of service"
+  },
+
+  "and": " and ",
+  "@and": {
+    "description": "And conjunction"
+  },
+
+  "privacyPolicy": "Privacy Policy",
+  "@privacyPolicy": {
+    "description": "Privacy policy"
+  },
+
+  "versionNumber": "Version {version}",
+  "@versionNumber": {
+    "description": "Version number",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+
+  "unexpectedErrorOccurred": "An unexpected error occurred. Please try again.",
+  "@unexpectedErrorOccurred": {
+    "description": "Unexpected error message"
+  },
+
+  "loginErrorTitle": "Login Error",
+  "@loginErrorTitle": {
+    "description": "Login error title"
+  },
+
+  "okButton": "OK",
+  "@okButton": {
+    "description": "OK button"
+  },
+
+  "welcomeToDriverApp": "Welcome to the Driver App",
+  "@welcomeToDriverApp": {
+    "description": "Welcome message to driver app"
+  },
+
+  "emailOrUsernameLabel": "Email or Username",
+  "@emailOrUsernameLabel": {
+    "description": "Email or username field label"
+  },
+
+  "enterEmailOrUsernameHint": "Enter your email or username",
+  "@enterEmailOrUsernameHint": {
+    "description": "Email or username field hint"
+  },
+
+  "pleaseEnterEmailError": "Please enter email",
+  "@pleaseEnterEmailError": {
+    "description": "Please enter email error message"
+  },
+
+  "passwordFieldLabel": "Password",
+  "@passwordFieldLabel": {
+    "description": "Password field label"
+  },
+
+  "enterPasswordHint": "Enter password",
+  "@enterPasswordHint": {
+    "description": "Password field hint"
+  },
+
+  "pleaseEnterPasswordError": "Please enter password",
+  "@pleaseEnterPasswordError": {
+    "description": "Please enter password error message"
+  },
+
+  "passwordMinLengthError": "Password must be at least 6 characters",
+  "@passwordMinLengthError": {
+    "description": "Password minimum length error message"
+  },
+
+  "loginButtonText": "Login",
+  "@loginButtonText": {
+    "description": "Login button text"
+  },
+
+  "rememberMeText": "Remember Me",
+  "@rememberMeText": {
+    "description": "Remember me text"
+  },
+
+  "forgotPasswordText": "Forgot Password?",
+  "@forgotPasswordText": {
+    "description": "Forgot password text"
+  },
+
+  "dontHaveAccountText": "Don't have an account?",
+  "@dontHaveAccountText": {
+    "description": "Don't have account text"
+  },
+
+  "createNewAccountText": "Create New Account",
+  "@createNewAccountText": {
+    "description": "Create new account text"
+  },
+
+  "byLoggingInYouAgreeText": "By logging in, you agree to",
+  "@byLoggingInYouAgreeText": {
+    "description": "Agreement to terms text"
+  },
+
+  "termsOfServiceText": "Terms of Service",
+  "@termsOfServiceText": {
+    "description": "Terms of service text"
+  },
+
+  "andText": " and ",
+  "@andText": {
+    "description": "And conjunction"
+  },
+
+  "privacyPolicyText": "Privacy Policy",
+  "@privacyPolicyText": {
+    "description": "Privacy policy text"
+  },
+
+    "allText": "All",
+  "@allText": {
+    "description": "All text"
+  },
+
+  "failedToLoadRegistrationData": "Failed to load registration data",
+  "@failedToLoadRegistrationData": {
+    "description": "Failed to load registration data error message"
+  },
+
+  "registrationError": "Registration error occurred",
+  "@registrationError": {
+    "description": "Registration error message"
+  },
+
+  "registrationSuccess": "Registration successful!",
+  "@registrationSuccess": {
+    "description": "Registration success message"
+  },
+
+  "verificationLinkSent": "Verification link sent to your email.",
+  "@verificationLinkSent": {
+    "description": "Verification link sent message"
+  },
+
+  "login": "Login",
+  "@login": {
+    "description": "Login text"
+  },
+
+  "createNewAccount": "Create New Account",
+  "@createNewAccount": {
+    "description": "Create new account text"
+  },
+
+  "previous": "Previous",
+  "@previous": {
+    "description": "Previous button text"
+  },
+
+  "forgotPassword": "Forgot Password",
+  "@forgotPassword": {
+    "description": "Forgot password text"
+  },
+
+  "errorOccurred": "Error occurred: {error}",
+  "@errorOccurred": {
+    "description": "General error message",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "Error details"
+      }
+    }
+  },
+
+  "taskExpiredTransferred": "Response time expired, task transferred to another driver",
+  "@taskExpiredTransferred": {
+    "description": "Task expired and transferred message"
+  },
+
+  "viewDetails": "View Details",
+  "@viewDetails": {
+    "description": "View details text"
+  },
+
+  "accept": "Accept",
+  "@accept": {
+    "description": "Accept text"
+  },
+
+  "reject": "Reject",
+  "@reject": {
+    "description": "Reject text"
+  },
+
+  "taskAcceptedSuccessfully": "Task accepted successfully",
+  "@taskAcceptedSuccessfully": {
+    "description": "Task accepted success message"
+  },
+
+  "taskRejected": "Task rejected",
+  "@taskRejected": {
+    "description": "Task rejected message"
+  },
+
+  "arrivedAtPickupPoint": "Arrived at Pickup Point",
+  "@arrivedAtPickupPoint": {
+    "description": "Arrived at pickup point text"
+  },
+
+  "startLoading": "Start Loading",
+  "@startLoading": {
+    "description": "Start loading text"
+  },
+
+  "onTheWay": "On the Way",
+  "@onTheWay": {
+    "description": "On the way text"
+  },
+
+  "arrivedAtDeliveryPoint": "Arrived at Delivery Point",
+  "@arrivedAtDeliveryPoint": {
+    "description": "Arrived at delivery point text"
+  },
+
+  "startUnloading": "Start Unloading",
+  "@startUnloading": {
+    "description": "Start unloading text"
+  },
+
+  "completeTask": "Complete Task",
+  "@completeTask": {
+    "description": "Complete task text"
+  },
+
+  "startTask": "Start Task",
+  "@startTask": {
+    "description": "Start task text"
+  },
+
+  "error": "Error",
+  "@error": {
+    "description": "Error text"
+  },
+
+  "taskNotFound": "Task not found",
+  "@taskNotFound": {
+    "description": "Task not found message"
+  },
+
+  "pickupPoint": "Pickup Point",
+  "@pickupPoint": {
+    "description": "Pickup point text"
+  },
+
+  "deliveryPoint": "Delivery Point",
+  "@deliveryPoint": {
+    "description": "Delivery point text"
+  },
+
+  "openInGoogleMaps": "Open in Google Maps",
+  "@openInGoogleMaps": {
+    "description": "Open in Google Maps text"
+  },
+
+  "ok": "OK",
+  "@ok": {
+    "description": "OK text"
+  },
+
+  "taskAds": "Task Ads",
+  "@taskAds": {
+    "description": "Task ads text"
+  },
+
+  "retry": "Retry",
+  "@retry": {
+    "description": "Retry text"
+  },
+
+  "filterAds": "Filter Ads",
+  "@filterAds": {
+    "description": "Filter ads text"
+  },
+
+  "priceRange": "Price Range",
+  "@priceRange": {
+    "description": "Price range text"
+  },
+
+  "sortBy": "Sort By",
+  "@sortBy": {
+    "description": "Sort by text"
+  },
+
+  "creationDate": "Creation Date",
+  "@creationDate": {
+    "description": "Creation date text"
+  },
+
+  "lowestPrice": "Lowest Price",
+  "@lowestPrice": {
+    "description": "Lowest price text"
+  },
+
+  "highestPrice": "Highest Price",
+  "@highestPrice": {
+    "description": "Highest price text"
+  },
+
+  "offersCount": "Offers Count",
+  "@offersCount": {
+    "description": "Offers count text"
+  },
+
+  "sort": "Sort",
+  "@sort": {
+    "description": "Sort text"
+  },
+
+  "descending": "Descending",
+  "@descending": {
+    "description": "Descending text"
+  },
+
+  "ascending": "Ascending",
+  "@ascending": {
+    "description": "Ascending text"
+  },
+
+  "clearFilters": "Clear Filters",
+  "@clearFilters": {
+    "description": "Clear filters text"
+  },
+
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel text"
+  },
+
+  "apply": "Apply",
+  "@apply": {
+    "description": "Apply text"
+  },
+
+  "acceptTask": "Accept Task",
+  "@acceptTask": {
+    "description": "Accept task text"
+  },
+
+  "confirmAcceptTask": "Are you sure you want to accept this task?",
+  "@confirmAcceptTask": {
+    "description": "Confirm accept task message"
+  },
+
+  "close": "Close",
+  "@close": {
+    "description": "Close text"
+  },
+
+  "allNotificationsMarkedRead": "All notifications marked as read",
+  "@allNotificationsMarkedRead": {
+    "description": "All notifications marked as read message"
+  },
+
+  "notifications": "Notifications",
+  "@notifications": {
+    "description": "Notifications text"
+  },
+
+  "additionalData": "Additional Data",
+  "@additionalData": {
+    "description": "Additional data text"
+  },
+
+  "editProfile": "Edit Profile",
+  "@editProfile": {
+    "description": "Edit profile text"
+  },
+
+  "changePassword": "Change Password",
+  "@changePassword": {
+    "description": "Change password text"
+  },
+
+  "passwordChangedSuccessfully": "Password changed successfully",
+  "@passwordChangedSuccessfully": {
+    "description": "Password changed success message"
+  },
+
+  "profileUpdatedSuccessfully": "Profile updated successfully",
+  "@profileUpdatedSuccessfully": {
+    "description": "Profile updated success message"
+  },
+
+  "updateLocationGPS": "Update GPS Location",
+  "@updateLocationGPS": {
+    "description": "Update GPS location text"
+  },
+
+  "view": "View",
+  "@view": {
+    "description": "View text"
+  },
+
+  "download": "Download",
+  "@download": {
+    "description": "Download text"
+  },
+
+  "open": "Open",
+  "@open": {
+    "description": "Open text"
+  },
+
+  "filterTransactions": "Filter Transactions",
+  "@filterTransactions": {
+    "description": "Filter transactions text"
+  },
+
+  "exit": "Exit",
+  "@exit": {
+    "description": "Exit text"
+  },
+
+
+
+  "appInitializationError": "An error occurred during app initialization. Please try again.",
+  "@appInitializationError": {
+    "description": "App initialization error message"
+  },
+
+  "loadingAds": "Loading ads...",
+  "@loadingAds": {
+    "description": "Loading ads message"
+  },
+
+  "loadingDetails": "Loading details...",
+  "@loadingDetails": {
+    "description": "Loading details message"
+  },
+
+  "loadingOffers": "Loading offers...",
+  "@loadingOffers": {
+    "description": "Loading offers message"
+  },
+
+  "loadingRegistrationData": "Loading registration data...",
+  "@loadingRegistrationData": {
+    "description": "Loading registration data message"
+  },
+
+  "sendingLocation": "Sending location...",
+  "@sendingLocation": {
+    "description": "Sending location message"
+  },
+
+  "updatingTaskStatus": "Updating task status...",
+  "@updatingTaskStatus": {
+    "description": "Updating task status message"
+  },
+
+  "failedToLoadImage": "Failed to load image",
+  "@failedToLoadImage": {
+    "description": "Failed to load image message"
+  },
+
+  "failedToSelectImage": "Failed to select image",
+  "@failedToSelectImage": {
+    "description": "Failed to select image message"
+  },
+
+  "failedToSelectFile": "Failed to select file",
+  "@failedToSelectFile": {
+    "description": "Failed to select file message"
+  },
+
+  "cannotOpenGoogleMaps": "Cannot open Google Maps",
+  "@cannotOpenGoogleMaps": {
+    "description": "Cannot open Google Maps message"
+  },
+
+  "mapOpenError": "Error opening map",
+  "@mapOpenError": {
+    "description": "Map open error message"
+  },
+
+  "undefinedItem": "Undefined item",
+  "@undefinedItem": {
+    "description": "Undefined item text"
+  },
+
+  "noDataToDisplay": "No data to display",
+  "@noDataToDisplay": {
+    "description": "No data to display message"
+  },
+
+  "cannotAccessAdDetails": "Cannot access ad details",
+  "@cannotAccessAdDetails": {
+    "description": "Cannot access ad details message"
+  },
+
+  "adNumber": "Ad #{adId}",
+  "@adNumber": {
+    "description": "Ad number",
+    "placeholders": {
+      "adId": {
+        "type": "String",
+        "description": "Ad ID"
+      }
+    }
+  },
+
+  "fileSelectedSuccessfully": "File selected: {fileName}",
+  "@fileSelectedSuccessfully": {
+    "description": "File selected success message",
+    "placeholders": {
+      "fileName": {
+        "type": "String",
+        "description": "File name"
+      }
+    }
+  },
+
+  "phoneIsWhatsApp": "My phone number is the same as WhatsApp",
+  "@phoneIsWhatsApp": {
+    "description": "Phone is WhatsApp text"
+  },
+
+  "correctBasicDataErrors": "Please correct errors in basic data",
+  "@correctBasicDataErrors": {
+    "description": "Correct basic data errors message"
+  },
+
+  "selectVehicleTypeSize": "Please select vehicle type and size",
+  "@selectVehicleTypeSize": {
+    "description": "Select vehicle type and size message"
+  },
+
+  "fillAllAdditionalFields": "Please fill all required additional information fields",
+  "@fillAllAdditionalFields": {
+    "description": "Fill all additional fields message"
+  },
+
+  "taskDetailsError": "Error fetching task details: {error}",
+  "@taskDetailsError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "registrationErrorOccurred": "An error occurred during registration",
+  "profileUpdateError": "An error occurred while updating profile",
+  "passwordChangeError": "An error occurred while changing password",
+  "locationSendError": "Error sending location: {error}",
+  "@locationSendError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "sentLocationDetails": "Sent location details",
+  "taskHistoryError": "Error fetching task history: {error}",
+  "@taskHistoryError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileSelectionError": "Error selecting file: {error}",
+  "@fileSelectionError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "noteAddedSuccessfully": "Note added successfully",
+  "noteAddError": "Error adding note: {error}",
+  "@noteAddError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "attachmentOpenError": "Error opening attachment: {error}",
+  "@attachmentOpenError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "imageLoadError": "Error loading image: {error}",
+  "@imageLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileDownloadError": "Error downloading file: {error}",
+  "@fileDownloadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileOpenError": "Error opening file: {error}",
+  "@fileOpenError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileOpenedForDownload": "File opened for download",
+  "passwordRequirements": "• At least 8 characters\n• At least one uppercase letter (A-Z)\n• At least one lowercase letter (a-z)\n• At least one number (0-9)",
+  "passwordSecurityTips": "• Don't share your password with anyone\n• Use a strong and unique password\n• Change your password regularly\n• Don't use personal information in your password",
+  "fileViewerComingSoon": "File viewer coming soon",
+  "linkOpenComingSoon": "Link opening coming soon",
+  "allText": "All",
+  "taskOfferAccepted": "Your offer for this task has been accepted!\n\nDo you want to accept the task and start executing it?\n\nAfter acceptance, the task will be officially assigned to you and will appear in your current tasks list.",
+
+  "loadingRegistrationData": "Loading registration data...",
+  "@loadingRegistrationData": {
+    "description": "Loading registration data message"
+  },
+
+  "basicData": "Basic Data",
+  "@basicData": {
+    "description": "Basic data title"
+  },
+
+  "additionalInfo": "Additional Information",
+  "@additionalInfo": {
+    "description": "Additional information title"
+  },
+
+  "reviewAndConfirm": "Review and Confirm",
+  "@reviewAndConfirm": {
+    "description": "Review and confirm title"
+  },
+
+  "fullName": "Full Name",
+  "@fullName": {
+    "description": "Full name label"
+  },
+
+  "fullNameRequired": "Full name is required",
+  "@fullNameRequired": {
+    "description": "Full name required error message"
+  },
+
+  "username": "Username",
+  "@username": {
+    "description": "Username label"
+  },
+
+  "usernameRequired": "Username is required",
+  "@usernameRequired": {
+    "description": "Username required error message"
+  },
+
+  "emailRequired": "Email is required",
+  "@emailRequired": {
+    "description": "Email required error message"
+  },
+
+  "invalidEmail": "Invalid email",
+  "@invalidEmail": {
+    "description": "Invalid email error message"
+  },
+
+  "phoneNumber": "Phone Number",
+  "@phoneNumber": {
+    "description": "Phone number label"
+  },
+
+  "phoneRequired": "Phone number is required",
+  "@phoneRequired": {
+    "description": "Phone required error message"
+  },
+
+  "password": "Password",
+  "@password": {
+    "description": "Password label"
+  },
+
+  "passwordRequired": "Password is required",
+  "@passwordRequired": {
+    "description": "Password required error message"
+  },
+
+  "passwordMinLength8": "Password must be at least 8 characters",
+  "@passwordMinLength8": {
+    "description": "Password minimum length 8 characters error message"
+  },
+
+  "confirmPassword": "Confirm Password",
+  "@confirmPassword": {
+    "description": "Confirm password label"
+  },
+
+  "confirmPasswordRequired": "Confirm password is required",
+  "@confirmPasswordRequired": {
+    "description": "Confirm password required error message"
+  },
+
+  "passwordsDoNotMatch": "Passwords do not match",
+  "@passwordsDoNotMatch": {
+    "description": "Passwords do not match error message"
+  },
+
+  "addressRequired": "Address is required",
+  "@addressRequired": {
+    "description": "Address required error message"
+  },
+
+  "vehicle": "Vehicle",
+  "@vehicle": {
+    "description": "Vehicle label"
+  },
+
+  "selectVehicle": "Select Vehicle",
+  "@selectVehicle": {
+    "description": "Select vehicle text"
+  },
+
+  "vehicleRequired": "Vehicle selection is required",
+  "@vehicleRequired": {
+    "description": "Vehicle required error message"
+  },
+
+  "selectVehicleType": "Select Vehicle Type",
+  "@selectVehicleType": {
+    "description": "Select vehicle type text"
+  },
+
+  "vehicleTypeRequired": "Vehicle type selection is required",
+  "@vehicleTypeRequired": {
+    "description": "Vehicle type required error message"
+  },
+
+  "selectVehicleSize": "Select Vehicle Size",
+  "@selectVehicleSize": {
+    "description": "Select vehicle size text"
+  },
+
+  "vehicleSizeRequired": "Vehicle size selection is required",
+  "@vehicleSizeRequired": {
+    "description": "Vehicle size required error message"
+  },
+
+  "selectTeamOptional": "Select Team (Optional)",
+  "@selectTeamOptional": {
+    "description": "Select team optional text"
+  },
+
+  "whatsapp": "WhatsApp",
+  "@whatsapp": {
+    "description": "WhatsApp label"
+  },
+
+  "phoneIsWhatsAppNumber": "My phone number is the same as WhatsApp",
+  "@phoneIsWhatsAppNumber": {
+    "description": "Phone is WhatsApp number text"
+  },
+
+  "whatsappNumber": "WhatsApp Number",
+  "@whatsappNumber": {
+    "description": "WhatsApp number label"
+  },
+
+  "enterWhatsAppOrSelectPhone": "Please enter WhatsApp number or select that phone is WhatsApp",
+  "@enterWhatsAppOrSelectPhone": {
+    "description": "Enter WhatsApp or select phone message"
+  },
+
+  "requiredAdditionalInfo": "Required Additional Information",
+  "@requiredAdditionalInfo": {
+    "description": "Required additional information title"
+  },
+
+  "fieldRequired": "{fieldName} is required",
+  "@fieldRequired": {
+    "description": "Field required error message",
+    "placeholders": {
+      "fieldName": {
+        "type": "String"
+      }
+    }
+  },
+
+  "mustBeValidNumber": "Must be a valid number",
+  "@mustBeValidNumber": {
+    "description": "Must be valid number error message"
+  },
+
+  "invalidUrl": "Invalid URL",
+  "@invalidUrl": {
+    "description": "Invalid URL error message"
+  },
+
+  "selectOption": "Select {fieldName}",
+  "@selectOption": {
+    "description": "Select option text",
+    "placeholders": {
+      "fieldName": {
+        "type": "String"
+      }
+    }
+  },
+
+  "fileSelected": "File selected",
+  "@fileSelected": {
+    "description": "File selected message"
+  },
+
+  "selectFile": "Tap to select file",
+  "@selectFile": {
+    "description": "Select file text"
+  },
+
+  "dataReview": "Data Review",
+  "@dataReview": {
+    "description": "Data review title"
+  },
+
+  "additionalFields": "Additional Fields",
+  "@additionalFields": {
+    "description": "Additional fields title"
+  },
+
+  "agreeToTerms": "By clicking \"Create Account\" you agree to the Terms of Service and Privacy Policy",
+  "@agreeToTerms": {
+    "description": "Agree to terms text"
+  },
+
+  "verificationEmailSent": "A verification link will be sent to your email to activate your account",
+  "@verificationEmailSent": {
+    "description": "Verification email sent text"
+  },
+
+  "createAccount": "Create Account",
+  "@createAccount": {
+    "description": "Create account text"
+  },
+
+  "next": "Next",
+  "@next": {
+    "description": "Next text"
+  },
+
+  "registrationFailed": "Registration failed",
+  "@registrationFailed": {
+    "description": "Registration failed message"
+  },
+
+  "verificationLinkSent": "Verification link sent to your email.",
+  "@verificationLinkSent": {
+    "description": "Verification link sent message"
+  },
+
+  "checkEmailAndActivate": "Please check your email and activate your account, then return to login.",
+  "@checkEmailAndActivate": {
+    "description": "Check email and activate message"
+  },
+
+  "loginText": "Login",
+  "@loginText": {
+    "description": "Login text"
+  },
+
+  "passwordMismatch": "Passwords do not match",
+  "@passwordMismatch": {
+    "description": "Error message when passwords don't match"
+  },
+
+  "selectVehicle": "Select Vehicle",
+  "@selectVehicle": {
+    "description": "Select vehicle text"
+  },
+
+  "selectVehicleRequired": "Vehicle selection is required",
+  "@selectVehicleRequired": {
+    "description": "Error message when vehicle is not selected"
+  },
+
+  "selectVehicleType": "Select Vehicle Type",
+  "@selectVehicleType": {
+    "description": "Select vehicle type text"
+  },
+
+  "selectVehicleTypeRequired": "Vehicle type selection is required",
+  "@selectVehicleTypeRequired": {
+    "description": "Error message when vehicle type is not selected"
+  },
+
+  "selectVehicleSize": "Select Vehicle Size",
+  "@selectVehicleSize": {
+    "description": "Select vehicle size text"
+  },
+
+  "selectVehicleSizeRequired": "Vehicle size selection is required",
+  "@selectVehicleSizeRequired": {
+    "description": "Error message when vehicle size is not selected"
+  },
+
+  "selectTeam": "Select Team",
+  "@selectTeam": {
+    "description": "Select team text"
+  },
+
+  "selectTeamRequired": "Team selection is required",
+  "@selectTeamRequired": {
+    "description": "Error message when team is not selected"
+  },
+
+  "selectTeamOptional": "Select Team (Optional)",
+  "@selectTeamOptional": {
+    "description": "Select team optional text"
+  },
+
+  "whatsapp": "WhatsApp",
+  "@whatsapp": {
+    "description": "WhatsApp text"
+  },
+
+  "whatsappNumberOptional": "WhatsApp number for communication (Optional)",
+  "@whatsappNumberOptional": {
+    "description": "WhatsApp number optional text"
+  },
+
+  "phoneIsWhatsapp": "My phone number is the same as WhatsApp",
+  "@phoneIsWhatsapp": {
+    "description": "Phone is WhatsApp text"
+  },
+
+  "whatsappNumber": "WhatsApp Number",
+  "@whatsappNumber": {
+    "description": "WhatsApp number text"
+  },
+
+  "whatsappRequired": "Please enter WhatsApp number or select that phone is WhatsApp",
+  "@whatsappRequired": {
+    "description": "Error message when WhatsApp number is not entered"
+  },
+
+  "additionalInfoRequired": "Additional Information Required",
+  "@additionalInfoRequired": {
+    "description": "Additional information required text"
+  },
+
+  "phoneNumberPlaceholder": "Phone Number",
+  "@phoneNumberPlaceholder": {
+    "description": "Phone number placeholder text"
+  },
+
+  "whatsappNumberPlaceholder": "WhatsApp Number",
+  "@whatsappNumberPlaceholder": {
+    "description": "WhatsApp number placeholder text"
+  },
+
+  "sentSuccessfully": "Sent Successfully",
+  "@sentSuccessfully": {
+    "description": "Successfully sent message"
+  },
+
+  "resetLinkSentTo": "Password reset link has been sent to:",
+  "@resetLinkSentTo": {
+    "description": "Reset link sent message"
+  },
+
+  "enterEmailForReset": "Enter your email address and we'll send you a password reset link",
+  "@enterEmailForReset": {
+    "description": "Email entry instructions"
+  },
+
+  "enterYourEmail": "Enter your email address",
+  "@enterYourEmail": {
+    "description": "Email placeholder text"
+  },
+
+  "sendResetLink": "Send Reset Link",
+  "@sendResetLink": {
+    "description": "Send reset link button text"
+  },
+
+  "pleaseEnterEmail": "Please enter your email address",
+  "@pleaseEnterEmail": {
+    "description": "Error message when email is not entered"
+  },
+
+  "pleaseEnterValidEmail": "Please enter a valid email address",
+  "@pleaseEnterValidEmail": {
+    "description": "Error message when email is invalid"
+  },
+
+  "termsAndPrivacyAgreement": "By clicking \"Create Account\" you agree to the Terms of Use and Privacy Policy",
+  "@termsAndPrivacyAgreement": {
+    "description": "Terms and privacy agreement text"
+  },
+
+  "notSpecified": "Not Specified",
+  "@notSpecified": {
+    "description": "Text when value is not specified"
+  },
+
+  "backToLogin": "Back to Login",
+  "@backToLogin": {
+    "description": "Back to login button text"
+  },
+
+  "verificationLinkWillBeSent": "A verification link will be sent to your email to activate your account",
+  "@verificationLinkWillBeSent": {
+    "description": "Verification link message"
+  },
+
+  "transactionHistory": "Transaction History",
+  "@transactionHistory": {
+    "description": "Transaction history title"
+  },
+
+  "filterTransactions": "Filter Transactions",
+  "@filterTransactions": {
+    "description": "Filter transactions title"
+  },
+
+  "all": "All",
+  "@all": {
+    "description": "All word"
+  },
+
+  "deposits": "Deposits",
+  "@deposits": {
+    "description": "Deposits"
+  },
+
+  "withdrawals": "Withdrawals",
+  "@withdrawals": {
+    "description": "Withdrawals"
+  },
+
+  "withAttachments": "With Attachments",
+  "@withAttachments": {
+    "description": "With attachments"
+  },
+
+  "amount": "Amount",
+  "@amount": {
+    "description": "Amount"
+  },
+
+  "type": "Type",
+  "@type": {
+    "description": "Type"
+  },
+
+  "description": "Description",
+  "@description": {
+    "description": "Description"
+  },
+
+  "status": "Status",
+  "@status": {
+    "description": "Status"
+  },
+
+  "date": "Date",
+  "@date": {
+    "description": "Date"
+  },
+
+  "time": "Time",
+  "@time": {
+    "description": "Time"
+  },
+
+  "deposit": "Deposit",
+  "@deposit": {
+    "description": "Deposit"
+  },
+
+  "withdrawal": "Withdrawal",
+  "@withdrawal": {
+    "description": "Withdrawal"
+  },
+
+  "selectDateRange": "Select Date Range",
+  "@selectDateRange": {
+    "description": "Select date range"
+  },
+
+  "referenceNumber": "Reference Number",
+  "@referenceNumber": {
+    "description": "Reference number"
+  },
+
+  "maturityDate": "Maturity Date",
+  "@maturityDate": {
+    "description": "Maturity date"
+  },
+
+  "attachment": "Attachment",
+  "@attachment": {
+    "description": "Attachment"
+  },
+
+  "download": "Download",
+  "@download": {
+    "description": "Download"
+  },
+
+  "open": "Open",
+  "@open": {
+    "description": "Open"
+  },
+
+  "tapToView": "Tap to View",
+  "@tapToView": {
+    "description": "Tap to view"
+  },
+
+  "loadingTransactions": "Loading transactions...",
+  "@loadingTransactions": {
+    "description": "Loading transactions"
+  },
+
+  "noTransactions": "No transactions",
+  "@noTransactions": {
+    "description": "No transactions"
+  },
+
+  "noTransactionsWithAttachments": "No transactions with attachments",
+  "@noTransactionsWithAttachments": {
+    "description": "No transactions with attachments"
+  },
+
+  "failedToLoadImage": "Failed to load image",
+  "@failedToLoadImage": {
+    "description": "Failed to load image"
+  },
+
+  "imageLoadError": "Image load error",
+  "@imageLoadError": {
+    "description": "Image load error"
+  },
+
+  "unexpectedError": "An unexpected error occurred",
+  "@unexpectedError": {
+    "description": "Unexpected error"
+  },
+
+  "tapOpenToViewFile": "Tap \"Open\" to view the file",
+  "@tapOpenToViewFile": {
+    "description": "Tap open to view file"
+  },
+
+  "fileOpenedForDownload": "File opened for download",
+  "@fileOpenedForDownload": {
+    "description": "File opened for download"
+  },
+
+  "fileDownloadError": "File download error",
+  "@fileDownloadError": {
+    "description": "File download error"
+  },
+
+  "fileOpenError": "File open error",
+  "@fileOpenError": {
+    "description": "File open error"
+  },
+
+  "searchInTransactions": "Search in transactions...",
+  "@searchInTransactions": {
+    "description": "Search in transactions text"
+  },
+
+  "noTransactionsFound": "No transactions found matching the search",
+  "@noTransactionsFound": {
+    "description": "No transactions found matching search"
+  },
+
+  "noTransactionsOfType": "No transactions of type",
+  "@noTransactionsOfType": {
+    "description": "No transactions of specific type"
+  },
+
+  "noTransactionsWithAttachmentsDescription": "No transactions found containing images or files",
+  "@noTransactionsWithAttachmentsDescription": {
+    "description": "Description for no transactions with attachments"
+  },
+
+  "attachmentLabel": "Attachment",
+  "@attachmentLabel": {
+    "description": "Attachment label"
+  },
+
+  "referenceNumberLabel": "Reference Number",
+  "@referenceNumberLabel": {
+    "description": "Reference number label"
+  },
+
+  "view": "View",
+  "@view": {
+    "description": "View"
+  },
+
+  "clearFilters": "Clear Filters",
+  "@clearFilters": {
+    "description": "Clear filters"
+  },
+
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel"
+  },
+
+  "apply": "Apply",
+  "@apply": {
+    "description": "Apply"
+  },
+
+  "retry": "Retry",
+  "@retry": {
+    "description": "Retry"
+  },
+
+  "allTransactionsComingSoon": "All transactions coming soon",
+  "@allTransactionsComingSoon": {
+    "description": "All transactions coming soon message"
+  },
+
+  "taskAds": "Task Ads",
+  "@taskAds": {
+    "description": "Task ads screen title"
+  },
+
+  "availableAds": "Available Ads",
+  "@availableAds": {
+    "description": "Available ads tab"
+  },
+
+  "myOffers": "My Offers",
+  "@myOffers": {
+    "description": "My offers tab"
+  },
+
+  "filter": "Filter",
+  "@filter": {
+    "description": "Filter"
+  },
+
+  "refresh": "Refresh",
+  "@refresh": {
+    "description": "Refresh"
+  },
+
+  "searchInAds": "Search in ads...",
+  "@searchInAds": {
+    "description": "Search in ads text"
+  },
+
+  "totalAds": "Total Ads",
+  "@totalAds": {
+    "description": "Total ads"
+  },
+
+  "averagePrice": "Average Price",
+  "@averagePrice": {
+    "description": "Average price"
+  },
+
+  "loadingAds": "Loading ads...",
+  "@loadingAds": {
+    "description": "Loading ads"
+  },
+
+  "failedToLoadAds": "Failed to load ads",
+  "@failedToLoadAds": {
+    "description": "Failed to load ads"
+  },
+
+  "noAdsAvailable": "No ads available",
+  "@noAdsAvailable": {
+    "description": "No ads available"
+  },
+
+  "noAdsAvailableDescription": "No task ads are available at the moment",
+  "@noAdsAvailableDescription": {
+    "description": "Description for no ads available"
+  },
+
+  "filterAds": "Filter Ads",
+  "@filterAds": {
+    "description": "Filter ads"
+  },
+
+  "minPrice": "Min Price",
+  "@minPrice": {
+    "description": "Min price"
+  },
+
+  "maxPrice": "Max Price",
+  "@maxPrice": {
+    "description": "Max price"
+  },
+
+  "sortBy": "Sort By",
+  "@sortBy": {
+    "description": "Sort by"
+  },
+
+  "sortOrder": "Sort Order",
+  "@sortOrder": {
+    "description": "Sort order"
+  },
+
+  "creationDate": "Creation Date",
+  "@creationDate": {
+    "description": "Creation date"
+  },
+
+  "lowestPrice": "Lowest Price",
+  "@lowestPrice": {
+    "description": "Lowest price"
+  },
+
+  "highestPrice": "Highest Price",
+  "@highestPrice": {
+    "description": "Highest price"
+  },
+
+  "offersCount": "Offers Count",
+  "@offersCount": {
+    "description": "Offers count"
+  },
+
+  "descending": "Descending",
+  "@descending": {
+    "description": "Descending"
+  },
+
+  "ascending": "Ascending",
+  "@ascending": {
+    "description": "Ascending"
+  },
+
+  "adDetails": "Ad Details",
+  "@adDetails": {
+    "description": "Ad details"
+  },
+
+  "submittedOffers": "Submitted Offers",
+  "@submittedOffers": {
+    "description": "Submitted offers"
+  },
+
+  "loadingDetails": "Loading details...",
+  "@loadingDetails": {
+    "description": "Loading details"
+  },
+
+  "failedToLoadAdDetails": "Failed to load ad details",
+  "@failedToLoadAdDetails": {
+    "description": "Failed to load ad details"
+  },
+
+  "cannotViewOffers": "You cannot view submitted offers",
+  "@cannotViewOffers": {
+    "description": "Cannot view submitted offers"
+  },
+
+  "mustSubmitOfferFirst": "You must submit an offer first to view other offers",
+  "@mustSubmitOfferFirst": {
+    "description": "Must submit offer first to view others"
+  },
+
+  "noOffersSubmitted": "No offers submitted",
+  "@noOffersSubmitted": {
+    "description": "No offers submitted"
+  },
+
+  "noOffersSubmittedDescription": "No offers have been submitted for this ad yet",
+  "@noOffersSubmittedDescription": {
+    "description": "No offers submitted description"
+  },
+
+  "offerAccepted": "Offer accepted",
+  "@offerAccepted": {
+    "description": "Offer accepted"
+  },
+
+  "editOffer": "Edit Offer",
+  "@editOffer": {
+    "description": "Edit offer"
+  },
+
+  "submitOffer": "Submit Offer",
+  "@submitOffer": {
+    "description": "Submit offer"
+  },
+
+  "acceptTask": "Accept Task",
+  "@acceptTask": {
+    "description": "Accept task"
+  },
+
+  "acceptTaskConfirmation": "Are you sure you want to accept this task?",
+  "@acceptTaskConfirmation": {
+    "description": "Accept task confirmation"
+  },
+
+  "accept": "Accept",
+  "@accept": {
+    "description": "Accept"
+  },
+
+  "taskAcceptedSuccessfully": "Task accepted successfully",
+  "@taskAcceptedSuccessfully": {
+    "description": "Task accepted successfully"
+  },
+
+  "failedToAcceptTask": "Failed to accept task",
+  "@failedToAcceptTask": {
+    "description": "Failed to accept task"
+  },
+
+  "taskDescription": "Task Description",
+  "@taskDescription": {
+    "description": "Task description"
+  },
+
+  "taskDetails": "Task Details",
+  "@taskDetails": {
+    "description": "Task details"
+  },
+
+  "pending": "Pending",
+  "@pending": {
+    "description": "Pending"
+  },
+
+  "accepted": "Accepted",
+  "@accepted": {
+    "description": "Accepted"
+  },
+
+  "rejected": "Rejected",
+  "@rejected": {
+    "description": "Rejected"
+  },
+
+  "proposedPrice": "Proposed Price",
+  "@proposedPrice": {
+    "description": "Proposed price"
+  },
+
+  "description": "Description",
+  "@description": {
+    "description": "Description"
+  },
+
+  "loadingOffers": "Loading offers...",
+  "@loadingOffers": {
+    "description": "Loading offers"
+  },
+
+  "failedToLoadOffers": "Failed to load offers",
+  "@failedToLoadOffers": {
+    "description": "Failed to load offers"
+  },
+
+  "offerUpdatedSuccessfully": "Offer updated successfully",
+  "@offerUpdatedSuccessfully": {
+    "description": "Offer updated successfully"
+  },
+
+  "offerSubmittedSuccessfully": "Offer submitted successfully",
+  "@offerSubmittedSuccessfully": {
+    "description": "Offer submitted successfully"
+  },
+
+  "failedToSubmitOffer": "Failed to submit offer",
+  "@failedToSubmitOffer": {
+    "description": "Failed to submit offer"
+  },
+
+  "errorOccurred": "An error occurred",
+  "@errorOccurred": {
+    "description": "An error occurred"
+  },
+
+  "priceRange": "Price Range",
+  "@priceRange": {
+    "description": "Price range"
+  },
+
+  "proposedPriceRequired": "Proposed Price *",
+  "@proposedPriceRequired": {
+    "description": "Proposed price required"
+  },
+
+  "enterProposedPrice": "Enter proposed price",
+  "@enterProposedPrice": {
+    "description": "Enter proposed price"
+  },
+
+  "pleaseEnterProposedPrice": "Please enter proposed price",
+  "@pleaseEnterProposedPrice": {
+    "description": "Please enter proposed price"
+  },
+
+  "pleaseEnterValidPrice": "Please enter a valid price",
+  "@pleaseEnterValidPrice": {
+    "description": "Please enter valid price"
+  },
+
+  "priceMustBeGreaterThanZero": "Price must be greater than zero",
+  "@priceMustBeGreaterThanZero": {
+    "description": "Price must be greater than zero"
+  },
+
+  "priceBelowMinimum": "Price is below minimum",
+  "@priceBelowMinimum": {
+    "description": "Price below minimum"
+  },
+
+  "priceAboveMaximum": "Price is above maximum",
+  "@priceAboveMaximum": {
+    "description": "Price above maximum"
+  },
+
+  "offerPrice": "Offer Price",
+  "@offerPrice": {
+    "description": "Offer price"
+  },
+
+  "serviceCommission": "Service Commission",
+  "@serviceCommission": {
+    "description": "Service commission"
+  },
+
+  "offerDescriptionOptional": "Offer Description (Optional)",
+  "@offerDescriptionOptional": {
+    "description": "Offer description optional"
+  },
+
+  "updateOffer": "Update Offer",
+  "@updateOffer": {
+    "description": "Update offer"
+  },
+
+  "submitOfferButton": "Submit Offer",
+  "@submitOfferButton": {
+    "description": "Submit offer button"
+  },
+
+  "yourEarnings": "Your Earnings",
+  "@yourEarnings": {
+    "description": "Driver earnings"
+  },
+
+  "quickNavigation": "Quick Navigation",
+  "@quickNavigation": {
+    "description": "Quick Navigation"
+  },
+
+  "contactName": "Contact Name",
+  "@contactName": {
+    "description": "Contact Name"
+  },
+
+  "contactPerson": "Contact Person",
+  "@contactPerson": {
+    "description": "Contact Person"
+  },
+
+  "openInGoogleMaps": "Open in Google Maps",
+  "@openInGoogleMaps": {
+    "description": "Open in Google Maps"
+  },
+
+  "cannotOpenGoogleMaps": "Cannot open Google Maps",
+  "@cannotOpenGoogleMaps": {
+    "description": "Cannot open Google Maps"
+  },
+
+  "mapOpenError": "Error opening map",
+  "@mapOpenError": {
+    "description": "Error opening map"
+  },
+
+  "items": "Items",
+  "@items": {
+    "description": "Items"
+  },
+
+  "unspecifiedItem": "Unspecified item",
+  "@unspecifiedItem": {
+    "description": "Unspecified item"
+  },
+
+  "quantity": "Quantity",
+  "@quantity": {
+    "description": "Quantity"
+  },
+
+  "pendingApproval": "Pending Approval",
+  "@pendingApproval": {
+    "description": "Pending Approval"
+  },
+
+  "confirmStatusUpdate": "Confirm Status Update",
+  "@confirmStatusUpdate": {
+    "description": "Confirm Status Update"
+  },
+
+  "confirmStatusUpdateMessage": "Are you sure you want to update the task status to:",
+  "@confirmStatusUpdateMessage": {
+    "description": "Status update confirmation message"
+  },
+
+  "cannotUndo": "This action cannot be undone.",
+  "@cannotUndo": {
+    "description": "This action cannot be undone"
+  },
+
+  "updatedSuccessfully": "Updated Successfully",
+  "@updatedSuccessfully": {
+    "description": "Updated Successfully"
+  },
+
+  "updateFailed": "Update Failed",
+  "@updateFailed": {
+    "description": "Update Failed"
+  },
+
+  "additionalData": "Additional Data",
+  "@additionalData": {
+    "description": "Additional Data"
+  },
+
+  "arrivedAtPickupPoint": "Arrived at Pickup Point",
+  "@arrivedAtPickupPoint": {
+    "description": "Arrived at Pickup Point"
+  },
+
+  "startLoading": "Start Loading",
+  "@startLoading": {
+    "description": "Start Loading"
+  },
+
+  "onTheWay": "On the Way",
+  "@onTheWay": {
+    "description": "On the Way"
+  },
+
+  "arrivedAtDeliveryPoint": "Arrived at Delivery Point",
+  "@arrivedAtDeliveryPoint": {
+    "description": "Arrived at Delivery Point"
+  },
+
+  "startUnloading": "Start Unloading",
+  "@startUnloading": {
+    "description": "Start Unloading"
+  },
+
+  "completeTask": "Complete Task",
+  "@completeTask": {
+    "description": "Complete Task"
+  },
+
+  "updatingTaskStatus": "Updating task status...",
+  "@updatingTaskStatus": {
+    "description": "Updating task status"
+  },
+
+  "taskStatusUpdatedTo": "Task status updated to: {status}",
+  "@taskStatusUpdatedTo": {
+    "description": "Task status updated to",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+
+  "unexpectedError": "An unexpected error occurred: {error}",
+  "@unexpectedError": {
+    "description": "An unexpected error occurred",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "viewDetails": "View Details",
+  "@viewDetails": {
+    "description": "View Details"
+  },
+
+  "noInternetConnection": "No Internet Connection",
+  "@noInternetConnection": {
+    "description": "No internet connection dialog title"
+  },
+
+  "internetConnectionRequired": "The app requires an internet connection to work properly. Please check your internet connection and try again.",
+  "@internetConnectionRequired": {
+    "description": "Internet connection required message"
+  },
+
+  "retry": "Retry",
+  "@retry": {
+    "description": "Retry button"
+  },
+
+  "exit": "Exit",
+  "@exit": {
+    "description": "Exit app button"
+  },
+
+  "initializationError": "Initialization Error",
+  "@initializationError": {
+    "description": "Initialization error dialog title"
+  },
+
+  "initializationErrorMessage": "An error occurred while initializing the app. Please try again.",
+  "@initializationErrorMessage": {
+    "description": "Initialization error message"
+  },
+
+  "ok": "OK",
+  "@ok": {
+    "description": "OK button"
+  },
+
+  "loading": "Loading...",
+  "@loading": {
+    "description": "Loading message"
+  },
+
+  "version": "Version",
+  "@version": {
+    "description": "Version label"
+  },
+
+  "driversApp": "Drivers App",
+  "@driversApp": {
+    "description": "App description"
+  },
+
+  "taskHistoryTitle": "Task History #{taskId}",
+  "@taskHistoryTitle": {
+    "description": "Task history title",
+    "placeholders": {
+      "taskId": {
+        "type": "String"
+      }
+    }
+  },
+
+  "noTaskHistory": "No task history",
+  "@noTaskHistory": {
+    "description": "No task history message"
+  },
+
+  "addNote": "Add Note",
+  "@addNote": {
+    "description": "Add note title"
+  },
+
+  "writeNoteHere": "Write your note here...",
+  "@writeNoteHere": {
+    "description": "Write note hint text"
+  },
+
+  "attachFile": "Attach File",
+  "@attachFile": {
+    "description": "Attach file button"
+  },
+
+  "add": "Add",
+  "@add": {
+    "description": "Add button"
+  },
+
+  "adding": "Adding...",
+  "@adding": {
+    "description": "Adding message"
+  },
+
+  "errorLoadingTaskHistory": "Error loading task history: {error}",
+  "@errorLoadingTaskHistory": {
+    "description": "Error loading task history message",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "pleaseWriteNote": "Please write a note",
+  "@pleaseWriteNote": {
+    "description": "Please write note message"
+  },
+
+  "noteAddedSuccessfully": "Note added successfully",
+  "@noteAddedSuccessfully": {
+    "description": "Note added successfully message"
+  },
+
+  "failedToAddNote": "Failed to add note",
+  "@failedToAddNote": {
+    "description": "Failed to add note message"
+  },
+
+  "errorAddingNote": "Error adding note: {error}",
+  "@errorAddingNote": {
+    "description": "Error adding note message",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "errorSelectingFile": "Error selecting file: {error}",
+  "@errorSelectingFile": {
+    "description": "Error selecting file message",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "errorOpeningAttachment": "Error opening attachment: {error}",
+  "@errorOpeningAttachment": {
+    "description": "Error opening attachment message",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "download": "Download",
+  "@download": {
+    "description": "Download button"
+  },
+
+  "open": "Open",
+  "@open": {
+    "description": "Open button"
+  },
+
+  "errorLoadingImage": "Error loading image: {error}",
+  "@errorLoadingImage": {
+    "description": "Error loading image message",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "clickOpenToViewFile": "Click \"Open\" to view the file",
+  "@clickOpenToViewFile": {
+    "description": "Click open to view file message"
+  },
+
+  "errorDownloadingFile": "Error downloading file: {error}",
+  "@errorDownloadingFile": {
+    "description": "Error downloading file message",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "errorOpeningFile": "Error opening file: {error}",
+  "@errorOpeningFile": {
+    "description": "Error opening file message",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "minutesAgo": "{minutes} minutes ago",
+  "@minutesAgo": {
+    "description": "Minutes ago",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+
+  "hoursAgo": "{hours} hours ago",
+  "@hoursAgo": {
+    "description": "Hours ago",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+
+  "reject": "Reject",
+  "@reject": {
+    "description": "Reject button"
+  },
+
+  "accept": "Accept",
+  "@accept": {
+    "description": "Accept button"
+  },
+
+  "startLoading": "Start Loading",
+  "@startLoading": {
+    "description": "Start loading"
+  },
+
+  "onTheWay": "On the Way",
+  "@onTheWay": {
+    "description": "On the way"
+  },
+
+  "startUnloading": "Start Unloading",
+  "@startUnloading": {
+    "description": "Start unloading"
+  },
+
+  "daysAgo": "{days} days ago",
+  "@daysAgo": {
+    "description": "Days ago",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+
+  "now": "Now",
+  "@now": {
+    "description": "Now"
+  },
+
+  "taskStatusAssign": "Assigned",
+  "@taskStatusAssign": {
+    "description": "Task status: Assigned"
+  },
+
+  "taskStatusStarted": "Started",
+  "@taskStatusStarted": {
+    "description": "Task status: Started"
+  },
+
+  "taskStatusInPickupPoint": "At Pickup Point",
+  "@taskStatusInPickupPoint": {
+    "description": "Task status: At pickup point"
+  },
+
+  "taskStatusLoading": "Loading",
+  "@taskStatusLoading": {
+    "description": "Task status: Loading"
+  },
+
+  "taskStatusInTheWay": "On the Way",
+  "@taskStatusInTheWay": {
+    "description": "Task status: On the way"
+  },
+
+  "taskStatusInDeliveryPoint": "At Delivery Point",
+  "@taskStatusInDeliveryPoint": {
+    "description": "Task status: At delivery point"
+  },
+
+  "taskStatusUnloading": "Unloading",
+  "@taskStatusUnloading": {
+    "description": "Task status: Unloading"
+  },
+
+  "taskStatusCompleted": "Completed",
+  "@taskStatusCompleted": {
+    "description": "Task status: Completed"
+  },
+
+  "taskStatusCancelled": "Cancelled",
+  "updateLocation": "Update Location",
+  "sendingLocation": "Sending location...",
+  "locationSent": "Location sent",
+  "locationSendError": "Location send error",
+  "importantNotes": "Important Notes:",
+  "checkInboxAndSpam": "• Check your inbox and spam folder",
+  "linkValidOneHour": "• The link is valid for one hour only",
+  "noEmailRetry": "• If you don't receive the email within 5 minutes, you can try again",
+  "backToLogin": "Back to Login",
+  "taskStages": "Task Stages",
+  "taskAssignedToDriver": "Task assigned to driver",
+  "driverStartedTask": "Driver started the task",
+  "driverArrivedPickup": "Driver arrived at pickup point",
+  "loadingGoods": "Loading goods",
+  "driverOnWayDelivery": "Driver on the way to delivery point",
+  "driverArrivedDelivery": "Driver arrived at delivery point",
+  "unloadingGoods": "Unloading goods",
+  "taskCompletedSuccessfully": "Task completed successfully",
+  "notifications": "Notifications",
+  "markAllAsRead": "Mark all as read",
+  "noNotifications": "No notifications",
+  "newNotificationsWillAppearHere": "New notifications will appear here",
+  "close": "Close",
+  "allNotificationsMarkedAsRead": "All notifications marked as read",
+  "failedToUpdateNotifications": "Failed to update notifications",
+  "newLabel": "New",
+  "now": "Now",
+  "minutesAgo": "{minutes} minutes ago",
+  "hoursAgo": "{hours} hours ago",
+  "daysAgo": "{days} days ago",
+  "dayAgo": "1 day ago",
+  "daysAgoPlural": "days ago",
+  "hourAgo": "1 hour ago",
+  "hoursAgoPlural": "hours ago",
+  "minuteAgo": "1 minute ago",
+  "minutesAgoPlural": "minutes ago",
+  "@taskStatusCancelled": {
+    "description": "Task status: Cancelled"
+  }
+
 }

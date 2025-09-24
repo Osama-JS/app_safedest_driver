@@ -79,6 +79,10 @@ class _TasksScreenState extends State<TasksScreen>
         ],
         bottom: TabBar(
           controller: _tabController,
+          labelColor: Colors.white, // لون النص للتبويب المحدد
+          unselectedLabelColor: Colors.white
+              .withValues(alpha: 0.7), // لون النص للتبويبات غير المحددة
+          indicatorColor: Colors.white, // لون المؤشر
           tabs: [
             Tab(text: l10n.availableTasks),
             Tab(text: l10n.currentTasks),
@@ -124,7 +128,7 @@ class _TasksScreenState extends State<TasksScreen>
                 const Icon(Icons.error_outline, size: 64, color: Colors.red),
                 const SizedBox(height: 16),
                 Text(
-                  taskService.errorMessage ?? l10n.unexpectedError,
+                  taskService.errorMessage ?? l10n.unexpectedErrorOccurred,
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontSize: 16),
                 ),

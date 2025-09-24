@@ -1,9 +1,8 @@
 class AppConfig {
   // API Configuration
-  static const String baseUrl =
-      'http://192.168.0.186/safedestssss/public/api'; // For Devlober
+  // static const String baseUrl = 'http://192.168.0.186/safedestssss/public/api'; // For Devlober
   // static const String baseUrl = 'https://tester.safedest.com/admin/tasks/api'; // For Tester
-  // static const String baseUrl = 'https://o.safedest.com/m/api'; // For Production
+  static const String baseUrl = 'https://o.safedest.com/api'; // For Production
 
   // App Information
   static const String appName = 'SafeDests Driver';
@@ -14,6 +13,8 @@ class AppConfig {
   static const String logoutEndpoint = '/driver/logout';
   static const String profileEndpoint = '/driver/profile';
   static const String updateProfileEndpoint = '/driver/profile';
+  static const String additionalDataEndpoint =
+      '/driver/profile/additional-data';
   static const String changePasswordEndpoint = '/driver/change-password';
   static const String refreshTokenEndpoint = '/driver/refresh-token';
   static const String forgotPasswordEndpoint = '/driver/forgot-password';
@@ -56,7 +57,7 @@ class AppConfig {
   static const String deviceIdKey = 'device_id';
 
   // Location Settings
-  static const double locationUpdateInterval = 30.0; // seconds
+  static const double locationUpdateInterval = 180.0; // seconds (3 minutes)
   static const double minDistanceFilter = 10.0; // meters
 
   // UI Settings
@@ -116,6 +117,11 @@ class AppConfig {
   static String getStorageUrl(String filePath) {
     // إزالة /api من baseUrl للحصول على رابط الملفات
     final storageBaseUrl = baseUrl.replaceAll('/api', '');
-    return '$storageBaseUrl/storage/$filePath';
+
+    if (filePath.startsWith('storage/')) {
+      return '$storageBaseUrl/$filePath';
+    } else {
+      return '$storageBaseUrl/storage/$filePath';
+    }
   }
 }

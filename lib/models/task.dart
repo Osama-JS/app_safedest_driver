@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import '../l10n/generated/app_localizations.dart';
+
 class Task {
   final int id;
   final String? customerName;
@@ -19,6 +22,7 @@ class Task {
   final TaskPoint? deliveryPoint;
   final List<TaskItem>? items;
   final String? specialInstructions;
+  final Map<String, dynamic>? additionalData;
 
   // حساب مستحقات السائق (السعر - العمولة)
   double get driverEarnings => totalPrice - commission;
@@ -44,6 +48,7 @@ class Task {
     this.deliveryPoint,
     this.items,
     this.specialInstructions,
+    this.additionalData,
   });
 
   factory Task.fromJson(Map<String, dynamic> json) {
@@ -82,6 +87,10 @@ class Task {
               .toList()
           : null,
       specialInstructions: _parseToString(json['special_instructions']),
+      additionalData: json['additional_data'] != null &&
+              json['additional_data'] is Map<String, dynamic>
+          ? Map<String, dynamic>.from(json['additional_data'])
+          : null,
     );
   }
 
@@ -141,6 +150,7 @@ class Task {
       'delivery_point': deliveryPoint?.toJson(),
       'items': items?.map((item) => item.toJson()).toList(),
       'special_instructions': specialInstructions,
+      'additional_data': additionalData,
     };
   }
 
@@ -163,6 +173,7 @@ class Task {
     TaskPoint? deliveryPoint,
     List<TaskItem>? items,
     String? specialInstructions,
+    Map<String, dynamic>? additionalData,
   }) {
     return Task(
       id: id ?? this.id,
@@ -183,6 +194,7 @@ class Task {
       deliveryPoint: deliveryPoint ?? this.deliveryPoint,
       items: items ?? this.items,
       specialInstructions: specialInstructions ?? this.specialInstructions,
+      additionalData: additionalData ?? this.additionalData,
     );
   }
 
@@ -341,6 +353,31 @@ extension TaskStatusExtension on TaskStatus {
         return 'مكتملة';
       case TaskStatus.cancelled:
         return 'ملغية';
+    }
+  }
+
+  String getLocalizedDisplayName(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    switch (this) {
+      case TaskStatus.assign:
+        return l10n.taskStatusAssign;
+      case TaskStatus.started:
+        return l10n.taskStatusStarted;
+      case TaskStatus.inPickupPoint:
+        return l10n.taskStatusInPickupPoint;
+      case TaskStatus.loading:
+        return l10n.taskStatusLoading;
+      case TaskStatus.inTheWay:
+        return l10n.taskStatusInTheWay;
+      case TaskStatus.inDeliveryPoint:
+        return l10n.taskStatusInDeliveryPoint;
+      case TaskStatus.unloading:
+        return l10n.taskStatusUnloading;
+      case TaskStatus.completed:
+        return l10n.taskStatusCompleted;
+      case TaskStatus.cancelled:
+        return l10n.taskStatusCancelled;
     }
   }
 

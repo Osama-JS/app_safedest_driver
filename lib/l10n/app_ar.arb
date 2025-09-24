@@ -676,6 +676,8 @@
     "description": "عنوان المهام الأخيرة"
   },
 
+
+
   "viewAll": "عرض الكل",
   "@viewAll": {
     "description": "زر عرض الكل"
@@ -1432,5 +1434,2986 @@
   "totalEarnings": "إجمالي الأرباح",
   "@totalEarnings": {
     "description": "تسمية إجمالي الأرباح"
+  },
+
+  "notificationsTitle": "الإشعارات",
+  "@notificationsTitle": {
+    "description": "عنوان شاشة الإشعارات"
+  },
+
+  "markAllAsRead": "تحديد الكل كمقروء",
+  "@markAllAsRead": {
+    "description": "تلميح زر تحديد جميع الإشعارات كمقروءة"
+  },
+
+  "noNotifications": "لا توجد إشعارات",
+  "@noNotifications": {
+    "description": "رسالة عدم وجود إشعارات"
+  },
+
+  "newNotificationsWillAppearHere": "ستظهر الإشعارات الجديدة هنا",
+  "@newNotificationsWillAppearHere": {
+    "description": "وصف عدم وجود إشعارات"
+  },
+
+  "newBadge": "جديد",
+  "@newBadge": {
+    "description": "شارة الإشعار الجديد"
+  },
+
+  "closeDialog": "إغلاق",
+  "@closeDialog": {
+    "description": "زر إغلاق الحوار"
+  },
+
+  "allNotificationsMarkedAsRead": "تم تحديد جميع الإشعارات كمقروءة",
+  "@allNotificationsMarkedAsRead": {
+    "description": "رسالة نجاح تحديد جميع الإشعارات كمقروءة"
+  },
+
+  "failedToUpdateNotifications": "فشل في تحديث الإشعارات",
+  "@failedToUpdateNotifications": {
+    "description": "رسالة فشل تحديث الإشعارات"
+  },
+
+  "dayAgo": "يوم",
+  "@dayAgo": {
+    "description": "وحدة يوم مضى"
+  },
+
+  "daysAgo": "أيام",
+  "@daysAgo": {
+    "description": "وحدة أيام مضت"
+  },
+
+  "hourAgo": "ساعة",
+  "@hourAgo": {
+    "description": "وحدة ساعة مضت"
+  },
+
+  "hoursAgo": "ساعات",
+  "@hoursAgo": {
+    "description": "وحدة ساعات مضت"
+  },
+
+  "minuteAgo": "دقيقة",
+  "@minuteAgo": {
+    "description": "وحدة دقيقة مضت"
+  },
+
+  "minutesAgo": "دقائق",
+  "@minutesAgo": {
+    "description": "وحدة دقائق مضت"
+  },
+
+  "justNow": "الآن",
+  "@justNow": {
+    "description": "الآن - للوقت الحالي"
+  },
+
+  "ago": "مضت",
+  "@ago": {
+    "description": "كلمة مضت"
+  },
+
+  "since": "منذ",
+  "@since": {
+    "description": "كلمة منذ"
+  },
+
+  "taskDetailError": "خطأ في جلب تفاصيل المهمة",
+  "@taskDetailError": {
+    "description": "رسالة خطأ جلب تفاصيل المهمة"
+  },
+
+  "errorTitle": "خطأ",
+  "@errorTitle": {
+    "description": "عنوان خطأ"
+  },
+
+  "taskNotFound": "لم يتم العثور على المهمة",
+  "@taskNotFound": {
+    "description": "رسالة عدم العثور على المهمة"
+  },
+
+  "taskHistory": "سجل المهمة",
+  "@taskHistory": {
+    "description": "تلميح سجل المهمة"
+  },
+
+  "taskNumber": "مهمة #{taskId}",
+  "@taskNumber": {
+    "description": "رقم المهمة",
+    "placeholders": {
+      "taskId": {
+        "type": "String"
+      }
+    }
+  },
+
+  "yourEarnings": "مستحقاتك",
+  "@yourEarnings": {
+    "description": "تسمية مستحقات السائق"
+  },
+
+  "quickNavigation": "التنقل السريع",
+  "@quickNavigation": {
+    "description": "عنوان التنقل السريع"
+  },
+
+  "pickupLocation": "نقطة الاستلام",
+  "@pickupLocation": {
+    "description": "نقطة الاستلام"
+  },
+
+  "deliveryLocation": "نقطة التسليم",
+  "@deliveryLocation": {
+    "description": "نقطة التسليم"
+  },
+
+  "contactPersonName": "اسم المسؤول",
+  "@contactPersonName": {
+    "description": "اسم المسؤول"
+  },
+
+  "phoneNumber": "رقم الهاتف",
+  "@phoneNumber": {
+    "description": "رقم الهاتف"
+  },
+
+  "openInGoogleMaps": "فتح في خرائط جوجل",
+  "@openInGoogleMaps": {
+    "description": "زر فتح في خرائط جوجل"
+  },
+
+  "items": "العناصر",
+  "@items": {
+    "description": "العناصر"
+  },
+
+  "unspecifiedItem": "عنصر غير محدد",
+  "@unspecifiedItem": {
+    "description": "عنصر غير محدد"
+  },
+
+  "quantity": "الكمية",
+  "@quantity": {
+    "description": "الكمية"
+  },
+
+  "awaitingApproval": "في انتظار الموافقة",
+  "@awaitingApproval": {
+    "description": "في انتظار الموافقة"
+  },
+
+  "startTask": "بدء المهمة",
+  "@startTask": {
+    "description": "زر بدء المهمة"
+  },
+
+  "arrivedAtPickupPoint": "وصلت لنقطة الاستلام",
+  "@arrivedAtPickupPoint": {
+    "description": "زر وصلت لنقطة الاستلام"
+  },
+
+  "startLoadingGoods": "بدء التحميل",
+  "@startLoadingGoods": {
+    "description": "زر بدء التحميل"
+  },
+
+  "onTheWayToDelivery": "في الطريق",
+  "@onTheWayToDelivery": {
+    "description": "زر في الطريق"
+  },
+
+  "arrivedAtDeliveryPoint": "وصلت لنقطة التسليم",
+  "@arrivedAtDeliveryPoint": {
+    "description": "زر وصلت لنقطة التسليم"
+  },
+
+  "startUnloadingGoods": "بدء التفريغ",
+  "@startUnloadingGoods": {
+    "description": "زر بدء التفريغ"
+  },
+
+  "completeTaskButton": "إكمال المهمة",
+  "@completeTaskButton": {
+    "description": "زر إكمال المهمة"
+  },
+
+  "cannotOpenGoogleMaps": "لا يمكن فتح خرائط جوجل",
+  "@cannotOpenGoogleMaps": {
+    "description": "رسالة عدم القدرة على فتح خرائط جوجل"
+  },
+
+  "mapOpenError": "حدث خطأ في فتح الخريطة",
+  "@mapOpenError": {
+    "description": "رسالة خطأ فتح الخريطة"
+  },
+
+  "confirmStatusUpdate": "تأكيد تحديث الحالة",
+  "@confirmStatusUpdate": {
+    "description": "عنوان تأكيد تحديث الحالة"
+  },
+
+  "confirmStatusUpdateMessage": "هل أنت متأكد من تحديث حالة المهمة إلى:",
+  "@confirmStatusUpdateMessage": {
+    "description": "رسالة تأكيد تحديث الحالة"
+  },
+
+  "cannotUndoAction": "لا يمكن التراجع عن هذا الإجراء.",
+  "@cannotUndoAction": {
+    "description": "تحذير عدم إمكانية التراجع"
+  },
+
+  "confirmButton": "تأكيد",
+  "@confirmButton": {
+    "description": "زر التأكيد"
+  },
+
+  "updatingTaskStatus": "جاري تحديث حالة المهمة...",
+  "@updatingTaskStatus": {
+    "description": "رسالة جاري تحديث حالة المهمة"
+  },
+
+  "unexpectedErrorOccurred": "حدث خطأ غير متوقع",
+  "@unexpectedErrorOccurred": {
+    "description": "رسالة خطأ غير متوقع"
+  },
+
+  "updateSuccessful": "تم التحديث بنجاح",
+  "@updateSuccessful": {
+    "description": "رسالة نجاح التحديث"
+  },
+
+  "taskStatusUpdatedTo": "تم تحديث حالة المهمة إلى: {statusName}",
+  "@taskStatusUpdatedTo": {
+    "description": "رسالة تحديث حالة المهمة",
+    "placeholders": {
+      "statusName": {
+        "type": "String"
+      }
+    }
+  },
+
+  "okButton": "حسناً",
+  "@okButton": {
+    "description": "زر حسناً"
+  },
+
+  "updateFailed": "فشل في التحديث",
+  "@updateFailed": {
+    "description": "رسالة فشل التحديث"
+  },
+
+  "failedToLoadAdDetails": "فشل في تحميل تفاصيل الإعلان",
+  "@failedToLoadAdDetails": {
+    "description": "رسالة فشل تحميل تفاصيل الإعلان"
+  },
+
+  "adNumber": "إعلان #{adId}",
+  "@adNumber": {
+    "description": "رقم الإعلان",
+    "placeholders": {
+      "adId": {
+        "type": "String"
+      }
+    }
+  },
+
+  "refreshTooltip": "تحديث",
+  "@refreshTooltip": {
+    "description": "تلميح زر التحديث"
+  },
+
+  "adDetailsTab": "تفاصيل الإعلان",
+  "@adDetailsTab": {
+    "description": "تبويب تفاصيل الإعلان"
+  },
+
+  "submittedOffersTab": "العروض المقدمة",
+  "@submittedOffersTab": {
+    "description": "تبويب العروض المقدمة"
+  },
+
+  "loadingDetails": "جاري تحميل التفاصيل...",
+  "@loadingDetails": {
+    "description": "رسالة جاري تحميل التفاصيل"
+  },
+
+  "retryButton": "إعادة المحاولة",
+  "@retryButton": {
+    "description": "زر إعادة المحاولة"
+  },
+
+  "noDataToDisplay": "لا توجد بيانات للعرض",
+  "@noDataToDisplay": {
+    "description": "رسالة عدم وجود بيانات للعرض"
+  },
+
+  "cannotViewSubmittedOffers": "لا يمكنك عرض العروض المقدمة",
+  "@cannotViewSubmittedOffers": {
+    "description": "رسالة عدم إمكانية عرض العروض المقدمة"
+  },
+
+  "mustSubmitOfferFirst": "يجب تقديم عرض أولاً لعرض العروض الأخرى",
+  "@mustSubmitOfferFirst": {
+    "description": "رسالة وجوب تقديم عرض أولاً"
+  },
+
+  "noOffersSubmitted": "لا توجد عروض مقدمة",
+  "@noOffersSubmitted": {
+    "description": "رسالة عدم وجود عروض مقدمة"
+  },
+
+  "noOffersSubmittedYet": "لم يتم تقديم أي عروض لهذا الإعلان بعد",
+  "@noOffersSubmittedYet": {
+    "description": "وصف عدم وجود عروض مقدمة"
+  },
+
+  "creationDate": "تاريخ الإنشاء",
+  "@creationDate": {
+    "description": "تاريخ الإنشاء"
+  },
+
+  "offersCount": "عدد العروض",
+  "@offersCount": {
+    "description": "عدد العروض"
+  },
+
+  "offerAccepted": "تم قبول عرض",
+  "@offerAccepted": {
+    "description": "رسالة تم قبول عرض"
+  },
+
+  "editOffer": "تعديل العرض",
+  "@editOffer": {
+    "description": "زر تعديل العرض"
+  },
+
+  "submitOffer": "تقديم عرض",
+  "@submitOffer": {
+    "description": "زر تقديم عرض"
+  },
+
+  "acceptTask": "قبول المهمة",
+  "@acceptTask": {
+    "description": "زر قبول المهمة"
+  },
+
+  "acceptTaskConfirmTitle": "قبول المهمة",
+  "@acceptTaskConfirmTitle": {
+    "description": "عنوان تأكيد قبول المهمة"
+  },
+
+  "acceptTaskConfirmMessage": "هل أنت متأكد من رغبتك في قبول هذه المهمة؟",
+  "@acceptTaskConfirmMessage": {
+    "description": "رسالة تأكيد قبول المهمة"
+  },
+
+  "acceptButton": "قبول",
+  "@acceptButton": {
+    "description": "زر القبول"
+  },
+
+  "taskAcceptedSuccessfully": "تم قبول المهمة بنجاح",
+  "@taskAcceptedSuccessfully": {
+    "description": "رسالة نجاح قبول المهمة"
+  },
+
+  "failedToAcceptTask": "فشل في قبول المهمة",
+  "@failedToAcceptTask": {
+    "description": "رسالة فشل قبول المهمة"
+  },
+
+  "statusRunning": "جاري",
+  "@statusRunning": {
+    "description": "حالة جاري"
+  },
+
+  "statusClosed": "مغلق",
+  "@statusClosed": {
+    "description": "حالة مغلق"
+  },
+
+  "taskDescription": "وصف المهمة",
+  "@taskDescription": {
+    "description": "وصف المهمة"
+  },
+
+  "priceRange": "نطاق الأسعار",
+  "@priceRange": {
+    "description": "نطاق الأسعار"
+  },
+
+  "fromPrice": "من {price} ر.س",
+  "@fromPrice": {
+    "description": "من السعر",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+
+  "toPrice": "إلى {price} ر.س",
+  "@toPrice": {
+    "description": "إلى السعر",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+
+  "taskDetails": "تفاصيل المهمة",
+  "@taskDetails": {
+    "description": "تفاصيل المهمة"
+  },
+
+  "vehicleSize": "حجم المركبة",
+  "@vehicleSize": {
+    "description": "حجم المركبة"
+  },
+
+  "commissionAndTaxInfo": "معلومات العمولة والضرائب",
+  "@commissionAndTaxInfo": {
+    "description": "معلومات العمولة والضرائب"
+  },
+
+  "serviceCommission": "عمولة الخدمة",
+  "@serviceCommission": {
+    "description": "عمولة الخدمة"
+  },
+
+  "vatTax": "ضريبة القيمة المضافة",
+  "@vatTax": {
+    "description": "ضريبة القيمة المضافة"
+  },
+
+  "statusPending": "في الانتظار",
+  "@statusPending": {
+    "description": "حالة في الانتظار"
+  },
+
+  "statusAccepted": "مقبول",
+  "@statusAccepted": {
+    "description": "حالة مقبول"
+  },
+
+  "statusRejected": "مرفوض",
+  "@statusRejected": {
+    "description": "حالة مرفوض"
+  },
+
+  "myOffer": "عرضي",
+  "@myOffer": {
+    "description": "عرضي"
+  },
+
+  "proposedPrice": "السعر المقترح",
+  "@proposedPrice": {
+    "description": "السعر المقترح"
+  },
+
+  "description": "الوصف",
+  "@description": {
+    "description": "الوصف"
+  },
+
+  "failedToLoadAds": "فشل في تحميل الإعلانات",
+  "@failedToLoadAds": {
+    "description": "رسالة فشل تحميل الإعلانات"
+  },
+
+  "taskAdsTitle": "إعلانات المهام",
+  "@taskAdsTitle": {
+    "description": "عنوان شاشة إعلانات المهام"
+  },
+
+  "filterTooltip": "فلترة",
+  "@filterTooltip": {
+    "description": "تلميح زر الفلترة"
+  },
+
+  "availableAdsTab": "الإعلانات المتاحة",
+  "@availableAdsTab": {
+    "description": "تبويب الإعلانات المتاحة"
+  },
+
+  "myOffersTab": "عروضي",
+  "@myOffersTab": {
+    "description": "تبويب عروضي"
+  },
+
+  "searchInAds": "البحث في الإعلانات...",
+  "@searchInAds": {
+    "description": "نص البحث في الإعلانات"
+  },
+
+  "totalAds": "إجمالي الإعلانات",
+  "@totalAds": {
+    "description": "إجمالي الإعلانات"
+  },
+
+  "myOffers": "عروضي",
+  "@myOffers": {
+    "description": "عروضي"
+  },
+
+  "averagePrice": "متوسط السعر",
+  "@averagePrice": {
+    "description": "متوسط السعر"
+  },
+
+  "loadingAds": "جاري تحميل الإعلانات...",
+  "@loadingAds": {
+    "description": "رسالة جاري تحميل الإعلانات"
+  },
+
+  "noAvailableAds": "لا توجد إعلانات متاحة",
+  "@noAvailableAds": {
+    "description": "رسالة عدم وجود إعلانات متاحة"
+  },
+
+  "noAvailableAdsDescription": "لا توجد إعلانات مهام متاحة في الوقت الحالي",
+  "@noAvailableAdsDescription": {
+    "description": "وصف عدم وجود إعلانات متاحة"
+  },
+
+  "filterAds": "فلترة الإعلانات",
+  "@filterAds": {
+    "description": "عنوان فلترة الإعلانات"
+  },
+
+  "minPrice": "أقل سعر",
+  "@minPrice": {
+    "description": "أقل سعر"
+  },
+
+  "maxPrice": "أعلى سعر",
+  "@maxPrice": {
+    "description": "أعلى سعر"
+  },
+
+  "sortBy": "ترتيب حسب",
+  "@sortBy": {
+    "description": "ترتيب حسب"
+  },
+
+  "sortByCreationDate": "تاريخ الإنشاء",
+  "@sortByCreationDate": {
+    "description": "ترتيب حسب تاريخ الإنشاء"
+  },
+
+  "sortByLowestPrice": "أقل سعر",
+  "@sortByLowestPrice": {
+    "description": "ترتيب حسب أقل سعر"
+  },
+
+  "sortByHighestPrice": "أعلى سعر",
+  "@sortByHighestPrice": {
+    "description": "ترتيب حسب أعلى سعر"
+  },
+
+  "sortByOffersCount": "عدد العروض",
+  "@sortByOffersCount": {
+    "description": "ترتيب حسب عدد العروض"
+  },
+
+  "sortOrder": "ترتيب",
+  "@sortOrder": {
+    "description": "ترتيب"
+  },
+
+  "descending": "تنازلي",
+  "@descending": {
+    "description": "ترتيب تنازلي"
+  },
+
+  "ascending": "تصاعدي",
+  "@ascending": {
+    "description": "ترتيب تصاعدي"
+  },
+
+  "clearFilters": "مسح الفلاتر",
+  "@clearFilters": {
+    "description": "زر مسح الفلاتر"
+  },
+
+  "applyFilters": "تطبيق",
+  "@applyFilters": {
+    "description": "زر تطبيق الفلاتر"
+  },
+
+  "offerUpdatedSuccessfully": "تم تحديث العرض بنجاح",
+  "@offerUpdatedSuccessfully": {
+    "description": "رسالة نجاح تحديث العرض"
+  },
+
+  "offerSubmittedSuccessfully": "تم تقديم العرض بنجاح",
+  "@offerSubmittedSuccessfully": {
+    "description": "رسالة نجاح تقديم العرض"
+  },
+
+  "failedToSubmitOffer": "فشل في تقديم العرض",
+  "@failedToSubmitOffer": {
+    "description": "رسالة فشل تقديم العرض"
+  },
+
+  "editOfferTitle": "تعديل العرض",
+  "@editOfferTitle": {
+    "description": "عنوان تعديل العرض"
+  },
+
+  "submitOfferTitle": "تقديم عرض",
+  "@submitOfferTitle": {
+    "description": "عنوان تقديم عرض"
+  },
+
+  "adSummary": "ملخص الإعلان",
+  "@adSummary": {
+    "description": "ملخص الإعلان"
+  },
+
+  "priceRangeLabel": "النطاق السعري",
+  "@priceRangeLabel": {
+    "description": "تسمية النطاق السعري"
+  },
+
+  "proposedPriceRequired": "السعر المقترح *",
+  "@proposedPriceRequired": {
+    "description": "السعر المقترح مطلوب"
+  },
+
+  "enterProposedPrice": "أدخل السعر المقترح",
+  "@enterProposedPrice": {
+    "description": "نص إدخال السعر المقترح"
+  },
+
+  "pleaseEnterProposedPrice": "يرجى إدخال السعر المقترح",
+  "@pleaseEnterProposedPrice": {
+    "description": "رسالة خطأ عدم إدخال السعر المقترح"
+  },
+
+  "pleaseEnterValidPrice": "يرجى إدخال سعر صحيح",
+  "@pleaseEnterValidPrice": {
+    "description": "رسالة خطأ سعر غير صحيح"
+  },
+
+  "priceMustBeGreaterThanZero": "يجب أن يكون السعر أكبر من صفر",
+  "@priceMustBeGreaterThanZero": {
+    "description": "رسالة خطأ السعر يجب أن يكون أكبر من صفر"
+  },
+
+  "priceBelowMinimum": "السعر أقل من الحد الأدنى ({minPrice} ر.س)",
+  "@priceBelowMinimum": {
+    "description": "رسالة خطأ السعر أقل من الحد الأدنى",
+    "placeholders": {
+      "minPrice": {
+        "type": "String"
+      }
+    }
+  },
+
+  "priceAboveMaximum": "السعر أعلى من الحد الأقصى ({maxPrice} ر.س)",
+  "@priceAboveMaximum": {
+    "description": "رسالة خطأ السعر أعلى من الحد الأقصى",
+    "placeholders": {
+      "maxPrice": {
+        "type": "String"
+      }
+    }
+  },
+
+  "allowedRange": "النطاق المسموح",
+  "@allowedRange": {
+    "description": "النطاق المسموح"
+  },
+
+  "netEarningsCalculation": "حساب صافي المستحقات",
+  "@netEarningsCalculation": {
+    "description": "حساب صافي المستحقات"
+  },
+
+  "offerPrice": "سعر العرض",
+  "@offerPrice": {
+    "description": "سعر العرض"
+  },
+
+  "netEarnings": "صافي المستحقات",
+  "@netEarnings": {
+    "description": "صافي المستحقات"
+  },
+
+  "offerDescriptionOptional": "وصف العرض (اختياري)",
+  "@offerDescriptionOptional": {
+    "description": "وصف العرض اختياري"
+  },
+
+  "addOfferDescription": "أضف وصفاً لعرضك (اختياري)",
+  "@addOfferDescription": {
+    "description": "نص إضافة وصف للعرض"
+  },
+
+  "updateOfferButton": "تحديث العرض",
+  "@updateOfferButton": {
+    "description": "زر تحديث العرض"
+  },
+
+  "submitOfferButton": "تقديم العرض",
+  "@submitOfferButton": {
+    "description": "زر تقديم العرض"
+  },
+
+  "unexpectedErrorTryAgain": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.",
+  "@unexpectedErrorTryAgain": {
+    "description": "رسالة خطأ غير متوقع مع طلب المحاولة مرة أخرى"
+  },
+
+  "loginError": "خطأ في تسجيل الدخول",
+  "@loginError": {
+    "description": "عنوان خطأ تسجيل الدخول"
+  },
+
+  "agreeButton": "موافق",
+  "@agreeButton": {
+    "description": "زر الموافقة"
+  },
+
+  "welcomeToDriverApp": "مرحباً بك في تطبيق السائقين",
+  "@welcomeToDriverApp": {
+    "description": "رسالة الترحيب في تطبيق السائقين"
+  },
+
+  "emailOrUsername": "البريد الإلكتروني أو اسم المستخدم",
+  "@emailOrUsername": {
+    "description": "تسمية البريد الإلكتروني أو اسم المستخدم"
+  },
+
+  "enterEmailOrUsername": "أدخل بريدك الإلكتروني أو اسم المستخدم",
+  "@enterEmailOrUsername": {
+    "description": "نص إدخال البريد الإلكتروني أو اسم المستخدم"
+  },
+
+  "pleaseEnterEmail": "يرجى إدخال البريد الإلكتروني",
+  "@pleaseEnterEmail": {
+    "description": "رسالة خطأ عدم إدخال البريد الإلكتروني"
+  },
+
+  "passwordLabel": "كلمة المرور",
+  "@passwordLabel": {
+    "description": "تسمية كلمة المرور"
+  },
+
+  "enterPassword": "أدخل كلمة المرور",
+  "@enterPassword": {
+    "description": "نص إدخال كلمة المرور"
+  },
+
+  "pleaseEnterPassword": "يرجى إدخال كلمة المرور",
+  "@pleaseEnterPassword": {
+    "description": "رسالة خطأ عدم إدخال كلمة المرور"
+  },
+
+  "passwordMinLength": "كلمة المرور يجب أن تكون 6 أحرف على الأقل",
+  "@passwordMinLength": {
+    "description": "رسالة خطأ طول كلمة المرور الأدنى"
+  },
+
+  "loginButton": "تسجيل الدخول",
+  "@loginButton": {
+    "description": "زر تسجيل الدخول"
+  },
+
+  "rememberMe": "تذكرني",
+  "@rememberMe": {
+    "description": "تذكرني"
+  },
+
+  "forgotPassword": "نسيت كلمة المرور؟",
+  "@forgotPassword": {
+    "description": "نسيت كلمة المرور"
+  },
+
+  "dontHaveAccount": "ليس لديك حساب؟",
+  "@dontHaveAccount": {
+    "description": "ليس لديك حساب"
+  },
+
+  "createNewAccount": "إنشاء حساب جديد",
+  "@createNewAccount": {
+    "description": "إنشاء حساب جديد"
+  },
+
+  "byLoggingInYouAgree": "بتسجيل الدخول، أنت توافق على",
+  "@byLoggingInYouAgree": {
+    "description": "بتسجيل الدخول أنت توافق على"
+  },
+
+  "termsOfService": "شروط الخدمة",
+  "@termsOfService": {
+    "description": "شروط الخدمة"
+  },
+
+  "and": " و ",
+  "@and": {
+    "description": "حرف العطف و"
+  },
+
+  "privacyPolicy": "سياسة الخصوصية",
+  "@privacyPolicy": {
+    "description": "سياسة الخصوصية"
+  },
+
+  "versionNumber": "الإصدار {version}",
+  "@versionNumber": {
+    "description": "رقم الإصدار",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+
+  "unexpectedErrorOccurred": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.",
+  "@unexpectedErrorOccurred": {
+    "description": "رسالة خطأ غير متوقع"
+  },
+
+  "loginErrorTitle": "خطأ في تسجيل الدخول",
+  "@loginErrorTitle": {
+    "description": "عنوان خطأ تسجيل الدخول"
+  },
+
+  "okButton": "موافق",
+  "@okButton": {
+    "description": "زر موافق"
+  },
+
+  "welcomeToDriverApp": "مرحباً بك في تطبيق السائقين",
+  "@welcomeToDriverApp": {
+    "description": "رسالة الترحيب في تطبيق السائقين"
+  },
+
+  "emailOrUsernameLabel": "البريد الإلكتروني أو اسم المستخدم",
+  "@emailOrUsernameLabel": {
+    "description": "تسمية حقل البريد الإلكتروني أو اسم المستخدم"
+  },
+
+  "enterEmailOrUsernameHint": "أدخل بريدك الإلكتروني أو اسم المستخدم",
+  "@enterEmailOrUsernameHint": {
+    "description": "تلميح حقل البريد الإلكتروني أو اسم المستخدم"
+  },
+
+  "pleaseEnterEmailError": "يرجى إدخال البريد الإلكتروني",
+  "@pleaseEnterEmailError": {
+    "description": "رسالة خطأ عدم إدخال البريد الإلكتروني"
+  },
+
+  "passwordFieldLabel": "كلمة المرور",
+  "@passwordFieldLabel": {
+    "description": "تسمية حقل كلمة المرور"
+  },
+
+  "enterPasswordHint": "أدخل كلمة المرور",
+  "@enterPasswordHint": {
+    "description": "تلميح حقل كلمة المرور"
+  },
+
+  "pleaseEnterPasswordError": "يرجى إدخال كلمة المرور",
+  "@pleaseEnterPasswordError": {
+    "description": "رسالة خطأ عدم إدخال كلمة المرور"
+  },
+
+  "passwordMinLengthError": "كلمة المرور يجب أن تكون 6 أحرف على الأقل",
+  "@passwordMinLengthError": {
+    "description": "رسالة خطأ طول كلمة المرور الأدنى"
+  },
+
+  "loginButtonText": "تسجيل الدخول",
+  "@loginButtonText": {
+    "description": "نص زر تسجيل الدخول"
+  },
+
+  "rememberMeText": "تذكرني",
+  "@rememberMeText": {
+    "description": "نص تذكرني"
+  },
+
+  "forgotPasswordText": "نسيت كلمة المرور؟",
+  "@forgotPasswordText": {
+    "description": "نص نسيت كلمة المرور"
+  },
+
+  "dontHaveAccountText": "ليس لديك حساب؟",
+  "@dontHaveAccountText": {
+    "description": "نص ليس لديك حساب"
+  },
+
+  "createNewAccountText": "إنشاء حساب جديد",
+  "@createNewAccountText": {
+    "description": "نص إنشاء حساب جديد"
+  },
+
+  "byLoggingInYouAgreeText": "بتسجيل الدخول، أنت توافق على",
+  "@byLoggingInYouAgreeText": {
+    "description": "نص الموافقة على الشروط"
+  },
+
+  "termsOfServiceText": "شروط الخدمة",
+  "@termsOfServiceText": {
+    "description": "نص شروط الخدمة"
+  },
+
+  "andText": " و ",
+  "@andText": {
+    "description": "حرف العطف و"
+  },
+
+  "privacyPolicyText": "سياسة الخصوصية",
+  "@privacyPolicyText": {
+    "description": "نص سياسة الخصوصية"
+  },
+
+  "allText": "الكل",
+  "@allText": {
+    "description": "نص الكل"
+  },
+
+  "failedToLoadRegistrationData": "فشل في تحميل بيانات التسجيل",
+  "@failedToLoadRegistrationData": {
+    "description": "رسالة خطأ عند فشل تحميل بيانات التسجيل"
+  },
+
+  "registrationError": "حدث خطأ أثناء التسجيل",
+  "@registrationError": {
+    "description": "رسالة خطأ عند فشل التسجيل"
+  },
+
+  "registrationSuccess": "تم التسجيل بنجاح!",
+  "@registrationSuccess": {
+    "description": "رسالة نجاح التسجيل"
+  },
+
+  "verificationLinkSent": "تم إرسال رابط التحقق إلى بريدك الإلكتروني.",
+  "@verificationLinkSent": {
+    "description": "رسالة إرسال رابط التحقق"
+  },
+
+  "login": "تسجيل الدخول",
+  "@login": {
+    "description": "نص تسجيل الدخول"
+  },
+
+  "createNewAccount": "إنشاء حساب جديد",
+  "@createNewAccount": {
+    "description": "نص إنشاء حساب جديد"
+  },
+
+  "previous": "السابق",
+  "@previous": {
+    "description": "نص زر السابق"
+  },
+
+  "forgotPassword": "نسيت كلمة المرور",
+  "@forgotPassword": {
+    "description": "نص نسيت كلمة المرور"
+  },
+
+  "errorOccurred": "حدث خطأ: {error}",
+  "@errorOccurred": {
+    "description": "رسالة خطأ عامة",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "تفاصيل الخطأ"
+      }
+    }
+  },
+
+  "taskExpiredTransferred": "انتهت مهلة الاستجابة، تم تحويل المهمة لسائق آخر",
+  "@taskExpiredTransferred": {
+    "description": "رسالة انتهاء مهلة المهمة"
+  },
+
+  "viewDetails": "عرض التفاصيل",
+  "@viewDetails": {
+    "description": "نص عرض التفاصيل"
+  },
+
+  "accept": "قبول",
+  "@accept": {
+    "description": "نص قبول"
+  },
+
+  "reject": "رفض",
+  "@reject": {
+    "description": "نص رفض"
+  },
+
+  "taskAcceptedSuccessfully": "تم قبول المهمة بنجاح",
+  "@taskAcceptedSuccessfully": {
+    "description": "رسالة نجاح قبول المهمة"
+  },
+
+  "taskRejected": "تم رفض المهمة",
+  "@taskRejected": {
+    "description": "رسالة رفض المهمة"
+  },
+
+  "arrivedAtPickupPoint": "وصلت لنقطة الاستلام",
+  "@arrivedAtPickupPoint": {
+    "description": "نص الوصول لنقطة الاستلام"
+  },
+
+  "startLoading": "بدء التحميل",
+  "@startLoading": {
+    "description": "نص بدء التحميل"
+  },
+
+  "onTheWay": "في الطريق",
+  "@onTheWay": {
+    "description": "نص في الطريق"
+  },
+
+  "arrivedAtDeliveryPoint": "وصلت لنقطة التسليم",
+  "@arrivedAtDeliveryPoint": {
+    "description": "نص الوصول لنقطة التسليم"
+  },
+
+  "startUnloading": "بدء التفريغ",
+  "@startUnloading": {
+    "description": "نص بدء التفريغ"
+  },
+
+  "completeTask": "إكمال المهمة",
+  "@completeTask": {
+    "description": "نص إكمال المهمة"
+  },
+
+  "startTask": "بدء المهمة",
+  "@startTask": {
+    "description": "نص بدء المهمة"
+  },
+
+  "error": "خطأ",
+  "@error": {
+    "description": "نص خطأ"
+  },
+
+  "taskNotFound": "لم يتم العثور على المهمة",
+  "@taskNotFound": {
+    "description": "رسالة عدم العثور على المهمة"
+  },
+
+  "pickupPoint": "نقطة الاستلام",
+  "@pickupPoint": {
+    "description": "نص نقطة الاستلام"
+  },
+
+  "deliveryPoint": "نقطة التسليم",
+  "@deliveryPoint": {
+    "description": "نص نقطة التسليم"
+  },
+
+  "openInGoogleMaps": "فتح في خرائط جوجل",
+  "@openInGoogleMaps": {
+    "description": "نص فتح في خرائط جوجل"
+  },
+
+  "ok": "حسناً",
+  "@ok": {
+    "description": "نص موافق/حسناً"
+  },
+
+  "taskAds": "إعلانات المهام",
+  "@taskAds": {
+    "description": "نص إعلانات المهام"
+  },
+
+  "retry": "إعادة المحاولة",
+  "@retry": {
+    "description": "نص إعادة المحاولة"
+  },
+
+  "filterAds": "فلترة الإعلانات",
+  "@filterAds": {
+    "description": "نص فلترة الإعلانات"
+  },
+
+  "priceRange": "نطاق الأسعار",
+  "@priceRange": {
+    "description": "نص نطاق الأسعار"
+  },
+
+  "sortBy": "ترتيب حسب",
+  "@sortBy": {
+    "description": "نص ترتيب حسب"
+  },
+
+  "creationDate": "تاريخ الإنشاء",
+  "@creationDate": {
+    "description": "نص تاريخ الإنشاء"
+  },
+
+  "lowestPrice": "أقل سعر",
+  "@lowestPrice": {
+    "description": "نص أقل سعر"
+  },
+
+  "highestPrice": "أعلى سعر",
+  "@highestPrice": {
+    "description": "نص أعلى سعر"
+  },
+
+  "offersCount": "عدد العروض",
+  "@offersCount": {
+    "description": "نص عدد العروض"
+  },
+
+  "sort": "ترتيب",
+  "@sort": {
+    "description": "نص ترتيب"
+  },
+
+  "descending": "تنازلي",
+  "@descending": {
+    "description": "نص تنازلي"
+  },
+
+  "ascending": "تصاعدي",
+  "@ascending": {
+    "description": "نص تصاعدي"
+  },
+
+  "clearFilters": "مسح الفلاتر",
+  "@clearFilters": {
+    "description": "نص مسح الفلاتر"
+  },
+
+  "cancel": "إلغاء",
+  "@cancel": {
+    "description": "نص إلغاء"
+  },
+
+  "apply": "تطبيق",
+  "@apply": {
+    "description": "نص تطبيق"
+  },
+
+  "acceptTask": "قبول المهمة",
+  "@acceptTask": {
+    "description": "نص قبول المهمة"
+  },
+
+  "confirmAcceptTask": "هل أنت متأكد من رغبتك في قبول هذه المهمة؟",
+  "@confirmAcceptTask": {
+    "description": "رسالة تأكيد قبول المهمة"
+  },
+
+  "close": "إغلاق",
+  "@close": {
+    "description": "نص إغلاق"
+  },
+
+  "allNotificationsMarkedRead": "تم تحديد جميع الإشعارات كمقروءة",
+  "@allNotificationsMarkedRead": {
+    "description": "رسالة تحديد جميع الإشعارات كمقروءة"
+  },
+
+  "notifications": "الإشعارات",
+  "@notifications": {
+    "description": "نص الإشعارات"
+  },
+
+  "additionalData": "البيانات الإضافية",
+  "@additionalData": {
+    "description": "نص البيانات الإضافية"
+  },
+
+  "editProfile": "تعديل الملف الشخصي",
+  "@editProfile": {
+    "description": "نص تعديل الملف الشخصي"
+  },
+
+  "changePassword": "تغيير كلمة المرور",
+  "@changePassword": {
+    "description": "نص تغيير كلمة المرور"
+  },
+
+  "passwordChangedSuccessfully": "تم تغيير كلمة المرور بنجاح",
+  "@passwordChangedSuccessfully": {
+    "description": "رسالة نجاح تغيير كلمة المرور"
+  },
+
+  "profileUpdatedSuccessfully": "تم تحديث الملف الشخصي بنجاح",
+  "@profileUpdatedSuccessfully": {
+    "description": "رسالة نجاح تحديث الملف الشخصي"
+  },
+
+  "updateLocationGPS": "تحديث الموقع الجغرافي",
+  "@updateLocationGPS": {
+    "description": "نص تحديث الموقع الجغرافي"
+  },
+
+  "view": "عرض",
+  "@view": {
+    "description": "نص عرض"
+  },
+
+  "download": "تحميل",
+  "@download": {
+    "description": "نص تحميل"
+  },
+
+  "open": "فتح",
+  "@open": {
+    "description": "نص فتح"
+  },
+
+  "filterTransactions": "فلترة المعاملات",
+  "@filterTransactions": {
+    "description": "نص فلترة المعاملات"
+  },
+
+  "exit": "خروج",
+  "@exit": {
+    "description": "نص خروج"
+  },
+
+
+
+  "appInitializationError": "حدث خطأ أثناء تهيئة التطبيق. يرجى المحاولة مرة أخرى.",
+  "@appInitializationError": {
+    "description": "رسالة خطأ تهيئة التطبيق"
+  },
+
+  "loadingAds": "جاري تحميل الإعلانات...",
+  "@loadingAds": {
+    "description": "رسالة تحميل الإعلانات"
+  },
+
+  "loadingDetails": "جاري تحميل التفاصيل...",
+  "@loadingDetails": {
+    "description": "رسالة تحميل التفاصيل"
+  },
+
+  "loadingOffers": "جاري تحميل العروض...",
+  "@loadingOffers": {
+    "description": "رسالة تحميل العروض"
+  },
+
+  "loadingRegistrationData": "جاري تحميل بيانات التسجيل...",
+  "@loadingRegistrationData": {
+    "description": "رسالة تحميل بيانات التسجيل"
+  },
+
+  "sendingLocation": "جاري إرسال الموقع...",
+  "@sendingLocation": {
+    "description": "رسالة إرسال الموقع"
+  },
+
+  "updatingTaskStatus": "جاري تحديث حالة المهمة...",
+  "@updatingTaskStatus": {
+    "description": "رسالة تحديث حالة المهمة"
+  },
+
+  "failedToLoadImage": "فشل في تحميل الصورة",
+  "@failedToLoadImage": {
+    "description": "رسالة فشل تحميل الصورة"
+  },
+
+  "failedToSelectImage": "فشل في اختيار الصورة",
+  "@failedToSelectImage": {
+    "description": "رسالة فشل اختيار الصورة"
+  },
+
+  "failedToSelectFile": "فشل في اختيار الملف",
+  "@failedToSelectFile": {
+    "description": "رسالة فشل اختيار الملف"
+  },
+
+  "cannotOpenGoogleMaps": "لا يمكن فتح خرائط جوجل",
+  "@cannotOpenGoogleMaps": {
+    "description": "رسالة عدم القدرة على فتح خرائط جوجل"
+  },
+
+  "mapOpenError": "حدث خطأ في فتح الخريطة",
+  "@mapOpenError": {
+    "description": "رسالة خطأ فتح الخريطة"
+  },
+
+  "undefinedItem": "عنصر غير محدد",
+  "@undefinedItem": {
+    "description": "نص عنصر غير محدد"
+  },
+
+  "noDataToDisplay": "لا توجد بيانات للعرض",
+  "@noDataToDisplay": {
+    "description": "رسالة عدم وجود بيانات للعرض"
+  },
+
+  "cannotAccessAdDetails": "لا يمكن الوصول لتفاصيل الإعلان",
+  "@cannotAccessAdDetails": {
+    "description": "رسالة عدم القدرة على الوصول لتفاصيل الإعلان"
+  },
+
+  "adNumber": "إعلان #{adId}",
+  "@adNumber": {
+    "description": "رقم الإعلان",
+    "placeholders": {
+      "adId": {
+        "type": "String",
+        "description": "رقم الإعلان"
+      }
+    }
+  },
+
+  "fileSelectedSuccessfully": "تم اختيار الملف: {fileName}",
+  "@fileSelectedSuccessfully": {
+    "description": "رسالة نجاح اختيار الملف",
+    "placeholders": {
+      "fileName": {
+        "type": "String",
+        "description": "اسم الملف"
+      }
+    }
+  },
+
+  "phoneIsWhatsApp": "رقم هاتفي هو نفسه رقم الواتساب",
+  "@phoneIsWhatsApp": {
+    "description": "نص رقم الهاتف هو نفسه الواتساب"
+  },
+
+  "correctBasicDataErrors": "يرجى تصحيح الأخطاء في البيانات الأساسية",
+  "@correctBasicDataErrors": {
+    "description": "رسالة تصحيح أخطاء البيانات الأساسية"
+  },
+
+  "selectVehicleTypeSize": "يرجى اختيار المركبة ونوعها وحجمها",
+  "@selectVehicleTypeSize": {
+    "description": "رسالة اختيار المركبة ونوعها وحجمها"
+  },
+
+  "fillAllAdditionalFields": "يرجى ملء جميع الحقول المطلوبة في المعلومات الإضافية",
+  "@fillAllAdditionalFields": {
+    "description": "رسالة ملء جميع الحقول الإضافية"
+  },
+
+  "taskDetailsError": "خطأ في جلب تفاصيل المهمة: {error}",
+  "@taskDetailsError": {
+    "description": "رسالة خطأ جلب تفاصيل المهمة",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "تفاصيل الخطأ"
+      }
+    }
+  },
+
+  "registrationErrorOccurred": "حدث خطأ أثناء التسجيل",
+  "@registrationErrorOccurred": {
+    "description": "رسالة خطأ أثناء التسجيل"
+  },
+
+  "profileUpdateError": "حدث خطأ أثناء تحديث الملف الشخصي",
+  "@profileUpdateError": {
+    "description": "رسالة خطأ تحديث الملف الشخصي"
+  },
+
+  "passwordChangeError": "حدث خطأ أثناء تغيير كلمة المرور",
+  "@passwordChangeError": {
+    "description": "رسالة خطأ تغيير كلمة المرور"
+  },
+
+  "locationSendError": "خطأ في إرسال الموقع: {error}",
+  "@locationSendError": {
+    "description": "رسالة خطأ إرسال الموقع",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "تفاصيل الخطأ"
+      }
+    }
+  },
+
+  "sentLocationDetails": "تفاصيل الموقع المرسل",
+  "@sentLocationDetails": {
+    "description": "نص تفاصيل الموقع المرسل"
+  },
+
+  "taskHistoryError": "خطأ في جلب سجل المهمة: {error}",
+  "@taskHistoryError": {
+    "description": "رسالة خطأ جلب سجل المهمة",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "تفاصيل الخطأ"
+      }
+    }
+  },
+
+  "fileSelectionError": "خطأ في اختيار الملف: {error}",
+  "@fileSelectionError": {
+    "description": "رسالة خطأ اختيار الملف",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "تفاصيل الخطأ"
+      }
+    }
+  },
+
+  "pleaseWriteNote": "يرجى كتابة ملاحظة",
+  "@pleaseWriteNote": {
+    "description": "رسالة كتابة ملاحظة"
+  },
+
+  "noteAddedSuccessfully": "تم إضافة الملاحظة بنجاح",
+  "@noteAddedSuccessfully": {
+    "description": "رسالة نجاح إضافة الملاحظة"
+  },
+
+  "noteAddError": "خطأ في إضافة الملاحظة: {error}",
+  "@noteAddError": {
+    "description": "رسالة خطأ إضافة الملاحظة",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "تفاصيل الخطأ"
+      }
+    }
+  },
+
+  "attachmentOpenError": "خطأ في فتح المرفق: {error}",
+  "@attachmentOpenError": {
+    "description": "رسالة خطأ فتح المرفق",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "تفاصيل الخطأ"
+      }
+    }
+  },
+
+  "imageLoadError": "خطأ في تحميل الصورة: {error}",
+  "@imageLoadError": {
+    "description": "رسالة خطأ تحميل الصورة",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "تفاصيل الخطأ"
+      }
+    }
+  },
+
+  "fileDownloadError": "خطأ في تحميل الملف: {error}",
+  "@fileDownloadError": {
+    "description": "رسالة خطأ تحميل الملف",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "تفاصيل الخطأ"
+      }
+    }
+  },
+
+  "fileOpenError": "خطأ في فتح الملف: {error}",
+  "@fileOpenError": {
+    "description": "رسالة خطأ فتح الملف",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "تفاصيل الخطأ"
+      }
+    }
+  },
+
+  "fileOpenedForDownload": "تم فتح الملف للتحميل",
+  "@fileOpenedForDownload": {
+    "description": "رسالة فتح الملف للتحميل"
+  },
+
+  "passwordRequirements": "• 8 أحرف على الأقل\n• حرف كبير واحد على الأقل (A-Z)\n• حرف صغير واحد على الأقل (a-z)\n• رقم واحد على الأقل (0-9)",
+  "@passwordRequirements": {
+    "description": "متطلبات كلمة المرور"
+  },
+
+  "passwordSecurityTips": "• لا تشارك كلمة المرور مع أي شخص\n• استخدم كلمة مرور قوية وفريدة\n• غير كلمة المرور بانتظام\n• لا تستخدم معلومات شخصية في كلمة المرور",
+  "@passwordSecurityTips": {
+    "description": "نصائح أمان كلمة المرور"
+  },
+
+  "fileViewerComingSoon": "عارض الملفات قريباً",
+  "@fileViewerComingSoon": {
+    "description": "رسالة عارض الملفات قريباً"
+  },
+
+  "linkOpenComingSoon": "فتح الرابط قريباً",
+  "@linkOpenComingSoon": {
+    "description": "رسالة فتح الرابط قريباً"
+  },
+
+  "allTransactionsComingSoon": "جميع المعاملات قريباً",
+  "@allTransactionsComingSoon": {
+    "description": "رسالة جميع المعاملات قريباً"
+  },
+
+  "viewAllTasks": "عرض جميع المهام",
+  "@viewAllTasks": {
+    "description": "نص عرض جميع المهام"
+  },
+
+  "earningsDetailsComingSoon": "تفاصيل الأرباح قريباً",
+  "@earningsDetailsComingSoon": {
+    "description": "رسالة تفاصيل الأرباح قريباً"
+  },
+
+  "details": "التفاصيل",
+  "@details": {
+    "description": "نص التفاصيل"
+  },
+
+  "taskOfferAccepted": "تم قبول عرضك لهذه المهمة!\n\nهل تريد قبول المهمة والبدء في تنفيذها؟\n\nبعد القبول ستصبح المهمة مسندة إليك رسمياً وستظهر في قائمة مهامك الحالية.",
+  "@taskOfferAccepted": {
+    "description": "رسالة قبول العرض للمهمة"
+  },
+
+  "loadingRegistrationData": "جاري تحميل بيانات التسجيل...",
+  "@loadingRegistrationData": {
+    "description": "رسالة تحميل بيانات التسجيل"
+  },
+
+  "basicData": "البيانات الأساسية",
+  "@basicData": {
+    "description": "عنوان البيانات الأساسية"
+  },
+
+  "additionalInfo": "المعلومات التكميلية",
+  "@additionalInfo": {
+    "description": "عنوان المعلومات التكميلية"
+  },
+
+  "reviewAndConfirm": "المراجعة والتأكيد",
+  "@reviewAndConfirm": {
+    "description": "عنوان المراجعة والتأكيد"
+  },
+
+  "fullName": "الاسم الكامل",
+  "@fullName": {
+    "description": "تسمية الاسم الكامل"
+  },
+
+  "fullNameRequired": "الاسم الكامل مطلوب",
+  "@fullNameRequired": {
+    "description": "رسالة خطأ الاسم الكامل مطلوب"
+  },
+
+  "username": "اسم المستخدم",
+  "@username": {
+    "description": "تسمية اسم المستخدم"
+  },
+
+  "usernameRequired": "اسم المستخدم مطلوب",
+  "@usernameRequired": {
+    "description": "رسالة خطأ اسم المستخدم مطلوب"
+  },
+
+  "emailRequired": "البريد الإلكتروني مطلوب",
+  "@emailRequired": {
+    "description": "رسالة خطأ البريد الإلكتروني مطلوب"
+  },
+
+  "invalidEmail": "البريد الإلكتروني غير صحيح",
+  "@invalidEmail": {
+    "description": "رسالة خطأ البريد الإلكتروني غير صحيح"
+  },
+
+  "phoneNumber": "رقم الهاتف",
+  "@phoneNumber": {
+    "description": "تسمية رقم الهاتف"
+  },
+
+  "phoneRequired": "رقم الهاتف مطلوب",
+  "@phoneRequired": {
+    "description": "رسالة خطأ رقم الهاتف مطلوب"
+  },
+
+  "password": "كلمة المرور",
+  "@password": {
+    "description": "تسمية كلمة المرور"
+  },
+
+  "passwordRequired": "كلمة المرور مطلوبة",
+  "@passwordRequired": {
+    "description": "رسالة خطأ كلمة المرور مطلوبة"
+  },
+
+  "passwordMinLength8": "كلمة المرور يجب أن تكون 8 أحرف على الأقل",
+  "@passwordMinLength8": {
+    "description": "رسالة خطأ طول كلمة المرور 8 أحرف"
+  },
+
+  "confirmPassword": "تأكيد كلمة المرور",
+  "@confirmPassword": {
+    "description": "تسمية تأكيد كلمة المرور"
+  },
+
+  "confirmPasswordRequired": "تأكيد كلمة المرور مطلوب",
+  "@confirmPasswordRequired": {
+    "description": "رسالة خطأ تأكيد كلمة المرور مطلوب"
+  },
+
+  "passwordsDoNotMatch": "كلمة المرور غير متطابقة",
+  "@passwordsDoNotMatch": {
+    "description": "رسالة خطأ كلمات المرور غير متطابقة"
+  },
+
+  "addressRequired": "العنوان مطلوب",
+  "@addressRequired": {
+    "description": "رسالة خطأ العنوان مطلوب"
+  },
+
+  "vehicle": "المركبة",
+  "@vehicle": {
+    "description": "تسمية المركبة"
+  },
+
+  "selectVehicle": "اختر المركبة",
+  "@selectVehicle": {
+    "description": "نص اختيار المركبة"
+  },
+
+  "vehicleRequired": "اختيار المركبة مطلوب",
+  "@vehicleRequired": {
+    "description": "رسالة خطأ اختيار المركبة مطلوب"
+  },
+
+  "selectVehicleType": "اختر نوع المركبة",
+  "@selectVehicleType": {
+    "description": "نص اختيار نوع المركبة"
+  },
+
+  "vehicleTypeRequired": "اختيار نوع المركبة مطلوب",
+  "@vehicleTypeRequired": {
+    "description": "رسالة خطأ اختيار نوع المركبة مطلوب"
+  },
+
+  "selectVehicleSize": "اختر حجم المركبة",
+  "@selectVehicleSize": {
+    "description": "نص اختيار حجم المركبة"
+  },
+
+  "vehicleSizeRequired": "اختيار حجم المركبة مطلوب",
+  "@vehicleSizeRequired": {
+    "description": "رسالة خطأ اختيار حجم المركبة مطلوب"
+  },
+
+  "selectTeamOptional": "اختر فريق (اختياري)",
+  "@selectTeamOptional": {
+    "description": "نص اختيار الفريق اختياري"
+  },
+
+  "whatsapp": "واتساب",
+  "@whatsapp": {
+    "description": "تسمية واتساب"
+  },
+
+  "phoneIsWhatsAppNumber": "رقم هاتفي هو نفسه رقم الواتساب",
+  "@phoneIsWhatsAppNumber": {
+    "description": "نص رقم الهاتف هو واتساب"
+  },
+
+  "whatsappNumber": "رقم الواتساب",
+  "@whatsappNumber": {
+    "description": "تسمية رقم الواتساب"
+  },
+
+  "enterWhatsAppOrSelectPhone": "الرجاء إدخال رقم واتساب أو اختيار أن الهاتف هو واتساب",
+  "@enterWhatsAppOrSelectPhone": {
+    "description": "رسالة إدخال واتساب أو اختيار الهاتف"
+  },
+
+  "requiredAdditionalInfo": "المعلومات التكميلية مطلوبة",
+  "@requiredAdditionalInfo": {
+    "description": "عنوان المعلومات التكميلية المطلوبة"
+  },
+
+  "fieldRequired": "{fieldName} مطلوب",
+  "@fieldRequired": {
+    "description": "رسالة خطأ حقل مطلوب",
+    "placeholders": {
+      "fieldName": {
+        "type": "String"
+      }
+    }
+  },
+
+  "mustBeValidNumber": "يجب أن يكون رقماً صحيحاً",
+  "@mustBeValidNumber": {
+    "description": "رسالة خطأ يجب أن يكون رقم صحيح"
+  },
+
+  "invalidUrl": "الرابط غير صحيح",
+  "@invalidUrl": {
+    "description": "رسالة خطأ الرابط غير صحيح"
+  },
+
+  "selectOption": "اختر {fieldName}",
+  "@selectOption": {
+    "description": "نص اختيار خيار",
+    "placeholders": {
+      "fieldName": {
+        "type": "String"
+      }
+    }
+  },
+
+  "fileSelected": "تم اختيار الملف",
+  "@fileSelected": {
+    "description": "رسالة تم اختيار الملف"
+  },
+
+  "selectFile": "اضغط لاختيار ملف",
+  "@selectFile": {
+    "description": "نص اختيار ملف"
+  },
+
+  "dataReview": "مراجعة البيانات",
+  "@dataReview": {
+    "description": "عنوان مراجعة البيانات"
+  },
+
+  "additionalFields": "الحقول الإضافية",
+  "@additionalFields": {
+    "description": "عنوان الحقول الإضافية"
+  },
+
+  "agreeToTerms": "بالضغط على \"إنشاء الحساب\" فإنك توافق على شروط الاستخدام وسياسة الخصوصية",
+  "@agreeToTerms": {
+    "description": "نص الموافقة على الشروط"
+  },
+
+  "verificationEmailSent": "سيتم إرسال رابط التحقق إلى بريدك الإلكتروني لتفعيل حسابك",
+  "@verificationEmailSent": {
+    "description": "نص إرسال رابط التحقق"
+  },
+
+  "createAccount": "إنشاء الحساب",
+  "@createAccount": {
+    "description": "نص إنشاء الحساب"
+  },
+
+  "next": "التالي",
+  "@next": {
+    "description": "نص التالي"
+  },
+
+  "registrationFailed": "فشل في التسجيل",
+  "@registrationFailed": {
+    "description": "رسالة فشل التسجيل"
+  },
+
+  "verificationLinkSent": "تم إرسال رابط التحقق إلى بريدك الإلكتروني.",
+  "@verificationLinkSent": {
+    "description": "رسالة إرسال رابط التحقق"
+  },
+
+  "checkEmailAndActivate": "يرجى التحقق من بريدك الإلكتروني وتفعيل حسابك، ثم العودة لتسجيل الدخول.",
+  "@checkEmailAndActivate": {
+    "description": "رسالة التحقق من البريد وتفعيل الحساب"
+  },
+
+  "loginText": "تسجيل الدخول",
+  "@loginText": {
+    "description": "نص تسجيل الدخول"
+  },
+
+  "passwordMismatch": "كلمة المرور غير متطابقة",
+  "@passwordMismatch": {
+    "description": "رسالة خطأ عند عدم تطابق كلمة المرور"
+  },
+
+  "selectVehicle": "اختر المركبة",
+  "@selectVehicle": {
+    "description": "نص اختيار المركبة"
+  },
+
+  "selectVehicleRequired": "اختيار المركبة مطلوب",
+  "@selectVehicleRequired": {
+    "description": "رسالة خطأ عند عدم اختيار المركبة"
+  },
+
+  "selectVehicleType": "اختر نوع المركبة",
+  "@selectVehicleType": {
+    "description": "نص اختيار نوع المركبة"
+  },
+
+  "selectVehicleTypeRequired": "اختيار نوع المركبة مطلوب",
+  "@selectVehicleTypeRequired": {
+    "description": "رسالة خطأ عند عدم اختيار نوع المركبة"
+  },
+
+  "selectVehicleSize": "اختر حجم المركبة",
+  "@selectVehicleSize": {
+    "description": "نص اختيار حجم المركبة"
+  },
+
+  "selectVehicleSizeRequired": "اختيار حجم المركبة مطلوب",
+  "@selectVehicleSizeRequired": {
+    "description": "رسالة خطأ عند عدم اختيار حجم المركبة"
+  },
+
+  "selectTeam": "اختر الفريق",
+  "@selectTeam": {
+    "description": "نص اختيار الفريق"
+  },
+
+  "selectTeamRequired": "اختيار الفريق مطلوب",
+  "@selectTeamRequired": {
+    "description": "رسالة خطأ عند عدم اختيار الفريق"
+  },
+
+  "selectTeamOptional": "اختر فريق (اختياري)",
+  "@selectTeamOptional": {
+    "description": "نص اختيار الفريق الاختياري"
+  },
+
+  "whatsapp": "واتساب",
+  "@whatsapp": {
+    "description": "نص واتساب"
+  },
+
+  "whatsappNumberOptional": "رقم واتساب للتواصل (اختياري)",
+  "@whatsappNumberOptional": {
+    "description": "نص رقم واتساب الاختياري"
+  },
+
+  "phoneIsWhatsapp": "رقم هاتفي هو نفسه رقم الواتساب",
+  "@phoneIsWhatsapp": {
+    "description": "نص رقم الهاتف هو نفسه رقم الواتساب"
+  },
+
+  "whatsappNumber": "رقم الواتساب",
+  "@whatsappNumber": {
+    "description": "نص رقم الواتساب"
+  },
+
+  "whatsappRequired": "الرجاء إدخال رقم واتساب أو اختيار أن الهاتف هو واتساب",
+  "@whatsappRequired": {
+    "description": "رسالة خطأ عند عدم إدخال رقم واتساب"
+  },
+
+  "additionalInfoRequired": "المعلومات التكميلية مطلوبة",
+  "@additionalInfoRequired": {
+    "description": "نص المعلومات التكميلية المطلوبة"
+  },
+
+  "phoneNumberPlaceholder": "رقم الهاتف",
+  "@phoneNumberPlaceholder": {
+    "description": "نص placeholder لحقل رقم الهاتف"
+  },
+
+  "whatsappNumberPlaceholder": "رقم الواتساب",
+  "@whatsappNumberPlaceholder": {
+    "description": "نص placeholder لحقل رقم الواتساب"
+  },
+
+  "sentSuccessfully": "تم الإرسال بنجاح",
+  "@sentSuccessfully": {
+    "description": "رسالة نجح الإرسال"
+  },
+
+  "resetLinkSentTo": "تم إرسال رابط إعادة تعيين كلمة المرور إلى:",
+  "@resetLinkSentTo": {
+    "description": "رسالة إرسال رابط إعادة التعيين"
+  },
+
+  "enterEmailForReset": "أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة تعيين كلمة المرور",
+  "@enterEmailForReset": {
+    "description": "تعليمات إدخال البريد الإلكتروني"
+  },
+
+  "enterYourEmail": "أدخل بريدك الإلكتروني",
+  "@enterYourEmail": {
+    "description": "نص placeholder البريد الإلكتروني"
+  },
+
+  "sendResetLink": "إرسال رابط إعادة التعيين",
+  "@sendResetLink": {
+    "description": "نص زر إرسال رابط إعادة التعيين"
+  },
+
+  "pleaseEnterEmail": "يرجى إدخال البريد الإلكتروني",
+  "@pleaseEnterEmail": {
+    "description": "رسالة خطأ عند عدم إدخال البريد الإلكتروني"
+  },
+
+  "pleaseEnterValidEmail": "يرجى إدخال بريد إلكتروني صحيح",
+  "@pleaseEnterValidEmail": {
+    "description": "رسالة خطأ عند إدخال بريد إلكتروني غير صحيح"
+  },
+
+  "termsAndPrivacyAgreement": "بالضغط على \"إنشاء الحساب\" فإنك توافق على شروط الاستخدام وسياسة الخصوصية",
+  "@termsAndPrivacyAgreement": {
+    "description": "نص الموافقة على الشروط والخصوصية"
+  },
+
+  "notSpecified": "غير محدد",
+  "@notSpecified": {
+    "description": "نص عندما تكون القيمة غير محددة"
+  },
+
+  "backToLogin": "العودة إلى تسجيل الدخول",
+  "@backToLogin": {
+    "description": "نص زر العودة إلى تسجيل الدخول"
+  },
+
+  "verificationLinkWillBeSent": "سيتم إرسال رابط التحقق إلى بريدك الإلكتروني لتفعيل حسابك",
+  "@verificationLinkWillBeSent": {
+    "description": "رسالة إرسال رابط التحقق"
+  },
+
+  "transactionHistory": "سجل المعاملات",
+  "@transactionHistory": {
+    "description": "عنوان سجل المعاملات"
+  },
+
+  "filterTransactions": "فلترة المعاملات",
+  "@filterTransactions": {
+    "description": "عنوان فلترة المعاملات"
+  },
+
+  "all": "الكل",
+  "@all": {
+    "description": "كلمة الكل"
+  },
+
+  "deposits": "الإيداعات",
+  "@deposits": {
+    "description": "الإيداعات"
+  },
+
+  "withdrawals": "السحوبات",
+  "@withdrawals": {
+    "description": "السحوبات"
+  },
+
+  "withAttachments": "مع مرفقات",
+  "@withAttachments": {
+    "description": "مع مرفقات"
+  },
+
+  "amount": "المبلغ",
+  "@amount": {
+    "description": "المبلغ"
+  },
+
+  "type": "النوع",
+  "@type": {
+    "description": "النوع"
+  },
+
+  "description": "الوصف",
+  "@description": {
+    "description": "الوصف"
+  },
+
+  "status": "الحالة",
+  "@status": {
+    "description": "الحالة"
+  },
+
+  "date": "التاريخ",
+  "@date": {
+    "description": "التاريخ"
+  },
+
+  "time": "الوقت",
+  "@time": {
+    "description": "الوقت"
+  },
+
+  "deposit": "إيداع",
+  "@deposit": {
+    "description": "إيداع"
+  },
+
+  "withdrawal": "سحب",
+  "@withdrawal": {
+    "description": "سحب"
+  },
+
+  "selectDateRange": "اختيار فترة زمنية",
+  "@selectDateRange": {
+    "description": "اختيار فترة زمنية"
+  },
+
+  "referenceNumber": "رقم المرجع",
+  "@referenceNumber": {
+    "description": "رقم المرجع"
+  },
+
+  "maturityDate": "تاريخ الاستحقاق",
+  "@maturityDate": {
+    "description": "تاريخ الاستحقاق"
+  },
+
+  "attachment": "المرفق",
+  "@attachment": {
+    "description": "المرفق"
+  },
+
+  "download": "تحميل",
+  "@download": {
+    "description": "تحميل"
+  },
+
+  "open": "فتح",
+  "@open": {
+    "description": "فتح"
+  },
+
+  "tapToView": "اضغط للعرض",
+  "@tapToView": {
+    "description": "اضغط للعرض"
+  },
+
+  "loadingTransactions": "جاري تحميل المعاملات...",
+  "@loadingTransactions": {
+    "description": "جاري تحميل المعاملات"
+  },
+
+  "noTransactions": "لا توجد معاملات",
+  "@noTransactions": {
+    "description": "لا توجد معاملات"
+  },
+
+  "noTransactionsWithAttachments": "لا توجد معاملات مع مرفقات",
+  "@noTransactionsWithAttachments": {
+    "description": "لا توجد معاملات مع مرفقات"
+  },
+
+  "failedToLoadImage": "فشل في تحميل الصورة",
+  "@failedToLoadImage": {
+    "description": "فشل في تحميل الصورة"
+  },
+
+  "imageLoadError": "خطأ في تحميل الصورة",
+  "@imageLoadError": {
+    "description": "خطأ في تحميل الصورة"
+  },
+
+  "unexpectedError": "حدث خطأ غير متوقع",
+  "@unexpectedError": {
+    "description": "حدث خطأ غير متوقع"
+  },
+
+  "tapOpenToViewFile": "اضغط على \"فتح\" لعرض الملف",
+  "@tapOpenToViewFile": {
+    "description": "اضغط على فتح لعرض الملف"
+  },
+
+  "fileOpenedForDownload": "تم فتح الملف للتحميل",
+  "@fileOpenedForDownload": {
+    "description": "تم فتح الملف للتحميل"
+  },
+
+  "fileDownloadError": "خطأ في تحميل الملف",
+  "@fileDownloadError": {
+    "description": "خطأ في تحميل الملف"
+  },
+
+  "fileOpenError": "خطأ في فتح الملف",
+  "@fileOpenError": {
+    "description": "خطأ في فتح الملف"
+  },
+
+  "searchInTransactions": "البحث في المعاملات...",
+  "@searchInTransactions": {
+    "description": "نص البحث في المعاملات"
+  },
+
+  "noTransactionsFound": "لم يتم العثور على معاملات تطابق البحث",
+  "@noTransactionsFound": {
+    "description": "لا توجد معاملات تطابق البحث"
+  },
+
+  "noTransactionsOfType": "لا توجد معاملات من نوع",
+  "@noTransactionsOfType": {
+    "description": "لا توجد معاملات من نوع معين"
+  },
+
+  "noTransactionsWithAttachmentsDescription": "لم يتم العثور على معاملات تحتوي على صور أو ملفات",
+  "@noTransactionsWithAttachmentsDescription": {
+    "description": "وصف عدم وجود معاملات مع مرفقات"
+  },
+
+  "attachmentLabel": "مرفق",
+  "@attachmentLabel": {
+    "description": "تسمية المرفق"
+  },
+
+  "referenceNumberLabel": "رقم المرجع",
+  "@referenceNumberLabel": {
+    "description": "تسمية رقم المرجع"
+  },
+
+  "view": "عرض",
+  "@view": {
+    "description": "عرض"
+  },
+
+  "clearFilters": "مسح الفلاتر",
+  "@clearFilters": {
+    "description": "مسح الفلاتر"
+  },
+
+  "cancel": "إلغاء",
+  "@cancel": {
+    "description": "إلغاء"
+  },
+
+  "apply": "تطبيق",
+  "@apply": {
+    "description": "تطبيق"
+  },
+
+  "retry": "إعادة المحاولة",
+  "@retry": {
+    "description": "إعادة المحاولة"
+  },
+
+  "allTransactionsComingSoon": "جميع المعاملات قريباً",
+  "@allTransactionsComingSoon": {
+    "description": "رسالة جميع المعاملات قريباً"
+  },
+
+  "taskAds": "إعلانات المهام",
+  "@taskAds": {
+    "description": "عنوان شاشة إعلانات المهام"
+  },
+
+  "availableAds": "الإعلانات المتاحة",
+  "@availableAds": {
+    "description": "تبويب الإعلانات المتاحة"
+  },
+
+  "myOffers": "عروضي",
+  "@myOffers": {
+    "description": "تبويب عروضي"
+  },
+
+  "filter": "فلترة",
+  "@filter": {
+    "description": "فلترة"
+  },
+
+  "refresh": "تحديث",
+  "@refresh": {
+    "description": "تحديث"
+  },
+
+  "searchInAds": "البحث في الإعلانات...",
+  "@searchInAds": {
+    "description": "نص البحث في الإعلانات"
+  },
+
+  "totalAds": "إجمالي الإعلانات",
+  "@totalAds": {
+    "description": "إجمالي الإعلانات"
+  },
+
+  "averagePrice": "متوسط السعر",
+  "@averagePrice": {
+    "description": "متوسط السعر"
+  },
+
+  "loadingAds": "جاري تحميل الإعلانات...",
+  "@loadingAds": {
+    "description": "جاري تحميل الإعلانات"
+  },
+
+  "failedToLoadAds": "فشل في تحميل الإعلانات",
+  "@failedToLoadAds": {
+    "description": "فشل في تحميل الإعلانات"
+  },
+
+  "noAdsAvailable": "لا توجد إعلانات متاحة",
+  "@noAdsAvailable": {
+    "description": "لا توجد إعلانات متاحة"
+  },
+
+  "noAdsAvailableDescription": "لا توجد إعلانات مهام متاحة في الوقت الحالي",
+  "@noAdsAvailableDescription": {
+    "description": "وصف عدم وجود إعلانات متاحة"
+  },
+
+  "filterAds": "فلترة الإعلانات",
+  "@filterAds": {
+    "description": "فلترة الإعلانات"
+  },
+
+  "minPrice": "أقل سعر",
+  "@minPrice": {
+    "description": "أقل سعر"
+  },
+
+  "maxPrice": "أعلى سعر",
+  "@maxPrice": {
+    "description": "أعلى سعر"
+  },
+
+  "sortBy": "ترتيب حسب",
+  "@sortBy": {
+    "description": "ترتيب حسب"
+  },
+
+  "sortOrder": "ترتيب",
+  "@sortOrder": {
+    "description": "ترتيب"
+  },
+
+  "creationDate": "تاريخ الإنشاء",
+  "@creationDate": {
+    "description": "تاريخ الإنشاء"
+  },
+
+  "lowestPrice": "أقل سعر",
+  "@lowestPrice": {
+    "description": "أقل سعر"
+  },
+
+  "highestPrice": "أعلى سعر",
+  "@highestPrice": {
+    "description": "أعلى سعر"
+  },
+
+  "offersCount": "عدد العروض",
+  "@offersCount": {
+    "description": "عدد العروض"
+  },
+
+  "descending": "تنازلي",
+  "@descending": {
+    "description": "تنازلي"
+  },
+
+  "ascending": "تصاعدي",
+  "@ascending": {
+    "description": "تصاعدي"
+  },
+
+  "adDetails": "تفاصيل الإعلان",
+  "@adDetails": {
+    "description": "تفاصيل الإعلان"
+  },
+
+  "submittedOffers": "العروض المقدمة",
+  "@submittedOffers": {
+    "description": "العروض المقدمة"
+  },
+
+  "loadingDetails": "جاري تحميل التفاصيل...",
+  "@loadingDetails": {
+    "description": "جاري تحميل التفاصيل"
+  },
+
+  "failedToLoadAdDetails": "فشل في تحميل تفاصيل الإعلان",
+  "@failedToLoadAdDetails": {
+    "description": "فشل في تحميل تفاصيل الإعلان"
+  },
+
+  "cannotViewOffers": "لا يمكنك عرض العروض المقدمة",
+  "@cannotViewOffers": {
+    "description": "لا يمكنك عرض العروض المقدمة"
+  },
+
+  "mustSubmitOfferFirst": "يجب تقديم عرض أولاً لعرض العروض الأخرى",
+  "@mustSubmitOfferFirst": {
+    "description": "يجب تقديم عرض أولاً لعرض العروض الأخرى"
+  },
+
+  "noOffersSubmitted": "لا توجد عروض مقدمة",
+  "@noOffersSubmitted": {
+    "description": "لا توجد عروض مقدمة"
+  },
+
+  "noOffersSubmittedDescription": "لم يتم تقديم أي عروض لهذا الإعلان بعد",
+  "@noOffersSubmittedDescription": {
+    "description": "لم يتم تقديم أي عروض لهذا الإعلان بعد"
+  },
+
+  "offerAccepted": "تم قبول عرض",
+  "@offerAccepted": {
+    "description": "تم قبول عرض"
+  },
+
+  "editOffer": "تعديل العرض",
+  "@editOffer": {
+    "description": "تعديل العرض"
+  },
+
+  "submitOffer": "تقديم عرض",
+  "@submitOffer": {
+    "description": "تقديم عرض"
+  },
+
+  "acceptTask": "قبول المهمة",
+  "@acceptTask": {
+    "description": "قبول المهمة"
+  },
+
+  "acceptTaskConfirmation": "هل أنت متأكد من رغبتك في قبول هذه المهمة؟",
+  "@acceptTaskConfirmation": {
+    "description": "تأكيد قبول المهمة"
+  },
+
+  "accept": "قبول",
+  "@accept": {
+    "description": "قبول"
+  },
+
+  "taskAcceptedSuccessfully": "تم قبول المهمة بنجاح",
+  "@taskAcceptedSuccessfully": {
+    "description": "تم قبول المهمة بنجاح"
+  },
+
+  "failedToAcceptTask": "فشل في قبول المهمة",
+  "@failedToAcceptTask": {
+    "description": "فشل في قبول المهمة"
+  },
+
+  "taskDescription": "وصف المهمة",
+  "@taskDescription": {
+    "description": "وصف المهمة"
+  },
+
+  "taskDetails": "تفاصيل المهمة",
+  "@taskDetails": {
+    "description": "تفاصيل المهمة"
+  },
+
+  "yourEarnings": "مستحقاتك",
+  "@yourEarnings": {
+    "description": "مستحقات السائق"
+  },
+
+  "quickNavigation": "التنقل السريع",
+  "@quickNavigation": {
+    "description": "التنقل السريع"
+  },
+
+  "contactName": "اسم المسؤول",
+  "@contactName": {
+    "description": "اسم المسؤول"
+  },
+
+  "contactPerson": "الشخص المسؤول",
+  "@contactPerson": {
+    "description": "الشخص المسؤول"
+  },
+
+  "openInGoogleMaps": "فتح في خرائط جوجل",
+  "@openInGoogleMaps": {
+    "description": "فتح في خرائط جوجل"
+  },
+
+  "cannotOpenGoogleMaps": "لا يمكن فتح خرائط جوجل",
+  "@cannotOpenGoogleMaps": {
+    "description": "لا يمكن فتح خرائط جوجل"
+  },
+
+  "mapOpenError": "حدث خطأ في فتح الخريطة",
+  "@mapOpenError": {
+    "description": "حدث خطأ في فتح الخريطة"
+  },
+
+  "items": "العناصر",
+  "@items": {
+    "description": "العناصر"
+  },
+
+  "unspecifiedItem": "عنصر غير محدد",
+  "@unspecifiedItem": {
+    "description": "عنصر غير محدد"
+  },
+
+  "quantity": "الكمية",
+  "@quantity": {
+    "description": "الكمية"
+  },
+
+  "pendingApproval": "في انتظار الموافقة",
+  "@pendingApproval": {
+    "description": "في انتظار الموافقة"
+  },
+
+  "confirmStatusUpdate": "تأكيد تحديث الحالة",
+  "@confirmStatusUpdate": {
+    "description": "تأكيد تحديث الحالة"
+  },
+
+  "confirmStatusUpdateMessage": "هل أنت متأكد من تحديث حالة المهمة إلى:",
+  "@confirmStatusUpdateMessage": {
+    "description": "رسالة تأكيد تحديث الحالة"
+  },
+
+  "cannotUndo": "لا يمكن التراجع عن هذا الإجراء.",
+  "@cannotUndo": {
+    "description": "لا يمكن التراجع عن هذا الإجراء"
+  },
+
+  "updatedSuccessfully": "تم التحديث بنجاح",
+  "@updatedSuccessfully": {
+    "description": "تم التحديث بنجاح"
+  },
+
+  "updateFailed": "فشل في التحديث",
+  "@updateFailed": {
+    "description": "فشل في التحديث"
+  },
+
+  "additionalData": "البيانات الإضافية",
+  "@additionalData": {
+    "description": "البيانات الإضافية"
+  },
+
+  "arrivedAtPickupPoint": "وصلت لنقطة الاستلام",
+  "@arrivedAtPickupPoint": {
+    "description": "وصلت لنقطة الاستلام"
+  },
+
+  "startLoading": "بدء التحميل",
+  "@startLoading": {
+    "description": "بدء التحميل"
+  },
+
+  "onTheWay": "في الطريق",
+  "@onTheWay": {
+    "description": "في الطريق"
+  },
+
+  "arrivedAtDeliveryPoint": "وصلت لنقطة التسليم",
+  "@arrivedAtDeliveryPoint": {
+    "description": "وصلت لنقطة التسليم"
+  },
+
+  "startUnloading": "بدء التفريغ",
+  "@startUnloading": {
+    "description": "بدء التفريغ"
+  },
+
+  "completeTask": "إكمال المهمة",
+  "@completeTask": {
+    "description": "إكمال المهمة"
+  },
+
+  "updatingTaskStatus": "جاري تحديث حالة المهمة...",
+  "@updatingTaskStatus": {
+    "description": "جاري تحديث حالة المهمة"
+  },
+
+  "taskStatusUpdatedTo": "تم تحديث حالة المهمة إلى: {status}",
+  "@taskStatusUpdatedTo": {
+    "description": "تم تحديث حالة المهمة إلى",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+
+  "unexpectedError": "حدث خطأ غير متوقع: {error}",
+  "@unexpectedError": {
+    "description": "حدث خطأ غير متوقع",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "viewDetails": "عرض التفاصيل",
+  "@viewDetails": {
+    "description": "عرض التفاصيل"
+  },
+
+  "noInternetConnection": "لا يوجد اتصال بالإنترنت",
+  "@noInternetConnection": {
+    "description": "عنوان رسالة عدم وجود اتصال بالإنترنت"
+  },
+
+  "internetConnectionRequired": "يحتاج التطبيق إلى الاتصال بالإنترنت للعمل بشكل صحيح. يرجى التأكد من اتصالك بالإنترنت ثم المحاولة مرة أخرى.",
+  "@internetConnectionRequired": {
+    "description": "رسالة توضيحية لضرورة الاتصال بالإنترنت"
+  },
+
+  "retry": "إعادة المحاولة",
+  "@retry": {
+    "description": "زر إعادة المحاولة"
+  },
+
+  "exit": "خروج",
+  "@exit": {
+    "description": "زر الخروج من التطبيق"
+  },
+
+  "initializationError": "خطأ في التهيئة",
+  "@initializationError": {
+    "description": "عنوان خطأ التهيئة"
+  },
+
+  "initializationErrorMessage": "حدث خطأ أثناء تهيئة التطبيق. يرجى المحاولة مرة أخرى.",
+  "@initializationErrorMessage": {
+    "description": "رسالة خطأ التهيئة"
+  },
+
+  "ok": "موافق",
+  "@ok": {
+    "description": "زر موافق"
+  },
+
+  "loading": "جاري التحميل...",
+  "@loading": {
+    "description": "رسالة التحميل"
+  },
+
+  "version": "الإصدار",
+  "@version": {
+    "description": "كلمة الإصدار"
+  },
+
+  "driversApp": "تطبيق السائقين",
+  "@driversApp": {
+    "description": "وصف التطبيق"
+  },
+
+  "pending": "في الانتظار",
+  "@pending": {
+    "description": "في الانتظار"
+  },
+
+  "accepted": "مقبول",
+  "@accepted": {
+    "description": "مقبول"
+  },
+
+  "rejected": "مرفوض",
+  "@rejected": {
+    "description": "مرفوض"
+  },
+
+  "proposedPrice": "السعر المقترح",
+  "@proposedPrice": {
+    "description": "السعر المقترح"
+  },
+
+  "description": "الوصف",
+  "@description": {
+    "description": "الوصف"
+  },
+
+  "loadingOffers": "جاري تحميل العروض...",
+  "@loadingOffers": {
+    "description": "جاري تحميل العروض"
+  },
+
+  "failedToLoadOffers": "فشل في تحميل العروض",
+  "@failedToLoadOffers": {
+    "description": "فشل في تحميل العروض"
+  },
+
+  "offerUpdatedSuccessfully": "تم تحديث العرض بنجاح",
+  "@offerUpdatedSuccessfully": {
+    "description": "تم تحديث العرض بنجاح"
+  },
+
+  "offerSubmittedSuccessfully": "تم تقديم العرض بنجاح",
+  "@offerSubmittedSuccessfully": {
+    "description": "تم تقديم العرض بنجاح"
+  },
+
+  "failedToSubmitOffer": "فشل في تقديم العرض",
+  "@failedToSubmitOffer": {
+    "description": "فشل في تقديم العرض"
+  },
+
+  "errorOccurred": "حدث خطأ",
+  "@errorOccurred": {
+    "description": "حدث خطأ"
+  },
+
+  "priceRange": "النطاق السعري",
+  "@priceRange": {
+    "description": "النطاق السعري"
+  },
+
+  "proposedPriceRequired": "السعر المقترح *",
+  "@proposedPriceRequired": {
+    "description": "السعر المقترح مطلوب"
+  },
+
+  "enterProposedPrice": "أدخل السعر المقترح",
+  "@enterProposedPrice": {
+    "description": "أدخل السعر المقترح"
+  },
+
+  "pleaseEnterProposedPrice": "يرجى إدخال السعر المقترح",
+  "@pleaseEnterProposedPrice": {
+    "description": "يرجى إدخال السعر المقترح"
+  },
+
+  "pleaseEnterValidPrice": "يرجى إدخال سعر صحيح",
+  "@pleaseEnterValidPrice": {
+    "description": "يرجى إدخال سعر صحيح"
+  },
+
+  "priceMustBeGreaterThanZero": "يجب أن يكون السعر أكبر من صفر",
+  "@priceMustBeGreaterThanZero": {
+    "description": "يجب أن يكون السعر أكبر من صفر"
+  },
+
+  "priceBelowMinimum": "السعر أقل من الحد الأدنى",
+  "@priceBelowMinimum": {
+    "description": "السعر أقل من الحد الأدنى"
+  },
+
+  "priceAboveMaximum": "السعر أعلى من الحد الأقصى",
+  "@priceAboveMaximum": {
+    "description": "السعر أعلى من الحد الأقصى"
+  },
+
+  "offerPrice": "سعر العرض",
+  "@offerPrice": {
+    "description": "سعر العرض"
+  },
+
+  "serviceCommission": "عمولة الخدمة",
+  "@serviceCommission": {
+    "description": "عمولة الخدمة"
+  },
+
+  "offerDescriptionOptional": "وصف العرض (اختياري)",
+  "@offerDescriptionOptional": {
+    "description": "وصف العرض اختياري"
+  },
+
+  "updateOffer": "تحديث العرض",
+  "@updateOffer": {
+    "description": "تحديث العرض"
+  },
+
+  "submitOfferButton": "تقديم العرض",
+  "@submitOfferButton": {
+    "description": "تقديم العرض"
+  },
+
+  "noInternetConnection": "لا يوجد اتصال بالإنترنت",
+  "@noInternetConnection": {
+    "description": "عنوان رسالة عدم وجود اتصال بالإنترنت"
+  },
+
+  "internetConnectionRequired": "يحتاج التطبيق إلى الاتصال بالإنترنت للعمل بشكل صحيح. يرجى التأكد من اتصالك بالإنترنت ثم المحاولة مرة أخرى.",
+  "@internetConnectionRequired": {
+    "description": "رسالة توضيحية لضرورة الاتصال بالإنترنت"
+  },
+
+  "initializationError": "خطأ في التهيئة",
+  "@initializationError": {
+    "description": "عنوان خطأ التهيئة"
+  },
+
+  "initializationErrorMessage": "حدث خطأ أثناء تهيئة التطبيق. يرجى المحاولة مرة أخرى.",
+  "@initializationErrorMessage": {
+    "description": "رسالة خطأ التهيئة"
+  },
+
+  "driversApp": "تطبيق السائقين",
+  "@driversApp": {
+    "description": "وصف التطبيق"
+  },
+
+  "taskHistoryTitle": "سجل المهمة #{taskId}",
+  "@taskHistoryTitle": {
+    "description": "عنوان سجل المهمة",
+    "placeholders": {
+      "taskId": {
+        "type": "String"
+      }
+    }
+  },
+
+  "noTaskHistory": "لا يوجد سجل للمهمة",
+  "@noTaskHistory": {
+    "description": "رسالة عدم وجود سجل للمهمة"
+  },
+
+  "addNote": "إضافة ملاحظة",
+  "@addNote": {
+    "description": "عنوان إضافة ملاحظة"
+  },
+
+  "writeNoteHere": "اكتب ملاحظتك هنا...",
+  "@writeNoteHere": {
+    "description": "نص تلميح كتابة الملاحظة"
+  },
+
+  "attachFile": "إرفاق ملف",
+  "@attachFile": {
+    "description": "زر إرفاق ملف"
+  },
+
+  "add": "إضافة",
+  "@add": {
+    "description": "زر إضافة"
+  },
+
+  "adding": "جاري الإضافة...",
+  "@adding": {
+    "description": "رسالة جاري الإضافة"
+  },
+
+  "errorLoadingTaskHistory": "خطأ في جلب سجل المهمة: {error}",
+  "@errorLoadingTaskHistory": {
+    "description": "رسالة خطأ جلب سجل المهمة",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "pleaseWriteNote": "يرجى كتابة ملاحظة",
+  "@pleaseWriteNote": {
+    "description": "رسالة يرجى كتابة ملاحظة"
+  },
+
+  "noteAddedSuccessfully": "تم إضافة الملاحظة بنجاح",
+  "@noteAddedSuccessfully": {
+    "description": "رسالة نجاح إضافة الملاحظة"
+  },
+
+  "failedToAddNote": "فشل في إضافة الملاحظة",
+  "@failedToAddNote": {
+    "description": "رسالة فشل إضافة الملاحظة"
+  },
+
+  "errorAddingNote": "خطأ في إضافة الملاحظة: {error}",
+  "@errorAddingNote": {
+    "description": "رسالة خطأ إضافة الملاحظة",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "errorSelectingFile": "خطأ في اختيار الملف: {error}",
+  "@errorSelectingFile": {
+    "description": "رسالة خطأ اختيار الملف",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "errorOpeningAttachment": "خطأ في فتح المرفق: {error}",
+  "@errorOpeningAttachment": {
+    "description": "رسالة خطأ فتح المرفق",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "download": "تحميل",
+  "@download": {
+    "description": "زر تحميل"
+  },
+
+  "open": "فتح",
+  "@open": {
+    "description": "زر فتح"
+  },
+
+  "errorLoadingImage": "خطأ في تحميل الصورة: {error}",
+  "@errorLoadingImage": {
+    "description": "رسالة خطأ تحميل الصورة",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "clickOpenToViewFile": "اضغط على \"فتح\" لعرض الملف",
+  "@clickOpenToViewFile": {
+    "description": "رسالة اضغط على فتح لعرض الملف"
+  },
+
+  "errorDownloadingFile": "خطأ في تحميل الملف: {error}",
+  "@errorDownloadingFile": {
+    "description": "رسالة خطأ تحميل الملف",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "errorOpeningFile": "خطأ في فتح الملف: {error}",
+  "@errorOpeningFile": {
+    "description": "رسالة خطأ فتح الملف",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "minutesAgo": "منذ {minutes} دقيقة",
+  "@minutesAgo": {
+    "description": "منذ دقائق",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+
+  "hoursAgo": "منذ {hours} ساعة",
+  "@hoursAgo": {
+    "description": "منذ ساعات",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+
+  "reject": "رفض",
+  "@reject": {
+    "description": "زر رفض"
+  },
+
+  "accept": "قبول",
+  "@accept": {
+    "description": "زر قبول"
+  },
+
+  "startLoading": "بدء التحميل",
+  "@startLoading": {
+    "description": "بدء التحميل"
+  },
+
+  "onTheWay": "في الطريق",
+  "@onTheWay": {
+    "description": "في الطريق"
+  },
+
+  "startUnloading": "بدء التفريغ",
+  "@startUnloading": {
+    "description": "بدء التفريغ"
+  },
+
+  "daysAgo": "منذ {days} يوم",
+  "@daysAgo": {
+    "description": "منذ أيام",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+
+  "now": "الآن",
+  "@now": {
+    "description": "الآن"
+  },
+
+  "taskStatusAssign": "مخصصة",
+  "@taskStatusAssign": {
+    "description": "حالة المهمة: مخصصة"
+  },
+
+  "taskStatusStarted": "بدأت",
+  "@taskStatusStarted": {
+    "description": "حالة المهمة: بدأت"
+  },
+
+  "taskStatusInPickupPoint": "في نقطة الاستلام",
+  "@taskStatusInPickupPoint": {
+    "description": "حالة المهمة: في نقطة الاستلام"
+  },
+
+  "taskStatusLoading": "جاري التحميل",
+  "@taskStatusLoading": {
+    "description": "حالة المهمة: جاري التحميل"
+  },
+
+  "taskStatusInTheWay": "في الطريق",
+  "@taskStatusInTheWay": {
+    "description": "حالة المهمة: في الطريق"
+  },
+
+  "taskStatusInDeliveryPoint": "في نقطة التسليم",
+  "@taskStatusInDeliveryPoint": {
+    "description": "حالة المهمة: في نقطة التسليم"
+  },
+
+  "taskStatusUnloading": "جاري التفريغ",
+  "@taskStatusUnloading": {
+    "description": "حالة المهمة: جاري التفريغ"
+  },
+
+  "taskStatusCompleted": "مكتملة",
+  "@taskStatusCompleted": {
+    "description": "حالة المهمة: مكتملة"
+  },
+
+  "taskStatusCancelled": "ملغية",
+  "updateLocation": "تحديث الموقع الجغرافي",
+  "sendingLocation": "جاري إرسال الموقع...",
+  "locationSent": "تم إرسال الموقع",
+  "locationSendError": "خطأ في إرسال الموقع",
+  "importantNotes": "ملاحظات مهمة:",
+  "checkInboxAndSpam": "• تحقق من صندوق البريد الوارد والرسائل المزعجة",
+  "linkValidOneHour": "• الرابط صالح لمدة ساعة واحدة فقط",
+  "noEmailRetry": "• إذا لم تستلم الرسالة خلال 5 دقائق، يمكنك المحاولة مرة أخرى",
+  "backToLogin": "العودة لتسجيل الدخول",
+  "taskStages": "مراحل المهمة",
+  "taskAssignedToDriver": "تم تخصيص المهمة للسائق",
+  "driverStartedTask": "بدأ السائق في تنفيذ المهمة",
+  "driverArrivedPickup": "وصل السائق لنقطة الاستلام",
+  "loadingGoods": "يتم تحميل البضائع",
+  "driverOnWayDelivery": "السائق في طريقه لنقطة التسليم",
+  "driverArrivedDelivery": "وصل السائق لنقطة التسليم",
+  "unloadingGoods": "يتم تفريغ البضائع",
+  "taskCompletedSuccessfully": "تم إكمال المهمة بنجاح",
+  "notifications": "الإشعارات",
+  "markAllAsRead": "تحديد الكل كمقروء",
+  "noNotifications": "لا توجد إشعارات",
+  "newNotificationsWillAppearHere": "ستظهر الإشعارات الجديدة هنا",
+  "close": "إغلاق",
+  "allNotificationsMarkedAsRead": "تم تحديد جميع الإشعارات كمقروءة",
+  "failedToUpdateNotifications": "فشل في تحديث الإشعارات",
+  "newLabel": "جديد",
+  "now": "الآن",
+  "minutesAgo": "منذ {minutes} دقيقة",
+  "hoursAgo": "منذ {hours} ساعة",
+  "daysAgo": "منذ {days} يوم",
+  "dayAgo": "يوم مضى",
+  "daysAgoPlural": "أيام مضت",
+  "hourAgo": "ساعة مضت",
+  "hoursAgoPlural": "ساعات مضت",
+  "minuteAgo": "دقيقة مضت",
+  "minutesAgoPlural": "دقائق مضت",
+  "@taskStatusCancelled": {
+    "description": "حالة المهمة: ملغية"
   }
+
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../l10n/generated/app_localizations.dart';
+
 import '../../services/registration_service.dart';
 import '../../models/registration_data.dart';
 import '../../widgets/custom_text_field.dart';
@@ -56,7 +58,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   void initState() {
     super.initState();
-    _loadRegistrationData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadRegistrationData();
+    });
   }
 
   @override
@@ -92,8 +96,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       DebugHelper.log('Error loading registration data: $e', tag: 'REGISTER');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('فشل في تحميل بيانات التسجيل'),
+          SnackBar(
+            content: Text(
+                AppLocalizations.of(context)!.failedToLoadRegistrationData),
             backgroundColor: Colors.red,
           ),
         );
@@ -199,8 +204,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       DebugHelper.log('Error during registration: $e', tag: 'REGISTER');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('حدث خطأ أثناء التسجيل'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.registrationError),
             backgroundColor: Colors.red,
           ),
         );
@@ -224,7 +229,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           size: 64,
           color: Colors.green,
         ),
-        title: const Text('تم التسجيل بنجاح!'),
+        title: Text(AppLocalizations.of(context)!.registrationSuccess),
         content: const Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -329,14 +334,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     if (_isLoading && _registrationData == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('إنشاء حساب جديد')),
-        body: const Center(
+        appBar:
+            AppBar(title: Text(AppLocalizations.of(context)!.createNewAccount)),
+        body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 16),
-              Text('جاري تحميل بيانات التسجيل...'),
+              const CircularProgressIndicator(),
+              const SizedBox(height: 16),
+              Text(AppLocalizations.of(context)!.loadingRegistrationData),
             ],
           ),
         ),
@@ -345,7 +351,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('إنشاء حساب جديد'),
+        title: Text(AppLocalizations.of(context)!.createNewAccount),
         elevation: 0,
       ),
       body: Column(
@@ -380,7 +386,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'البيانات الأساسية',
+                  AppLocalizations.of(context)!.basicData,
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight:
@@ -391,7 +397,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 Text(
-                  'المعلومات التكميلية',
+                  AppLocalizations.of(context)!.additionalInfo,
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight:
@@ -402,7 +408,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 Text(
-                  'المراجعة والتأكيد',
+                  AppLocalizations.of(context)!.reviewAndConfirm,
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight:
@@ -447,13 +453,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Expanded(
                     child: OutlinedButton(
                       onPressed: _previousStep,
-                      child: const Text('السابق'),
+                      child: Text(AppLocalizations.of(context)!.previous),
                     ),
                   ),
                 if (_currentStep > 0) const SizedBox(width: 16),
                 Expanded(
                   child: CustomButton(
-                    text: _currentStep == 2 ? 'إنشاء الحساب' : 'التالي',
+                    text: _currentStep == 2
+                        ? AppLocalizations.of(context)!.createAccount
+                        : AppLocalizations.of(context)!.next,
                     onPressed: _currentStep == 2 ? _register : _nextStep,
                     isLoading: _isLoading,
                   ),
@@ -471,7 +479,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       padding: const EdgeInsets.all(16),
       children: [
         Text(
-          'البيانات الأساسية',
+          AppLocalizations.of(context)!.basicData,
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -480,11 +488,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
         CustomTextField(
           controller: _nameController,
-          label: 'الاسم الكامل',
+          label: AppLocalizations.of(context)!.fullName,
           prefixIcon: Icons.person,
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'الاسم الكامل مطلوب';
+              return AppLocalizations.of(context)!.fullNameRequired;
             }
             return null;
           },
@@ -493,11 +501,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
         CustomTextField(
           controller: _usernameController,
-          label: 'اسم المستخدم',
+          label: AppLocalizations.of(context)!.username,
           prefixIcon: Icons.alternate_email,
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'اسم المستخدم مطلوب';
+              return AppLocalizations.of(context)!.usernameRequired;
             }
             return null;
           },
@@ -506,15 +514,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
         CustomTextField(
           controller: _emailController,
-          label: 'البريد الإلكتروني',
+          label: AppLocalizations.of(context)!.email,
           prefixIcon: Icons.email,
           keyboardType: TextInputType.emailAddress,
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'البريد الإلكتروني مطلوب';
+              return AppLocalizations.of(context)!.emailRequired;
             }
             if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-              return 'البريد الإلكتروني غير صحيح';
+              return AppLocalizations.of(context)!.invalidEmail;
             }
             return null;
           },
@@ -524,7 +532,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         // Phone number with country code
         PhoneInputField(
           controller: _phoneController,
-          label: 'رقم الهاتف',
+          label: AppLocalizations.of(context)!.phoneNumber,
           selectedCountryCode: _selectedPhoneCode,
           countryCodes: _registrationData?.phoneCodes ?? [],
           onCountryCodeChanged: (value) {
@@ -535,7 +543,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           prefixIcon: Icons.phone,
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'رقم الهاتف مطلوب';
+              return AppLocalizations.of(context)!.phoneRequired;
             }
             return null;
           },
@@ -544,7 +552,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
         CustomTextField(
           controller: _passwordController,
-          label: 'كلمة المرور',
+          label: AppLocalizations.of(context)!.password,
           prefixIcon: Icons.lock,
           obscureText: _obscurePassword,
           suffixIcon: IconButton(
@@ -558,10 +566,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'كلمة المرور مطلوبة';
+              return AppLocalizations.of(context)!.passwordRequired;
             }
             if (value.length < 8) {
-              return 'كلمة المرور يجب أن تكون 8 أحرف على الأقل';
+              return AppLocalizations.of(context)!.passwordMinLength;
             }
             return null;
           },
@@ -570,7 +578,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
         CustomTextField(
           controller: _confirmPasswordController,
-          label: 'تأكيد كلمة المرور',
+          label: AppLocalizations.of(context)!.confirmPassword,
           prefixIcon: Icons.lock_outline,
           obscureText: _obscureConfirmPassword,
           suffixIcon: IconButton(
@@ -585,10 +593,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'تأكيد كلمة المرور مطلوب';
+              return AppLocalizations.of(context)!.confirmPasswordRequired;
             }
             if (value != _passwordController.text) {
-              return 'كلمة المرور غير متطابقة';
+              return AppLocalizations.of(context)!.passwordMismatch;
             }
             return null;
           },
@@ -597,12 +605,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
         CustomTextField(
           controller: _addressController,
-          label: 'العنوان',
+          label: AppLocalizations.of(context)!.address,
           prefixIcon: Icons.location_on,
           maxLines: 2,
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'العنوان مطلوب';
+              return AppLocalizations.of(context)!.addressRequired;
             }
             return null;
           },
@@ -616,7 +624,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       padding: const EdgeInsets.all(16),
       children: [
         Text(
-          'المعلومات التكميلية',
+          AppLocalizations.of(context)!.additionalInfo,
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -626,7 +634,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         // Vehicle selection
         if (_registrationData?.vehicles.isNotEmpty == true) ...[
           Text(
-            'المركبة',
+            AppLocalizations.of(context)!.vehicle,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -660,11 +668,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
             },
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'اختيار المركبة مطلوب';
+                return AppLocalizations.of(context)!.selectVehicleRequired;
               }
               return null;
             },
-            hint: 'اختر المركبة',
+            hint: AppLocalizations.of(context)!.selectVehicle,
           ),
           const SizedBox(height: 16),
 
@@ -695,11 +703,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               },
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'اختيار نوع المركبة مطلوب';
+                  return AppLocalizations.of(context)!
+                      .selectVehicleTypeRequired;
                 }
                 return null;
               },
-              hint: 'اختر نوع المركبة',
+              hint: AppLocalizations.of(context)!.selectVehicleType,
             ),
             const SizedBox(height: 16),
           ],
@@ -721,11 +730,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               },
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'اختيار حجم المركبة مطلوب';
+                  return AppLocalizations.of(context)!
+                      .selectVehicleSizeRequired;
                 }
                 return null;
               },
-              hint: 'اختر حجم المركبة',
+              hint: AppLocalizations.of(context)!.selectVehicleSize,
             ),
             const SizedBox(height: 16),
           ],
@@ -734,7 +744,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         // Team selection
         if (_registrationData?.publicTeams.isNotEmpty == true) ...[
           Text(
-            'الفريق',
+            AppLocalizations.of(context)!.team,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -745,18 +755,46 @@ class _RegisterScreenState extends State<RegisterScreen> {
             items: _registrationData!.publicTeams.map((team) {
               return DropdownMenuItem<String>(
                 value: team.id.toString(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(team.name),
-                    if (team.address != null)
-                      Text(
-                        team.address!,
-                        style:
-                            const TextStyle(fontSize: 12, color: Colors.grey),
+                child: Container(
+                  width: double.infinity,
+                  constraints: const BoxConstraints(
+                    maxHeight: 60, // تحديد أقصى ارتفاع لتجنب overflow
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          team.name,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
                       ),
-                  ],
+                      if (team.address != null && team.address!.isNotEmpty)
+                        Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 2),
+                            child: Text(
+                              team.address!,
+                              style: const TextStyle(
+                                fontSize: 11,
+                                color: Colors.grey,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
               );
             }).toList(),
@@ -765,7 +803,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 _selectedTeamId = value;
               });
             },
-            hint: 'اختر فريق (اختياري)',
+            hint: AppLocalizations.of(context)!.selectTeamOptional,
           ),
           const SizedBox(height: 24),
         ],
@@ -782,7 +820,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Icon(Icons.chat, color: Colors.green[600]),
                     const SizedBox(width: 8),
                     Text(
-                      'واتساب',
+                      AppLocalizations.of(context)!.whatsapp,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
@@ -791,7 +829,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 16),
                 CheckboxListTile(
-                  title: const Text('رقم هاتفي هو نفسه رقم الواتساب'),
+                  title: Text(AppLocalizations.of(context)!.phoneIsWhatsapp),
                   value: _phoneIsWhatsapp,
                   onChanged: (value) {
                     setState(() {
@@ -810,7 +848,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: 16),
                   PhoneInputField(
                     controller: _whatsappController,
-                    label: 'رقم الواتساب',
+                    label: AppLocalizations.of(context)!.whatsappNumber,
                     selectedCountryCode: _selectedWhatsappCode,
                     countryCodes: _registrationData?.phoneCodes ?? [],
                     onCountryCodeChanged: (value) {
@@ -824,7 +862,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       if (!_phoneIsWhatsapp) {
                         if ((value == null || value.isEmpty) ||
                             _selectedWhatsappCode == null) {
-                          return 'الرجاء إدخال رقم واتساب أو اختيار أن الهاتف هو واتساب';
+                          return AppLocalizations.of(context)!.whatsappRequired;
                         }
                       }
                       return null;
@@ -840,7 +878,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         // Dynamic fields from template
         if (_registrationData?.driverFields.isNotEmpty == true) ...[
           Text(
-            'المعلومات التكميلية مطلوبة',
+            AppLocalizations.of(context)!.additionalInfoRequired,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -1148,7 +1186,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
             // Expiration date
             CustomTextField(
-              label: fieldValue + (isRequired ? ' *' : ''),
+              label: (fieldValue ?? '') + (isRequired ? ' *' : ''),
               readOnly: true,
               suffixIcon: const Icon(Icons.calendar_today),
               onTap: () async {
@@ -1281,7 +1319,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       padding: const EdgeInsets.all(16),
       children: [
         Text(
-          'مراجعة البيانات',
+          AppLocalizations.of(context)!.reviewAndConfirm,
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -1295,18 +1333,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'البيانات الأساسية',
+                  AppLocalizations.of(context)!.basicData,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                 ),
                 const SizedBox(height: 16),
-                _buildReviewItem('الاسم الكامل', _nameController.text),
-                _buildReviewItem('اسم المستخدم', _usernameController.text),
-                _buildReviewItem('البريد الإلكتروني', _emailController.text),
-                _buildReviewItem('رقم الهاتف',
+                _buildReviewItem(AppLocalizations.of(context)!.fullName,
+                    _nameController.text),
+                _buildReviewItem(AppLocalizations.of(context)!.username,
+                    _usernameController.text),
+                _buildReviewItem(
+                    AppLocalizations.of(context)!.email, _emailController.text),
+                _buildReviewItem(AppLocalizations.of(context)!.phoneNumber,
                     '$_selectedPhoneCode ${_phoneController.text}'),
-                _buildReviewItem('العنوان', _addressController.text),
+                _buildReviewItem(AppLocalizations.of(context)!.address,
+                    _addressController.text),
               ],
             ),
           ),
@@ -1323,18 +1365,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'المعلومات التكميلية',
+                    AppLocalizations.of(context)!.additionalInfo,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                   ),
                   const SizedBox(height: 16),
                   if (_selectedVehicleSizeId != null) ...[
-                    _buildReviewItem('المركبة', _getVehicleDisplayText()),
+                    _buildReviewItem(AppLocalizations.of(context)!.vehicle,
+                        _getVehicleDisplayText()),
                   ],
                   if (_selectedTeamId != null) ...[
                     _buildReviewItem(
-                        'الفريق',
+                        AppLocalizations.of(context)!.team,
                         _registrationData?.publicTeams
                                 .firstWhere(
                                     (t) => t.id.toString() == _selectedTeamId)
@@ -1343,7 +1386,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ],
                   if (!_phoneIsWhatsapp &&
                       _whatsappController.text.isNotEmpty) ...[
-                    _buildReviewItem('رقم الواتساب',
+                    _buildReviewItem(
+                        AppLocalizations.of(context)!.whatsappNumber,
                         '$_selectedWhatsappCode ${_whatsappController.text}'),
                   ],
                 ],
@@ -1394,32 +1438,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.blue[50],
+            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.blue[200]!),
+            border: Border.all(
+                color: Theme.of(context)
+                    .colorScheme
+                    .primary
+                    .withValues(alpha: 0.3)),
           ),
           child: Column(
             children: [
               Icon(
                 Icons.info_outline,
-                color: Colors.blue[600],
+                color: Theme.of(context).colorScheme.primary,
                 size: 32,
               ),
               const SizedBox(height: 12),
               Text(
-                'بالضغط على "إنشاء الحساب" فإنك توافق على شروط الاستخدام وسياسة الخصوصية',
+                AppLocalizations.of(context)!.termsAndPrivacyAgreement,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Colors.blue[800],
+                  color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               const SizedBox(height: 12),
               Text(
-                'سيتم إرسال رابط التحقق إلى بريدك الإلكتروني لتفعيل حسابك',
+                AppLocalizations.of(context)!.verificationLinkWillBeSent,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Colors.blue[600],
+                  color: Theme.of(context)
+                      .colorScheme
+                      .primary
+                      .withValues(alpha: 0.8),
                   fontSize: 12,
                 ),
               ),
@@ -1449,7 +1500,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
           const SizedBox(width: 16),
           Expanded(
             child: Text(
-              value.isNotEmpty ? value : 'غير محدد',
+              value.isNotEmpty
+                  ? value
+                  : AppLocalizations.of(context)!.notSpecified,
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 color: value.isNotEmpty ? null : Colors.grey,
@@ -1491,9 +1544,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   // Build appropriate widget based on field type and value
   Widget _buildFieldValueWidget(dynamic value, String fieldType) {
     if (value == null) {
-      return const Text(
-        'غير محدد',
-        style: TextStyle(
+      return Text(
+        AppLocalizations.of(context)!.notSpecified,
+        style: const TextStyle(
           fontWeight: FontWeight.w600,
           color: Colors.grey,
         ),
@@ -1511,7 +1564,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     // Handle regular text values
     return Text(
-      value.toString().isNotEmpty ? value.toString() : 'غير محدد',
+      value.toString().isNotEmpty
+          ? value.toString()
+          : AppLocalizations.of(context)!.notSpecified,
       style: TextStyle(
         fontWeight: FontWeight.w600,
         color: value.toString().isNotEmpty ? null : Colors.grey,
@@ -1584,15 +1639,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.blue[50],
+        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.blue[200]!),
+        border: Border.all(
+            color:
+                Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
           Icon(
             _getFileIcon(file.name),
-            color: Colors.blue[600],
+            color: Theme.of(context).colorScheme.primary,
             size: 24,
           ),
           const SizedBox(width: 12),
@@ -1604,7 +1661,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   file.name,
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
-                    color: Colors.blue[800],
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -1615,7 +1672,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     _formatFileSize(file.size),
                     style: TextStyle(
                       fontSize: 12,
-                      color: Colors.blue[600],
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withValues(alpha: 0.8),
                     ),
                   ),
                 ],
@@ -1750,7 +1810,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       return '${vehicle?.name} - ${vehicleType.name} - ${vehicleSize.name}';
     } catch (e) {
-      return 'غير محدد';
+      return AppLocalizations.of(context)!.notSpecified;
     }
   }
 }

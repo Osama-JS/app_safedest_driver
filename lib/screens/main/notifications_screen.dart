@@ -86,15 +86,28 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   String _formatNotificationTime(DateTime dateTime) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
 
     if (difference.inDays > 0) {
-      return '${difference.inDays} ${difference.inDays == 1 ? 'يوم' : 'أيام'} مضت';
+      if (isArabic) {
+        return '${difference.inDays} ${difference.inDays == 1 ? 'يوم' : 'أيام'} مضت';
+      } else {
+        return '${difference.inDays} ${difference.inDays == 1 ? 'day' : 'days'} ago';
+      }
     } else if (difference.inHours > 0) {
-      return '${difference.inHours} ${difference.inHours == 1 ? 'ساعة' : 'ساعات'} مضت';
+      if (isArabic) {
+        return '${difference.inHours} ${difference.inHours == 1 ? 'ساعة' : 'ساعات'} مضت';
+      } else {
+        return '${difference.inHours} ${difference.inHours == 1 ? 'hour' : 'hours'} ago';
+      }
     } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes} ${difference.inMinutes == 1 ? 'دقيقة' : 'دقائق'} مضت';
+      if (isArabic) {
+        return '${difference.inMinutes} ${difference.inMinutes == 1 ? 'دقيقة' : 'دقائق'} مضت';
+      } else {
+        return '${difference.inMinutes} ${difference.inMinutes == 1 ? 'minute' : 'minutes'} ago';
+      }
     } else {
-      return 'الآن';
+      return isArabic ? 'الآن' : 'Now';
     }
   }
 
@@ -152,13 +165,17 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 if (notification.isUnread) ...[
                   const SizedBox(height: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: const Color(AppConfig.primaryColorValue).withOpacity(0.1),
+                      color: const Color(AppConfig.primaryColorValue)
+                          .withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      'جديد',
+                      Localizations.localeOf(context).languageCode == 'ar'
+                          ? 'جديد'
+                          : 'New',
                       style: TextStyle(
                         fontSize: 10,
                         color: const Color(AppConfig.primaryColorValue),
@@ -173,7 +190,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('إغلاق'),
+              child: Text(Localizations.localeOf(context).languageCode == 'ar'
+                  ? 'إغلاق'
+                  : 'Close'),
             ),
           ],
         );
@@ -193,17 +212,24 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         Provider.of<NotificationService>(context, listen: false);
     final response = await notificationService.markAllAsRead();
 
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+
     if (response.isSuccess) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('تم تحديد جميع الإشعارات كمقروءة'),
+        SnackBar(
+          content: Text(isArabic
+              ? 'تم تحديد جميع الإشعارات كمقروءة'
+              : 'All notifications marked as read'),
           backgroundColor: Colors.green,
         ),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(response.message ?? 'فشل في تحديث الإشعارات'),
+          content: Text(response.message ??
+              (isArabic
+                  ? 'فشل في تحديث الإشعارات'
+                  : 'Failed to update notifications')),
           backgroundColor: Colors.red,
         ),
       );
@@ -214,7 +240,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('الإشعارات'),
+        title: Text(Localizations.localeOf(context).languageCode == 'ar'
+            ? 'الإشعارات'
+            : 'Notifications'),
         backgroundColor: const Color(AppConfig.primaryColorValue),
         foregroundColor: Colors.white,
         actions: [
@@ -224,7 +252,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 return IconButton(
                   icon: const Icon(Icons.mark_email_read),
                   onPressed: _markAllAsRead,
-                  tooltip: 'تحديد الكل كمقروء',
+                  tooltip: Localizations.localeOf(context).languageCode == 'ar'
+                      ? 'تحديد الكل كمقروء'
+                      : 'Mark all as read',
                 );
               }
               return const SizedBox.shrink();
@@ -278,6 +308,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   }
 
   Widget _buildEmptyState() {
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -289,7 +321,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            'لا توجد إشعارات',
+            isArabic ? 'لا توجد إشعارات' : 'No notifications',
             style: TextStyle(
               fontSize: 18,
               color: Colors.grey[600],
@@ -298,7 +330,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'ستظهر الإشعارات الجديدة هنا',
+            isArabic
+                ? 'ستظهر الإشعارات الجديدة هنا'
+                : 'New notifications will appear here',
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey[500],
@@ -331,8 +365,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             color: notification.isUnread
-                ? const Color(AppConfig.primaryColorValue).withOpacity(0.08) // لون أغمق للإشعارات غير المقروءة
-                : Colors.grey.withOpacity(0.03), // لون أفتح للإشعارات المقروءة
+                ? const Color(AppConfig.primaryColorValue)
+                    .withValues(alpha: 0.08) // لون أغمق للإشعارات غير المقروءة
+                : Colors.grey
+                    .withValues(alpha: 0.03), // لون أفتح للإشعارات المقروءة
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -405,7 +441,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                           ),
                           decoration: BoxDecoration(
                             color: _getNotificationTypeColor(notificationType)
-                                .withOpacity(0.1),
+                                .withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -435,8 +471,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        color:
-            _getNotificationTypeColor(type).withOpacity(isUnread ? 0.15 : 0.1),
+        color: _getNotificationTypeColor(type)
+            .withValues(alpha: isUnread ? 0.15 : 0.1),
         shape: BoxShape.circle,
       ),
       child: Icon(
@@ -498,17 +534,31 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   String _formatDateTime(DateTime dateTime) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
 
     if (difference.inMinutes < 1) {
-      return 'الآن';
+      return isArabic ? 'الآن' : 'Now';
     } else if (difference.inMinutes < 60) {
-      return 'منذ ${difference.inMinutes} دقيقة';
+      if (isArabic) {
+        return 'منذ ${difference.inMinutes} دقيقة';
+      } else {
+        return '${difference.inMinutes} ${difference.inMinutes == 1 ? 'minute' : 'minutes'} ago';
+      }
     } else if (difference.inHours < 24) {
-      return 'منذ ${difference.inHours} ساعة';
+      if (isArabic) {
+        return 'منذ ${difference.inHours} ساعة';
+      } else {
+        return '${difference.inHours} ${difference.inHours == 1 ? 'hour' : 'hours'} ago';
+      }
     } else if (difference.inDays < 7) {
-      return 'منذ ${difference.inDays} يوم';
+      if (isArabic) {
+        return 'منذ ${difference.inDays} يوم';
+      } else {
+        return '${difference.inDays} ${difference.inDays == 1 ? 'day' : 'days'} ago';
+      }
     } else {
-      return DateFormat('dd/MM/yyyy HH:mm', 'ar').format(dateTime);
+      return DateFormat('dd/MM/yyyy HH:mm', isArabic ? 'ar' : 'en')
+          .format(dateTime);
     }
   }
 }

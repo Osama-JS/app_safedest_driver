@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../services/auth_service.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
@@ -54,7 +55,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('حدث خطأ: $e'),
+            content: Text(AppLocalizations.of(context)!.errorOccurred),
             backgroundColor: Colors.red,
             duration: const Duration(seconds: 4),
           ),
@@ -85,9 +86,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               size: 28,
             ),
             const SizedBox(width: 12),
-            const Text(
-              'تم الإرسال بنجاح',
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context)!.sentSuccessfully,
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -99,25 +100,35 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'تم إرسال رابط إعادة تعيين كلمة المرور إلى:',
+              AppLocalizations.of(context)!.resetLinkSentTo,
               style: TextStyle(
                 fontSize: 16,
-                color: Colors.grey[700],
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: 0.7),
               ),
             ),
             const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.blue[50],
+                color: Theme.of(context)
+                    .colorScheme
+                    .primary
+                    .withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.blue[200]!),
+                border: Border.all(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.3)),
               ),
               child: Row(
                 children: [
                   Icon(
                     Icons.email,
-                    color: Colors.blue[600],
+                    color: Theme.of(context).colorScheme.primary,
                     size: 20,
                   ),
                   const SizedBox(width: 8),
@@ -127,7 +138,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: Colors.blue[700],
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                   ),
@@ -138,16 +149,23 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.amber[50],
+                color: Theme.of(context)
+                    .colorScheme
+                    .secondary
+                    .withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.amber[200]!),
+                border: Border.all(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .secondary
+                        .withValues(alpha: 0.3)),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(
                     Icons.info,
-                    color: Colors.amber[700],
+                    color: Theme.of(context).colorScheme.secondary,
                     size: 20,
                   ),
                   const SizedBox(width: 8),
@@ -156,21 +174,21 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'ملاحظات مهمة:',
+                          AppLocalizations.of(context)!.importantNotes,
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
-                            color: Colors.amber[800],
+                            color: Theme.of(context).colorScheme.secondary,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '• تحقق من صندوق البريد الوارد والرسائل المزعجة\n'
-                          '• الرابط صالح لمدة ساعة واحدة فقط\n'
-                          '• إذا لم تستلم الرسالة خلال 5 دقائق، يمكنك المحاولة مرة أخرى',
+                          '${AppLocalizations.of(context)!.checkInboxAndSpam}\n'
+                          '${AppLocalizations.of(context)!.linkValidOneHour}\n'
+                          '${AppLocalizations.of(context)!.noEmailRetry}',
                           style: TextStyle(
                             fontSize: 13,
-                            color: Colors.amber[800],
+                            color: Theme.of(context).colorScheme.secondary,
                             height: 1.4,
                           ),
                         ),
@@ -188,9 +206,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               Navigator.of(context).pop(); // Close dialog
               Navigator.of(context).pop(); // Go back to login
             },
-            child: const Text(
-              'العودة لتسجيل الدخول',
-              style: TextStyle(
+            child: Text(
+              AppLocalizations.of(context)!.backToLogin,
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
@@ -203,12 +221,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   String? _validateEmail(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'يرجى إدخال البريد الإلكتروني';
+      return AppLocalizations.of(context)!.pleaseEnterEmail;
     }
 
     final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
     if (!emailRegex.hasMatch(value.trim())) {
-      return 'يرجى إدخال بريد إلكتروني صحيح';
+      return AppLocalizations.of(context)!.pleaseEnterValidEmail;
     }
 
     return null;
@@ -218,7 +236,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('نسيت كلمة المرور'),
+        title: Text(AppLocalizations.of(context)!.forgotPassword),
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -233,7 +251,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 20),
-                
+
                 // Icon and title
                 Container(
                   padding: const EdgeInsets.all(20),
@@ -247,59 +265,63 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     color: Theme.of(context).primaryColor,
                   ),
                 ),
-                
+
                 const SizedBox(height: 32),
-                
+
                 Text(
-                  'إعادة تعيين كلمة المرور',
+                  AppLocalizations.of(context)!.email,
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).primaryColor,
-                  ),
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColor,
+                      ),
                   textAlign: TextAlign.center,
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 Text(
-                  'أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة تعيين كلمة المرور',
+                  AppLocalizations.of(context)!.enterEmailForReset,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Colors.grey[600],
-                    height: 1.5,
-                  ),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.6),
+                        height: 1.5,
+                      ),
                   textAlign: TextAlign.center,
                 ),
-                
+
                 const SizedBox(height: 40),
-                
+
                 // Email field
                 CustomTextField(
                   controller: _emailController,
-                  label: 'البريد الإلكتروني',
-                  hint: 'أدخل بريدك الإلكتروني',
+                  label: AppLocalizations.of(context)!.email,
+                  hint: AppLocalizations.of(context)!.enterYourEmail,
                   prefixIcon: Icons.email_outlined,
                   keyboardType: TextInputType.emailAddress,
                   validator: _validateEmail,
                   enabled: !_isLoading,
                 ),
-                
+
                 const SizedBox(height: 32),
-                
+
                 // Send button
                 CustomButton(
-                  text: 'إرسال رابط إعادة التعيين',
+                  text: AppLocalizations.of(context)!.sendResetLink,
                   onPressed: _isLoading ? null : _sendResetLink,
                   isLoading: _isLoading,
                   icon: Icons.send,
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Back to login
                 TextButton(
-                  onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
+                  onPressed:
+                      _isLoading ? null : () => Navigator.of(context).pop(),
                   child: Text(
-                    'العودة إلى تسجيل الدخول',
+                    AppLocalizations.of(context)!.backToLogin,
                     style: TextStyle(
                       color: Theme.of(context).primaryColor,
                       fontSize: 16,

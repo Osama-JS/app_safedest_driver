@@ -201,6 +201,7 @@ class NotificationService extends ChangeNotifier {
       title: message.notification?.title ?? 'إشعار جديد',
       body: message.notification?.body ?? 'لديك إشعار جديد',
       data: message.data,
+      isRead: false,
       createdAt: DateTime.now(),
       readAt: null,
     );
@@ -283,8 +284,8 @@ class NotificationService extends ChangeNotifier {
         // Update local notification
         final index = _notifications.indexWhere((n) => n.id == notificationId);
         if (index != -1 && !_notifications[index].isRead) {
-          _notifications[index] =
-              _notifications[index].copyWith(readAt: DateTime.now());
+          _notifications[index] = _notifications[index]
+              .copyWith(isRead: true, readAt: DateTime.now());
           _unreadCount = (_unreadCount - 1).clamp(0, _unreadCount);
           notifyListeners();
         }
@@ -310,7 +311,7 @@ class NotificationService extends ChangeNotifier {
       if (response.isSuccess) {
         // Update all local notifications
         _notifications = _notifications
-            .map((n) => n.copyWith(readAt: DateTime.now()))
+            .map((n) => n.copyWith(isRead: true, readAt: DateTime.now()))
             .toList();
         _unreadCount = 0;
         notifyListeners();
@@ -402,6 +403,7 @@ class NotificationService extends ChangeNotifier {
       title: 'إشعار تجريبي',
       body: 'هذا إشعار تجريبي للاختبار',
       data: {'test': 'true'},
+      isRead: false,
       createdAt: DateTime.now(),
       readAt: null, // null means unread
     );

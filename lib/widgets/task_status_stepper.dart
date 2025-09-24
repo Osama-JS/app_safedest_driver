@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/task.dart';
+import '../l10n/generated/app_localizations.dart';
 
 class TaskStatusStepper extends StatelessWidget {
   final Task task;
@@ -11,8 +12,8 @@ class TaskStatusStepper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final steps = _getSteps();
-    final currentStepIndex = _getCurrentStepIndex();
+    final steps = _getSteps(context);
+    final currentStepIndex = _getCurrentStepIndex(steps);
 
     return Card(
       elevation: 4,
@@ -27,18 +28,23 @@ class TaskStatusStepper extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Colors.blue[100],
+                    color: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
                     Icons.timeline,
-                    color: Colors.blue[700],
+                    color: Theme.of(context).colorScheme.primary,
                     size: 24,
                   ),
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  'مراحل المهمة',
+                  Localizations.localeOf(context).languageCode == 'ar'
+                      ? 'مراحل المهمة'
+                      : 'Task Stages',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -46,14 +52,15 @@ class TaskStatusStepper extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
-            _buildHorizontalStepper(steps, currentStepIndex),
+            _buildHorizontalStepper(context, steps, currentStepIndex),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildHorizontalStepper(List<TaskStep> steps, int currentStepIndex) {
+  Widget _buildHorizontalStepper(
+      BuildContext context, List<TaskStep> steps, int currentStepIndex) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -66,9 +73,9 @@ class TaskStatusStepper extends StatelessWidget {
 
           return Row(
             children: [
-              _buildStepItem(step, isActive, isCurrent, isCompleted),
+              _buildStepItem(context, step, isActive, isCurrent, isCompleted),
               if (index < steps.length - 1)
-                _buildConnector(index < currentStepIndex),
+                _buildConnector(context, index < currentStepIndex),
             ],
           );
         }).toList(),
@@ -76,8 +83,8 @@ class TaskStatusStepper extends StatelessWidget {
     );
   }
 
-  Widget _buildStepItem(
-      TaskStep step, bool isActive, bool isCurrent, bool isCompleted) {
+  Widget _buildStepItem(BuildContext context, TaskStep step, bool isActive,
+      bool isCurrent, bool isCompleted) {
     Color backgroundColor;
     Color iconColor;
     Color textColor;
@@ -89,14 +96,17 @@ class TaskStatusStepper extends StatelessWidget {
       textColor = Colors.green;
       icon = Icons.check;
     } else if (isCurrent) {
-      backgroundColor = Colors.blue;
+      backgroundColor = Theme.of(context).colorScheme.primary;
       iconColor = Colors.white;
-      textColor = Colors.blue;
+      textColor = Theme.of(context).colorScheme.primary;
       icon = _getStepIcon(step.status);
     } else {
-      backgroundColor = Colors.grey[300]!;
-      iconColor = Colors.grey[600]!;
-      textColor = Colors.grey[600]!;
+      backgroundColor =
+          Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2);
+      iconColor =
+          Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6);
+      textColor =
+          Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6);
       icon = _getStepIcon(step.status);
     }
 
@@ -143,13 +153,15 @@ class TaskStatusStepper extends StatelessWidget {
     );
   }
 
-  Widget _buildConnector(bool isCompleted) {
+  Widget _buildConnector(BuildContext context, bool isCompleted) {
     return Container(
       width: 30,
       height: 2,
       margin: const EdgeInsets.only(bottom: 30),
       decoration: BoxDecoration(
-        color: isCompleted ? Colors.green : Colors.grey[300],
+        color: isCompleted
+            ? Colors.green
+            : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(1),
       ),
     );
@@ -178,53 +190,64 @@ class TaskStatusStepper extends StatelessWidget {
     }
   }
 
-  List<TaskStep> _getSteps() {
+  List<TaskStep> _getSteps(BuildContext context) {
+    // استخدام النصوص المترجمة مباشرة حتى يتم إصلاح مشكلة توليد ملفات الترجمة
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+
     return [
       TaskStep(
-        title: 'مخصصة',
-        content: 'تم تخصيص المهمة للسائق',
+        title: isArabic ? 'مخصصة' : 'Assigned',
+        content:
+            isArabic ? 'تم تخصيص المهمة للسائق' : 'Task assigned to driver',
         status: 'assign',
       ),
       TaskStep(
-        title: 'بدأت',
-        content: 'بدأ السائق في تنفيذ المهمة',
+        title: isArabic ? 'بدأت' : 'Started',
+        content:
+            isArabic ? 'بدأ السائق في تنفيذ المهمة' : 'Driver started the task',
         status: 'started',
       ),
       TaskStep(
-        title: 'في نقطة الاستلام',
-        content: 'وصل السائق لنقطة الاستلام',
+        title: isArabic ? 'في نقطة الاستلام' : 'At Pickup Point',
+        content: isArabic
+            ? 'وصل السائق لنقطة الاستلام'
+            : 'Driver arrived at pickup point',
         status: 'in pickup point',
       ),
       TaskStep(
-        title: 'جاري التحميل',
-        content: 'يتم تحميل البضائع',
+        title: isArabic ? 'جاري التحميل' : 'Loading',
+        content: isArabic ? 'يتم تحميل البضائع' : 'Loading goods',
         status: 'loading',
       ),
       TaskStep(
-        title: 'في الطريق',
-        content: 'السائق في طريقه لنقطة التسليم',
+        title: isArabic ? 'في الطريق' : 'On the Way',
+        content: isArabic
+            ? 'السائق في طريقه لنقطة التسليم'
+            : 'Driver on the way to delivery point',
         status: 'in the way',
       ),
       TaskStep(
-        title: 'في نقطة التسليم',
-        content: 'وصل السائق لنقطة التسليم',
+        title: isArabic ? 'في نقطة التسليم' : 'At Delivery Point',
+        content: isArabic
+            ? 'وصل السائق لنقطة التسليم'
+            : 'Driver arrived at delivery point',
         status: 'in delivery point',
       ),
       TaskStep(
-        title: 'جاري التفريغ',
-        content: 'يتم تفريغ البضائع',
+        title: isArabic ? 'جاري التفريغ' : 'Unloading',
+        content: isArabic ? 'يتم تفريغ البضائع' : 'Unloading goods',
         status: 'unloading',
       ),
       TaskStep(
-        title: 'مكتملة',
-        content: 'تم إكمال المهمة بنجاح',
+        title: isArabic ? 'مكتملة' : 'Completed',
+        content:
+            isArabic ? 'تم إكمال المهمة بنجاح' : 'Task completed successfully',
         status: 'completed',
       ),
     ];
   }
 
-  int _getCurrentStepIndex() {
-    final steps = _getSteps();
+  int _getCurrentStepIndex(List<TaskStep> steps) {
     for (int i = 0; i < steps.length; i++) {
       if (steps[i].status == task.status) {
         return i;

@@ -3,16 +3,22 @@ import 'package:provider/provider.dart';
 import '../services/task_service.dart';
 import '../models/task.dart';
 import '../theme/app_theme.dart';
+import '../l10n/generated/app_localizations.dart';
 
 class RecentTasksCard extends StatelessWidget {
   const RecentTasksCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) {
+      // Fallback or error handling
+      return const SizedBox.shrink();
+    }
     return Consumer<TaskService>(
       builder: (context, taskService, child) {
         final recentTasks = taskService.tasks.take(3).toList();
-        
+
         return Card(
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -28,26 +34,24 @@ class RecentTasksCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 12),
                     Text(
-                      'المهام الأخيرة',
+                      l10n.recentTasks,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                     const Spacer(),
-                    TextButton(
-                      onPressed: () {
-                        // TODO: Navigate to tasks screen
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('عرض جميع المهام')),
-                        );
-                      },
-                      child: const Text('عرض الكل'),
-                    ),
+                    // TextButton(
+                    //   onPressed: () {
+                    //     // TODO: Navigate to tasks screen
+                    //     ScaffoldMessenger.of(context).showSnackBar(
+                    //       const SnackBar(content: Text('عرض جميع المهام')),
+                    //     );
+                    //   },
+                    //   child: Text(l10n.viewAll),
+                    // ),
                   ],
                 ),
-                
                 const SizedBox(height: 16),
-                
                 if (taskService.isLoading)
                   const Center(
                     child: Padding(
@@ -68,6 +72,11 @@ class RecentTasksCard extends StatelessWidget {
   }
 
   Widget _buildEmptyState(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) {
+      // Fallback or error handling
+      return const SizedBox.shrink();
+    }
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -79,10 +88,11 @@ class RecentTasksCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'لا توجد مهام حالياً',
+            l10n.noTasksCurrently,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-            ),
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                ),
           ),
         ],
       ),
@@ -91,7 +101,11 @@ class RecentTasksCard extends StatelessWidget {
 
   Widget _buildTaskItem(BuildContext context, Task task) {
     final statusColor = AppTheme.getTaskStatusColor(task.status);
-    
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) {
+      // Fallback or error handling
+      return const SizedBox.shrink();
+    }
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
@@ -110,10 +124,10 @@ class RecentTasksCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  'مهمة #${task.id}',
+                  '${l10n.taskId} #${task.id}',
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
               ),
               Container(
@@ -133,27 +147,28 @@ class RecentTasksCard extends StatelessWidget {
               ),
             ],
           ),
-          
           const SizedBox(height: 8),
-          
           if (task.customerName != null)
             Row(
               children: [
                 Icon(
                   Icons.person_outline,
                   size: 16,
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                 ),
                 const SizedBox(width: 6),
                 Text(
                   task.customerName!,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
-                  ),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.8),
+                      ),
                 ),
               ],
             ),
-          
           if (task.pickupAddress != null) ...[
             const SizedBox(height: 4),
             Row(
@@ -161,15 +176,19 @@ class RecentTasksCard extends StatelessWidget {
                 Icon(
                   Icons.location_on_outlined,
                   size: 16,
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                 ),
                 const SizedBox(width: 6),
                 Expanded(
                   child: Text(
                     task.pickupAddress!,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
-                    ),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.8),
+                        ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -177,9 +196,7 @@ class RecentTasksCard extends StatelessWidget {
               ],
             ),
           ],
-          
           const SizedBox(height: 8),
-          
           Row(
             children: [
               Icon(
@@ -189,18 +206,21 @@ class RecentTasksCard extends StatelessWidget {
               ),
               const SizedBox(width: 6),
               Text(
-                '${task.commission.toStringAsFixed(2)} ر.س',
+                '${(task.totalPrice - task.commission).toStringAsFixed(2)} ر.س',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Colors.green,
-                  fontWeight: FontWeight.w600,
-                ),
+                      color: Colors.green,
+                      fontWeight: FontWeight.w600,
+                    ),
               ),
               const Spacer(),
               Text(
                 _formatDate(task.createdAt),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                ),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.6),
+                    ),
               ),
             ],
           ),
@@ -231,7 +251,7 @@ class RecentTasksCard extends StatelessWidget {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays > 0) {
       return '${difference.inDays} يوم';
     } else if (difference.inHours > 0) {

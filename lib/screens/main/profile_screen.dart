@@ -15,6 +15,45 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  bool _isRefreshing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Refresh profile data when screen loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _refreshProfileData();
+    });
+  }
+
+  Future<void> _refreshProfileData() async {
+    if (_isRefreshing) return;
+
+    setState(() {
+      _isRefreshing = true;
+    });
+
+    try {
+      final authService = Provider.of<AuthService>(context, listen: false);
+      await authService.refreshDriverData();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('خطأ في تحديث البيانات: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isRefreshing = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -53,30 +92,63 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           }
 
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                // Profile Header
-                _buildProfileHeader(driver, l10n),
+          return RefreshIndicator(
+            onRefresh: _refreshProfileData,
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  // Refresh indicator
+                  if (_isRefreshing)
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
+                            'جاري تحديث البيانات...',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
 
-                const SizedBox(height: 24),
+                  // Profile Header
+                  _buildProfileHeader(driver, l10n),
 
-                // Profile Information
-                _buildProfileInfo(driver, l10n),
+                  const SizedBox(height: 24),
 
-                const SizedBox(height: 24),
+                  // Profile Information
+                  _buildProfileInfo(driver, l10n),
 
-                // Settings Section
-                _buildSettingsSection(l10n),
+                  const SizedBox(height: 24),
 
-                const SizedBox(height: 24),
+                  // Settings Section
+                  _buildSettingsSection(l10n),
 
-                // Logout Button
-                _buildLogoutButton(authService, l10n),
+                  const SizedBox(height: 24),
 
-                const SizedBox(height: 100), // Bottom padding
-              ],
+                  // Logout Button
+                  _buildLogoutButton(authService, l10n),
+
+                  const SizedBox(height: 100), // Bottom padding
+                ],
+              ),
             ),
           );
         },
@@ -94,14 +166,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
             CircleAvatar(
               radius: 50,
               backgroundColor: Theme.of(context).colorScheme.primary,
-              child: Text(
-                driver.name.isNotEmpty ? driver.name[0].toUpperCase() : 'S',
-                style: const TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
+              backgroundImage: driver.image != null && driver.image!.isNotEmpty
+                  ? NetworkImage(AppConfig.getStorageUrl(driver.image!))
+                  : null,
+              child: driver.image == null || driver.image!.isEmpty
+                  ? Text(
+                      driver.name.isNotEmpty
+                          ? driver.name[0].toUpperCase()
+                          : 'S',
+                      style: const TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    )
+                  : null,
             ),
 
             const SizedBox(height: 16),
@@ -177,6 +256,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 16),
             _buildInfoRow(l10n.email, driver.email, Icons.email),
+            // عرض username إذا كان موجود
+            if (driver.username != null && driver.username!.isNotEmpty)
+              _buildInfoRow(
+                  'اسم المستخدم', driver.username!, Icons.account_circle),
             _buildInfoRow(l10n.phone, driver.phone, Icons.phone),
             _buildInfoRow(l10n.address, driver.address, Icons.map),
             if (driver.team != null)

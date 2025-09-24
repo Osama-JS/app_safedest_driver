@@ -11,6 +11,48 @@ class AdditionalDataScreen extends StatefulWidget {
 }
 
 class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
+  bool _isLoading = false;
+  Map<String, dynamic>? _additionalData;
+  String? _errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAdditionalData();
+  }
+
+  Future<void> _loadAdditionalData() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final authService = Provider.of<AuthService>(context, listen: false);
+      final response = await authService.getAdditionalData();
+
+      if (response.isSuccess && response.data != null) {
+        setState(() {
+          _additionalData = response.data!['additional_data'] ?? {};
+          _isLoading = false;
+        });
+        debugPrint('Additional data loaded: $_additionalData');
+      } else {
+        setState(() {
+          _errorMessage =
+              response.errorMessage ?? 'فشل في جلب البيانات الإضافية';
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'حدث خطأ أثناء جلب البيانات: $e';
+        _isLoading = false;
+      });
+      debugPrint('Error loading additional data: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,126 +60,133 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
         title: const Text('البيانات الإضافية'),
         elevation: 0,
       ),
-      body: Consumer<AuthService>(
-        builder: (context, authService, child) {
-          final driver = authService.currentDriver;
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : _errorMessage != null
+              ? _buildErrorState()
+              : _additionalData == null || _additionalData!.isEmpty
+                  ? _buildEmptyState()
+                  : _buildDataContent(),
+    );
+  }
 
-          if (driver == null) {
-            return const Center(
-              child: Text('لا توجد بيانات للسائق'),
-            );
-          }
+  Widget _buildErrorState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.error_outline,
+            size: 64,
+            color: Colors.red[400],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'حدث خطأ',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: Colors.red[600],
+                ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            _errorMessage!,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Colors.red[500],
+                ),
+          ),
+          const SizedBox(height: 32),
+          CustomButton(
+            text: 'إعادة المحاولة',
+            onPressed: _loadAdditionalData,
+            backgroundColor: Colors.red[600]!,
+          ),
+        ],
+      ),
+    );
+  }
 
-          // Parse additional data
-          Map<String, dynamic> additionalData = {};
-          debugPrint('Driver additional data: ${driver.additionalData}');
-
-          if (driver.additionalData != null &&
-              driver.additionalData!.isNotEmpty) {
-            try {
-              additionalData =
-                  Map<String, dynamic>.from(driver.additionalData!);
-              debugPrint('Parsed additional data: $additionalData');
-            } catch (e) {
-              debugPrint('Error parsing additional data: $e');
-            }
-          } else {
-            debugPrint('No additional data found for driver');
-          }
-
-          if (additionalData.isEmpty) {
-            return _buildEmptyState();
-          }
-
-          return ListView(
+  Widget _buildDataContent() {
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        // Header
+        Card(
+          child: Padding(
             padding: const EdgeInsets.all(16),
-            children: [
-              // Header
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context)
+                            .primaryColor
+                            .withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(
+                        Icons.info_outline,
+                        color: Theme.of(context).primaryColor,
+                        size: 24,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context)
-                                  .primaryColor
-                                  .withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Icon(
-                              Icons.info_outline,
-                              color: Theme.of(context).primaryColor,
-                              size: 24,
-                            ),
+                          Text(
+                            'البيانات الإضافية',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                           ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'البيانات الإضافية',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleLarge
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'المعلومات التكميلية المسجلة في ملفك الشخصي',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                  color: Colors.grey[600],
                                 ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  'المعلومات التكميلية المسجلة في ملفك الشخصي',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(
-                                        color: Colors.grey[600],
-                                      ),
-                                ),
-                              ],
-                            ),
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Additional data fields
-              ...additionalData.entries.map((entry) {
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: _buildDataField(entry.key, entry.value),
-                );
-              }),
-
-              const SizedBox(height: 32),
-
-              // Update button
-              CustomButton(
-                text: 'تحديث البيانات',
-                onPressed: () {
-                  // TODO: Navigate to update additional data screen
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('ميزة تحديث البيانات قريباً'),
-                      backgroundColor: Colors.blue,
                     ),
-                  );
-                },
-                backgroundColor: Theme.of(context).primaryColor,
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+
+        // Additional data fields
+        ..._additionalData!.entries.map((entry) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: _buildDataField(entry.key, entry.value),
           );
-        },
-      ),
+        }),
+
+        const SizedBox(height: 32),
+
+        // Refresh button
+        CustomButton(
+          text: 'تحديث البيانات',
+          onPressed: _loadAdditionalData,
+          backgroundColor: Theme.of(context).primaryColor,
+        ),
+      ],
     );
   }
 
@@ -232,17 +281,26 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
     final text = fieldData['text'];
 
     return Card(
+      elevation: 2,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              label,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: Theme.of(context).primaryColor,
+            // Field label with type indicator
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    label,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).primaryColor,
+                        ),
                   ),
+                ),
+                _buildTypeIndicator(type),
+              ],
             ),
             const SizedBox(height: 12),
 
@@ -255,10 +313,92 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
               _buildFileWithTextField(value, text),
             ] else if (type == 'date') ...[
               _buildDateField(value),
+            ] else if (type == 'number') ...[
+              _buildNumberField(value),
+            ] else if (type == 'email') ...[
+              _buildEmailField(value),
+            ] else if (type == 'phone') ...[
+              _buildPhoneField(value),
+            ] else if (type == 'url') ...[
+              _buildUrlField(value),
             ] else ...[
               _buildTextValue(value),
             ],
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTypeIndicator(String type) {
+    IconData icon;
+    Color color;
+    String tooltip;
+
+    switch (type) {
+      case 'file':
+        icon = Icons.attach_file;
+        color = Colors.blue;
+        tooltip = 'ملف';
+        break;
+      case 'image':
+        icon = Icons.image;
+        color = Colors.green;
+        tooltip = 'صورة';
+        break;
+      case 'date':
+        icon = Icons.calendar_today;
+        color = Colors.orange;
+        tooltip = 'تاريخ';
+        break;
+      case 'number':
+        icon = Icons.numbers;
+        color = Colors.purple;
+        tooltip = 'رقم';
+        break;
+      case 'email':
+        icon = Icons.email;
+        color = Colors.red;
+        tooltip = 'بريد إلكتروني';
+        break;
+      case 'phone':
+        icon = Icons.phone;
+        color = Colors.teal;
+        tooltip = 'هاتف';
+        break;
+      case 'url':
+        icon = Icons.link;
+        color = Colors.indigo;
+        tooltip = 'رابط';
+        break;
+      case 'file_expiration_date':
+        icon = Icons.schedule;
+        color = Colors.amber;
+        tooltip = 'ملف مع تاريخ انتهاء';
+        break;
+      case 'file_with_text':
+        icon = Icons.description;
+        color = Colors.cyan;
+        tooltip = 'ملف مع نص';
+        break;
+      default:
+        icon = Icons.text_fields;
+        color = Colors.grey;
+        tooltip = 'نص';
+    }
+
+    return Tooltip(
+      message: tooltip,
+      child: Container(
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Icon(
+          icon,
+          size: 16,
+          color: color,
         ),
       ),
     );
@@ -419,6 +559,156 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
       child: Text(
         value.toString(),
         style: Theme.of(context).textTheme.bodyLarge,
+      ),
+    );
+  }
+
+  Widget _buildNumberField(dynamic value) {
+    if (value == null || value.toString().isEmpty) {
+      return _buildEmptyValue();
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.purple[50],
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.purple[200]!),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.numbers,
+            color: Colors.purple[600],
+            size: 20,
+          ),
+          const SizedBox(width: 12),
+          Text(
+            value.toString(),
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              color: Colors.purple[800],
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmailField(dynamic value) {
+    if (value == null || value.toString().isEmpty) {
+      return _buildEmptyValue();
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.red[50],
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.red[200]!),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.email,
+            color: Colors.red[600],
+            size: 20,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              value.toString(),
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Colors.red[800],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPhoneField(dynamic value) {
+    if (value == null || value.toString().isEmpty) {
+      return _buildEmptyValue();
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.teal[50],
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.teal[200]!),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.phone,
+            color: Colors.teal[600],
+            size: 20,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              value.toString(),
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Colors.teal[800],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUrlField(dynamic value) {
+    if (value == null || value.toString().isEmpty) {
+      return _buildEmptyValue();
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.indigo[50],
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.indigo[200]!),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.link,
+            color: Colors.indigo[600],
+            size: 20,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              value.toString(),
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Colors.indigo[800],
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              // TODO: Open URL in browser
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('فتح الرابط قريباً'),
+                ),
+              );
+            },
+            icon: Icon(
+              Icons.open_in_new,
+              color: Colors.indigo[600],
+            ),
+          ),
+        ],
       ),
     );
   }

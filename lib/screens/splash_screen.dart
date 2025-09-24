@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../l10n/generated/app_localizations.dart';
 import '../config/app_config.dart';
 import '../services/auth_service.dart';
 import '../services/notification_service.dart';
@@ -65,7 +66,7 @@ class _SplashScreenState extends State<SplashScreen>
       try {
         final isConnected = await authService
             .checkApiConnectivity()
-            .timeout(const Duration(seconds: 20));
+            .timeout(const Duration(seconds: 30));
 
         debugPrint('SplashScreen: API connectivity result: $isConnected');
 
@@ -100,6 +101,18 @@ class _SplashScreenState extends State<SplashScreen>
       await locationService.initialize();
       debugPrint('SplashScreen: LocationService initialized');
 
+      // Check initial permission status for debugging
+      debugPrint('SplashScreen: Checking initial permission status...');
+      await locationService.getDetailedPermissionStatus();
+
+      // Request GPS permission immediately after LocationService initialization
+      debugPrint('SplashScreen: Requesting GPS permission...');
+      await _requestGPSPermission(locationService);
+
+      // Check final permission status
+      debugPrint('SplashScreen: Checking final permission status...');
+      await locationService.getDetailedPermissionStatus();
+
       // انتظار مدة الـ Splash
       debugPrint('SplashScreen: Waiting for splash duration...');
       await Future.delayed(Duration(seconds: AppConfig.splashDuration));
@@ -129,8 +142,119 @@ class _SplashScreenState extends State<SplashScreen>
     }
   }
 
+  // Request GPS permission during app startup with comprehensive diagnosis
+  Future<void> _requestGPSPermission(LocationService locationService) async {
+    try {
+      debugPrint(
+          '🚀 SplashScreen: Starting comprehensive GPS permission diagnosis...');
+
+      // Step 1: Get detailed status first for debugging
+      final detailedStatus =
+          await locationService.getDetailedPermissionStatus();
+      debugPrint('📊 SplashScreen: Initial detailed status: $detailedStatus');
+
+      // Step 2: Check if this is a manifest issue
+      if (detailedStatus['manifestConfigured'] == false) {
+        debugPrint('🚨 SplashScreen: CRITICAL MANIFEST ISSUE DETECTED!');
+        debugPrint(
+            '🔧 SplashScreen: Manifest error: ${detailedStatus['manifestError']}');
+        debugPrint('🔧 SplashScreen: IMMEDIATE ACTION REQUIRED:');
+        debugPrint('   1. STOP the app completely');
+        debugPrint('   2. Run: flutter clean');
+        debugPrint('   3. Run: flutter pub get');
+        debugPrint('   4. Completely rebuild and reinstall the app');
+        debugPrint('   5. Check AndroidManifest.xml has location permissions');
+        debugPrint(
+            '🚨 SplashScreen: App will continue but location features will NOT work!');
+        return; // Don't attempt permission requests if manifest is broken
+      }
+
+      // Step 3: Show diagnosis
+      debugPrint('💡 SplashScreen: Diagnosis: ${detailedStatus['diagnosis']}');
+
+      // Step 4: Try multiple permission request strategies
+      bool hasPermission = false;
+      int attempts = 0;
+      const maxAttempts = 3;
+
+      while (!hasPermission && attempts < maxAttempts) {
+        attempts++;
+        debugPrint(
+            '🔄 SplashScreen: Permission attempt $attempts/$maxAttempts');
+
+        // Request permission with enhanced method
+        hasPermission = await locationService.requestGPSPermissionOnly();
+
+        if (!hasPermission && attempts < maxAttempts) {
+          debugPrint('⏳ SplashScreen: Waiting before next attempt...');
+          await Future.delayed(const Duration(seconds: 2));
+
+          // Get updated status
+          final updatedStatus =
+              await locationService.getDetailedPermissionStatus();
+          debugPrint(
+              '📊 SplashScreen: Updated status after attempt $attempts: ${updatedStatus['diagnosis']}');
+        }
+      }
+
+      // Step 5: Final verification
+      if (hasPermission) {
+        debugPrint('✅ SplashScreen: GPS permission granted successfully');
+
+        // Try to get initial location to verify everything works
+        try {
+          final response = await locationService.sendLocationManually();
+          if (response.isSuccess) {
+            debugPrint(
+                '✅ SplashScreen: Location access fully verified and working');
+          } else {
+            debugPrint(
+                '⚠️ SplashScreen: Permission granted but location sending failed: ${response.message}');
+          }
+        } catch (e) {
+          debugPrint('⚠️ SplashScreen: Location verification failed: $e');
+        }
+      } else {
+        debugPrint(
+            '❌ SplashScreen: Failed to get GPS permission after $maxAttempts attempts');
+
+        // Get final comprehensive status for debugging
+        final finalStatus = await locationService.getDetailedPermissionStatus();
+        debugPrint(
+            '📊 SplashScreen: FINAL DIAGNOSIS: ${finalStatus['diagnosis']}');
+        debugPrint('📊 SplashScreen: Complete final status: $finalStatus');
+
+        // Provide specific guidance based on final status
+        if (finalStatus['isPermanentlyDenied'] == true) {
+          debugPrint(
+              '🔧 SplashScreen: USER ACTION REQUIRED: Open app settings and grant location permission');
+        } else if (finalStatus['serviceEnabled'] == false) {
+          debugPrint(
+              '🔧 SplashScreen: USER ACTION REQUIRED: Enable GPS/Location services in device settings');
+        } else {
+          debugPrint(
+              '🔧 SplashScreen: DEVELOPER ACTION REQUIRED: Check app configuration and rebuild');
+        }
+      }
+    } catch (e) {
+      debugPrint('💥 SplashScreen: GPS permission request error: $e');
+
+      // Even on error, try to get diagnostic info
+      try {
+        final errorStatus = await locationService.getDetailedPermissionStatus();
+        debugPrint(
+            '📊 SplashScreen: Error diagnosis: ${errorStatus['diagnosis']}');
+      } catch (e2) {
+        debugPrint('💥 SplashScreen: Could not get error diagnosis: $e2');
+      }
+    }
+  }
+
   // Dialog عند انقطاع الاتصال
   Future<void> _showConnectivityDialog() async {
+    final l10n = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -143,13 +267,12 @@ class _SplashScreenState extends State<SplashScreen>
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.red[50]!,
-                Colors.orange[50]!,
-              ],
+            color: Theme.of(context).colorScheme.surface,
+            border: Border.all(
+              color: isDark
+                  ? Colors.red.withValues(alpha: 0.3)
+                  : Colors.red.withValues(alpha: 0.2),
+              width: 1,
             ),
           ),
           child: Column(
@@ -160,7 +283,9 @@ class _SplashScreenState extends State<SplashScreen>
                 width: 80,
                 height: 80,
                 decoration: BoxDecoration(
-                  color: Colors.red[100],
+                  color: isDark
+                      ? Colors.red.withValues(alpha: 0.2)
+                      : Colors.red.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
@@ -173,25 +298,28 @@ class _SplashScreenState extends State<SplashScreen>
                 child: Icon(
                   Icons.wifi_off_rounded,
                   size: 40,
-                  color: Colors.red[600],
+                  color: isDark ? Colors.red[400] : Colors.red[600],
                 ),
               ),
               const SizedBox(height: 24),
 
               Text(
-                'لا يوجد اتصال بالإنترنت',
+                l10n.noInternetConnection,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Colors.red[700],
+                      color: isDark ? Colors.red[400] : Colors.red[700],
                     ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
 
               Text(
-                'يحتاج التطبيق إلى الاتصال بالإنترنت للعمل بشكل صحيح. يرجى التأكد من اتصالك بالإنترنت ثم المحاولة مرة أخرى.',
+                l10n.internetConnectionRequired,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey[700],
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withValues(alpha: 0.8),
                       height: 1.5,
                     ),
                 textAlign: TextAlign.center,
@@ -208,7 +336,14 @@ class _SplashScreenState extends State<SplashScreen>
                         _initializeApp(); // إعادة المحاولة
                       },
                       icon: const Icon(Icons.refresh_rounded),
-                      label: const Text('إعادة المحاولة'),
+                      label: Text(l10n.retry),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor:
+                            isDark ? Colors.blue[400] : Colors.blue[600],
+                        side: BorderSide(
+                          color: isDark ? Colors.blue[400]! : Colors.blue[600]!,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -219,7 +354,12 @@ class _SplashScreenState extends State<SplashScreen>
                         exit(0);
                       },
                       icon: const Icon(Icons.exit_to_app_rounded),
-                      label: const Text('خروج'),
+                      label: Text(l10n.exit),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            isDark ? Colors.red[600] : Colors.red[500],
+                        foregroundColor: Colors.white,
+                      ),
                     ),
                   ),
                 ],
@@ -232,20 +372,33 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   void _showErrorAndNavigate() {
+    final l10n = AppLocalizations.of(context)!;
+
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: const Text('خطأ في التهيئة'),
-        content:
-            const Text('حدث خطأ أثناء تهيئة التطبيق. يرجى المحاولة مرة أخرى.'),
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: Text(
+          l10n.initializationError,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+        ),
+        content: Text(
+          l10n.initializationErrorMessage,
+          style: TextStyle(
+            color:
+                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
               Navigator.of(context).pushReplacementNamed('/login');
             },
-            child: const Text('موافق'),
+            child: Text(l10n.ok),
           ),
         ],
       ),
@@ -260,6 +413,8 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: Center(
@@ -312,9 +467,9 @@ class _SplashScreenState extends State<SplashScreen>
 
                     // الوصف
                     Text(
-                      'تطبيق السائقين',
+                      l10n.driversApp,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: Colors.white.withOpacity(0.8),
+                            color: Colors.white.withValues(alpha: 0.8),
                           ),
                     ),
 
@@ -332,9 +487,9 @@ class _SplashScreenState extends State<SplashScreen>
                     const SizedBox(height: 20),
 
                     Text(
-                      'جاري التحميل...',
+                      l10n.loading,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.white.withOpacity(0.7),
+                            color: Colors.white.withValues(alpha: 0.7),
                           ),
                     ),
                   ],
@@ -349,10 +504,10 @@ class _SplashScreenState extends State<SplashScreen>
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(20),
         child: Text(
-          'الإصدار ${AppConfig.appVersion}',
+          '${l10n.version} ${AppConfig.appVersion}',
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.white.withOpacity(0.6),
+                color: Colors.white.withValues(alpha: 0.6),
               ),
         ),
       ),

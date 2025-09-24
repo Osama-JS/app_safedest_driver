@@ -9,6 +9,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../models/task.dart';
 import '../services/task_service.dart';
 import '../config/app_config.dart';
+import '../l10n/generated/app_localizations.dart';
 
 class TaskHistorySheet extends StatefulWidget {
   final Task task;
@@ -61,8 +62,9 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
         setState(() {
           _isLoading = false;
         });
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('خطأ في جلب سجل المهمة: $e')),
+          SnackBar(content: Text(l10n.errorLoadingTaskHistory(e.toString()))),
         );
       }
     }
@@ -70,11 +72,14 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       height: MediaQuery.of(context).size.height * 0.9,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         children: [
@@ -84,7 +89,7 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
             height: 4,
             margin: const EdgeInsets.symmetric(vertical: 12),
             decoration: BoxDecoration(
-              color: Colors.grey[300],
+              color: isDark ? Colors.grey[600] : Colors.grey[300],
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -94,18 +99,23 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               children: [
-                Icon(Icons.history, color: Colors.blue[700], size: 28),
+                Icon(Icons.history,
+                    color: Theme.of(context).colorScheme.primary, size: 28),
                 const SizedBox(width: 12),
                 Text(
-                  'سجل المهمة #${widget.task.id}',
+                  l10n.taskHistoryTitle(widget.task.id.toString()),
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                 ),
                 const Spacer(),
                 IconButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(Icons.close),
+                  icon: Icon(
+                    Icons.close,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
               ],
             ),
@@ -142,17 +152,26 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
     }
 
     if (_taskLogs.isEmpty) {
-      return const Center(
+      final l10n = AppLocalizations.of(context)!;
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.history, size: 64, color: Colors.grey),
-            SizedBox(height: 16),
+            Icon(Icons.history,
+                size: 64,
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: 0.5)),
+            const SizedBox(height: 16),
             Text(
-              'لا يوجد سجل للمهمة',
+              l10n.noTaskHistory,
               style: TextStyle(
                 fontSize: 16,
-                color: Colors.grey,
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: 0.6),
               ),
             ),
           ],
@@ -176,13 +195,20 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
     final note = log.note ?? '';
     final hasFile = log.fileName != null;
     final fileName = log.fileName;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.grey[50],
+        color: isDark
+            ? Theme.of(context).colorScheme.surfaceContainerHighest
+            : Theme.of(context).colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[200]!),
+        border: Border.all(
+            color: isDark
+                ? Theme.of(context).colorScheme.outline.withValues(alpha: 0.3)
+                : Theme.of(context).colorScheme.outline.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,12 +218,20 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: Colors.blue[100],
+                  color: isDark
+                      ? Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withValues(alpha: 0.2)
+                      : Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Icon(
                   _getStatusIcon(status),
-                  color: Colors.blue[700],
+                  color: Theme.of(context).colorScheme.primary,
                   size: 16,
                 ),
               ),
@@ -207,16 +241,20 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      TaskStatusExtension.fromString(status).displayName,
-                      style: const TextStyle(
+                      status,
+                      style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     Text(
                       _formatDateTime(timestamp),
                       style: TextStyle(
-                        color: Colors.grey[600],
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.6),
                         fontSize: 12,
                       ),
                     ),
@@ -229,12 +267,14 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
                   child: Container(
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      color: Colors.green[50],
+                      color: isDark
+                          ? Colors.green.withValues(alpha: 0.2)
+                          : Colors.green.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Icon(
                       Icons.attach_file,
-                      color: Colors.green[600],
+                      color: isDark ? Colors.green[300] : Colors.green[600],
                       size: 20,
                     ),
                   ),
@@ -245,7 +285,10 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
             const SizedBox(height: 12),
             Text(
               note,
-              style: const TextStyle(fontSize: 14),
+              style: TextStyle(
+                fontSize: 14,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
             ),
           ],
           if (hasFile && fileName != null) ...[
@@ -253,9 +296,21 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.blue[50],
+                color: isDark
+                    ? Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.2)
+                    : Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(4),
-                border: Border.all(color: Colors.blue[200]!),
+                border: Border.all(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.3)),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -263,14 +318,14 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
                   Icon(
                     Icons.attach_file,
                     size: 16,
-                    color: Colors.blue[600],
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                   const SizedBox(width: 4),
                   Text(
                     fileName,
                     style: TextStyle(
                       fontSize: 12,
-                      color: Colors.blue[700],
+                      color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -284,6 +339,8 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
   }
 
   Widget _buildAddNoteSection() {
+    final l10n = AppLocalizations.of(context)!;
+
     return Container(
       padding: const EdgeInsets.all(20),
       child: SingleChildScrollView(
@@ -292,9 +349,10 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'إضافة ملاحظة',
+              l10n.addNote,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
             ),
             const SizedBox(height: 12),
@@ -304,7 +362,7 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
               controller: _noteController,
               maxLines: 3,
               decoration: InputDecoration(
-                hintText: 'اكتب ملاحظتك هنا...',
+                hintText: l10n.writeNoteHere,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -323,7 +381,7 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
                   child: OutlinedButton.icon(
                     onPressed: _isAddingNote ? null : _selectFile,
                     icon: const Icon(Icons.attach_file, size: 18),
-                    label: Text(_selectedFileName ?? 'إرفاق ملف'),
+                    label: Text(_selectedFileName ?? l10n.attachFile),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
@@ -351,7 +409,7 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
                             ),
                           )
                         : const Icon(Icons.add, size: 18),
-                    label: Text(_isAddingNote ? 'جاري الإضافة...' : 'إضافة'),
+                    label: Text(_isAddingNote ? l10n.adding : l10n.add),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
@@ -392,13 +450,14 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
   }
 
   String _formatDateTime(DateTime dateTime) {
+    final l10n = AppLocalizations.of(context)!;
     final now = DateTime.now();
     final difference = now.difference(dateTime);
 
     if (difference.inMinutes < 60) {
-      return 'منذ ${difference.inMinutes} دقيقة';
+      return l10n.minutesAgo(difference.inMinutes);
     } else if (difference.inHours < 24) {
-      return 'منذ ${difference.inHours} ساعة';
+      return l10n.hoursAgo(difference.inHours);
     } else {
       return '${dateTime.day}/${dateTime.month}/${dateTime.year}';
     }
@@ -419,20 +478,23 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
       }
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('خطأ في اختيار الملف: $e')),
+          SnackBar(content: Text(l10n.errorSelectingFile(e.toString()))),
         );
       }
     }
   }
 
   Future<void> _addNote() async {
+    final l10n = AppLocalizations.of(context)!;
+
     if (_noteController.text.trim().isEmpty) {
       if (mounted) {
         // إغلاق النافذة أولاً ثم عرض الرسالة
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('يرجى كتابة ملاحظة')),
+          SnackBar(content: Text(l10n.pleaseWriteNote)),
         );
       }
       return;
@@ -462,11 +524,11 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
           // عرض رسالة النجاح في الصفحة الرئيسية
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Row(
+              content: Row(
                 children: [
-                  Icon(Icons.check_circle, color: Colors.white),
-                  SizedBox(width: 8),
-                  Text('تم إضافة الملاحظة بنجاح'),
+                  const Icon(Icons.check_circle, color: Colors.white),
+                  const SizedBox(width: 8),
+                  Text(l10n.noteAddedSuccessfully),
                 ],
               ),
               backgroundColor: Colors.green,
@@ -495,7 +557,7 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
                     child: Text(
                       response.errorMessage.isNotEmpty
                           ? response.errorMessage
-                          : 'فشل في إضافة الملاحظة',
+                          : l10n.failedToAddNote,
                     ),
                   ),
                 ],
@@ -523,7 +585,7 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
                 const Icon(Icons.error, color: Colors.white),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: Text('خطأ في إضافة الملاحظة: $e'),
+                  child: Text(l10n.errorAddingNote(e.toString())),
                 ),
               ],
             ),
@@ -549,8 +611,9 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
       );
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('خطأ في فتح المرفق: $e')),
+          SnackBar(content: Text(l10n.errorOpeningAttachment(e.toString()))),
         );
       }
     }
@@ -560,8 +623,10 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
       String? fileName, String fileUrl, String filePath) {
     final isImage = _isImageFile(filePath);
     final displayName = fileName ?? _getFileNameFromPath(filePath);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Dialog(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       child: Container(
         constraints: BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width * 0.9,
@@ -574,7 +639,15 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.blue[50],
+                color: isDark
+                    ? Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.2)
+                    : Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.1),
                 borderRadius:
                     const BorderRadius.vertical(top: Radius.circular(8)),
               ),
@@ -582,21 +655,25 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
                 children: [
                   Icon(
                     isImage ? Icons.image : Icons.insert_drive_file,
-                    color: Colors.blue[700],
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       displayName,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                   ),
                   IconButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(Icons.close),
+                    icon: Icon(
+                      Icons.close,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                   ),
                 ],
               ),
@@ -621,13 +698,13 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
                   ElevatedButton.icon(
                     onPressed: () => _downloadFile(fileUrl, displayName),
                     icon: const Icon(Icons.download),
-                    label: const Text('تحميل'),
+                    label: Text(AppLocalizations.of(context)!.download),
                   ),
                   if (!isImage)
                     ElevatedButton.icon(
                       onPressed: () => _openExternalFile(fileUrl),
                       icon: const Icon(Icons.open_in_new),
-                      label: const Text('فتح'),
+                      label: Text(AppLocalizations.of(context)!.open),
                     ),
                 ],
               ),
@@ -649,7 +726,12 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
           children: [
             const Icon(Icons.error, size: 64, color: Colors.red),
             const SizedBox(height: 16),
-            Text('خطأ في تحميل الصورة: $error'),
+            Text(
+              AppLocalizations.of(context)!.errorLoadingImage(error.toString()),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
           ],
         ),
       ),
@@ -657,6 +739,8 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
   }
 
   Widget _buildFileViewer(String fileName, String fileUrl) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -664,22 +748,26 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
           Icon(
             _getFileIcon(fileName),
             size: 64,
-            color: Colors.blue[600],
+            color: Theme.of(context).colorScheme.primary,
           ),
           const SizedBox(height: 16),
           Text(
             fileName,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
           Text(
-            'اضغط على "فتح" لعرض الملف',
+            l10n.clickOpenToViewFile,
             style: TextStyle(
-              color: Colors.grey[600],
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.6),
               fontSize: 14,
             ),
           ),
@@ -731,8 +819,9 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
       }
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('خطأ في تحميل الملف: $e')),
+          SnackBar(content: Text(l10n.errorDownloadingFile(e.toString()))),
         );
       }
     }
@@ -748,10 +837,38 @@ class _TaskHistorySheetState extends State<TaskHistorySheet> {
       }
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('خطأ في فتح الملف: $e')),
+          SnackBar(content: Text(l10n.errorOpeningFile(e.toString()))),
         );
       }
+    }
+  }
+
+  String _getStatusText(BuildContext context, String status) {
+    final l10n = AppLocalizations.of(context)!;
+
+    switch (status.toLowerCase()) {
+      case 'assign':
+        return l10n.taskStatusAssign;
+      case 'started':
+        return l10n.taskStatusStarted;
+      case 'in pickup point':
+        return l10n.taskStatusInPickupPoint;
+      case 'loading':
+        return l10n.taskStatusLoading;
+      case 'in the way':
+        return l10n.taskStatusInTheWay;
+      case 'in delivery point':
+        return l10n.taskStatusInDeliveryPoint;
+      case 'unloading':
+        return l10n.taskStatusUnloading;
+      case 'completed':
+        return l10n.taskStatusCompleted;
+      case 'cancelled':
+        return l10n.taskStatusCancelled;
+      default:
+        return l10n.taskStatusAssign;
     }
   }
 }

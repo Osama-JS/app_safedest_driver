@@ -7,6 +7,7 @@ import '../../models/driver.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/custom_button.dart';
 import '../../utils/debug_helper.dart';
+import '../../config/app_config.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -19,9 +20,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
+  final _usernameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _addressController = TextEditingController();
-  
+
   File? _selectedImage;
   bool _isLoading = false;
   Driver? _currentDriver;
@@ -44,10 +46,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void _loadDriverData() {
     final authService = Provider.of<AuthService>(context, listen: false);
     _currentDriver = authService.currentDriver;
-    
+
     if (_currentDriver != null) {
       _nameController.text = _currentDriver!.name;
       _emailController.text = _currentDriver!.email;
+      _usernameController.text = _currentDriver!.username ?? '';
       _phoneController.text = _currentDriver!.phone ?? '';
       _addressController.text = _currentDriver!.address ?? '';
     }
@@ -85,8 +88,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   ImageProvider? _getProfileImage() {
     if (_selectedImage != null) {
       return FileImage(_selectedImage!);
-    } else if (_currentDriver?.image != null && _currentDriver!.image!.isNotEmpty) {
-      return NetworkImage(_currentDriver!.image!);
+    } else if (_currentDriver?.image != null &&
+        _currentDriver!.image!.isNotEmpty) {
+      return NetworkImage(AppConfig.getStorageUrl(_currentDriver!.image!));
     }
     return null;
   }
@@ -100,10 +104,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     try {
       final authService = Provider.of<AuthService>(context, listen: false);
-      
+
       final updateData = {
         'name': _nameController.text.trim(),
-        'email': _emailController.text.trim(),
+        // البريد الإلكتروني محذوف لأنه غير قابل للتعديل
         'phone': _phoneController.text.trim(),
         'address': _addressController.text.trim(),
       };
@@ -125,7 +129,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(response.errorMessage ?? 'فشل في تحديث الملف الشخصي'),
+              content:
+                  Text(response.errorMessage ?? 'فشل في تحديث الملف الشخصي'),
               backgroundColor: Colors.red,
             ),
           );
@@ -186,14 +191,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   CircleAvatar(
                     radius: 60,
                     backgroundColor: Colors.grey[300],
-                    backgroundImage: _getProfileImage(), // استخدام الدالة المساعدة
-                    child: _selectedImage == null && _currentDriver?.image == null
-                        ? const Icon(
-                            Icons.person,
-                            size: 60,
-                            color: Colors.grey,
-                          )
-                        : null,
+                    backgroundImage:
+                        _getProfileImage(), // استخدام الدالة المساعدة
+                    child:
+                        _selectedImage == null && _currentDriver?.image == null
+                            ? const Icon(
+                                Icons.person,
+                                size: 60,
+                                color: Colors.grey,
+                              )
+                            : null,
                   ),
                   Positioned(
                     bottom: 0,
@@ -237,18 +244,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
             CustomTextField(
               controller: _emailController,
-              label: 'البريد الإلكتروني',
+              label: 'البريد الإلكتروني (غير قابل للتعديل)',
               prefixIcon: Icons.email,
               keyboardType: TextInputType.emailAddress,
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'البريد الإلكتروني مطلوب';
-                }
-                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                  return 'البريد الإلكتروني غير صحيح';
-                }
-                return null;
-              },
+              enabled: false, // منع التعديل
+              validator: null, // إزالة validation لأنه غير قابل للتعديل
+            ),
+            const SizedBox(height: 16),
+
+            CustomTextField(
+              controller: _usernameController,
+              label: 'اسم المستخدم (غير قابل للتعديل)',
+              prefixIcon: Icons.account_circle,
+              enabled: false, // منع التعديل
+              validator: null, // إزالة validation لأنه غير قابل للتعديل
             ),
             const SizedBox(height: 16),
 

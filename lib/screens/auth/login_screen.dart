@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../config/app_config.dart';
 import '../../services/auth_service.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/custom_button.dart';
+import '../../widgets/language_selector.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -59,22 +61,24 @@ class _LoginScreenState extends State<LoginScreen> {
         // Add small delay to avoid Navigator conflicts
         await Future.delayed(const Duration(milliseconds: 100));
         if (mounted) {
-          _showErrorDialog('حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.');
+          _showErrorDialog(
+              AppLocalizations.of(context)!.unexpectedErrorOccurred);
         }
       }
     }
   }
 
   void _showErrorDialog(String message) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('خطأ في تسجيل الدخول'),
+        title: Text(l10n.loginErrorTitle),
         content: Text(message),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('موافق'),
+            child: Text(l10n.okButton),
           ),
         ],
       ),
@@ -83,6 +87,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
@@ -93,30 +99,38 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 60),
+                // Language Selector
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const LanguageSelector(),
+                  ],
+                ),
+
+                const SizedBox(height: 40),
 
                 // Logo and Title
-                _buildHeader(),
+                _buildHeader(l10n),
 
                 const SizedBox(height: 60),
 
                 // Login Form
-                _buildLoginForm(),
+                _buildLoginForm(l10n),
 
                 const SizedBox(height: 30),
 
                 // Login Button
-                _buildLoginButton(),
+                _buildLoginButton(l10n),
 
                 const SizedBox(height: 20),
 
                 // Remember Me
-                _buildRememberMe(),
+                _buildRememberMe(l10n),
 
                 const SizedBox(height: 40),
 
                 // Footer
-                _buildFooter(),
+                _buildFooter(l10n),
               ],
             ),
           ),
@@ -125,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(AppLocalizations l10n) {
     return Column(
       children: [
         // App Logo
@@ -158,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
         // Subtitle
         Text(
-          'مرحباً بك في تطبيق السائقين',
+          l10n.welcomeToDriverApp,
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
               ),
@@ -167,19 +181,19 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildLoginForm() {
+  Widget _buildLoginForm(AppLocalizations l10n) {
     return Column(
       children: [
         // Login Field (Email or Username)
         CustomTextField(
           controller: _loginController,
-          label: 'البريد الإلكتروني أو اسم المستخدم',
-          hint: 'أدخل بريدك الإلكتروني أو اسم المستخدم',
+          label: l10n.emailOrUsernameLabel,
+          hint: l10n.enterEmailOrUsernameHint,
           keyboardType: TextInputType.text,
           prefixIcon: Icons.email_outlined,
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'يرجى إدخال البريد الإلكتروني';
+              return l10n.pleaseEnterEmailError;
             }
 
             return null;
@@ -191,8 +205,8 @@ class _LoginScreenState extends State<LoginScreen> {
         // Password Field
         CustomTextField(
           controller: _passwordController,
-          label: 'كلمة المرور',
-          hint: 'أدخل كلمة المرور',
+          label: l10n.passwordFieldLabel,
+          hint: l10n.enterPasswordHint,
           obscureText: _obscurePassword,
           prefixIcon: Icons.lock_outlined,
           suffixIcon: IconButton(
@@ -209,10 +223,10 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'يرجى إدخال كلمة المرور';
+              return l10n.pleaseEnterPasswordError;
             }
             if (value.length < 6) {
-              return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+              return l10n.passwordMinLengthError;
             }
             return null;
           },
@@ -221,11 +235,11 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildLoginButton() {
+  Widget _buildLoginButton(AppLocalizations l10n) {
     return Consumer<AuthService>(
       builder: (context, authService, child) {
         return CustomButton(
-          text: 'تسجيل الدخول',
+          text: l10n.loginButtonText,
           onPressed: authService.isLoading ? null : _handleLogin,
           isLoading: authService.isLoading,
           icon: Icons.login,
@@ -234,7 +248,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildRememberMe() {
+  Widget _buildRememberMe(AppLocalizations l10n) {
     return Row(
       children: [
         Checkbox(
@@ -245,19 +259,19 @@ class _LoginScreenState extends State<LoginScreen> {
             });
           },
         ),
-        const Text('تذكرني'),
+        Text(l10n.rememberMeText),
         const Spacer(),
         TextButton(
           onPressed: () {
             Navigator.pushNamed(context, '/forgot-password');
           },
-          child: const Text('نسيت كلمة المرور؟'),
+          child: Text(l10n.forgotPasswordText),
         ),
       ],
     );
   }
 
-  Widget _buildFooter() {
+  Widget _buildFooter(AppLocalizations l10n) {
     return Column(
       children: [
         const SizedBox(height: 16),
@@ -266,21 +280,21 @@ class _LoginScreenState extends State<LoginScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('ليس لديك حساب؟'),
+            Text(l10n.dontHaveAccountText),
             TextButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/register');
               },
-              child: const Text(
-                'إنشاء حساب جديد',
-                style: TextStyle(fontWeight: FontWeight.bold),
+              child: Text(
+                l10n.createNewAccountText,
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
           ],
         ),
 
         Text(
-          'بتسجيل الدخول، أنت توافق على',
+          l10n.byLoggingInYouAgreeText,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
               ),
@@ -294,20 +308,20 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: () {
                 // TODO: Show terms of service
               },
-              child: const Text('شروط الخدمة'),
+              child: Text(l10n.termsOfServiceText),
             ),
-            const Text(' و '),
+            Text(l10n.andText),
             TextButton(
               onPressed: () {
                 // TODO: Show privacy policy
               },
-              child: const Text('سياسة الخصوصية'),
+              child: Text(l10n.privacyPolicyText),
             ),
           ],
         ),
         const SizedBox(height: 20),
         Text(
-          'الإصدار ${AppConfig.appVersion}',
+          l10n.versionNumber(AppConfig.appVersion),
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
               ),

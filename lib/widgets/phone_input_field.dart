@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/generated/app_localizations.dart';
 
 class PhoneInputField extends StatelessWidget {
   final TextEditingController controller;
@@ -99,7 +100,10 @@ class PhoneInputField extends StatelessWidget {
                   keyboardType: TextInputType.phone,
                   validator: validator,
                   decoration: InputDecoration(
-                    hintText: isWhatsApp ? 'رقم الواتساب' : 'رقم الهاتف',
+                    hintText: isWhatsApp
+                        ? AppLocalizations.of(context)!
+                            .whatsappNumberPlaceholder
+                        : AppLocalizations.of(context)!.phoneNumberPlaceholder,
                     prefixIcon: prefixIcon != null
                         ? Icon(prefixIcon,
                             color: isWhatsApp ? Colors.green[600] : null)

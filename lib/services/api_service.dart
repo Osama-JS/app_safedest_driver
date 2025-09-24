@@ -253,7 +253,7 @@ class ApiService {
     }
   }
 
-  // PUT request with file upload
+  // PUT request with file upload (using POST with _method=PUT for Laravel compatibility)
   Future<ApiResponse<T>> putWithFile<T>(
     String endpoint, {
     Map<String, dynamic>? body,
@@ -262,10 +262,14 @@ class ApiService {
   }) async {
     try {
       final uri = _buildUri(endpoint, null);
-      final request = http.MultipartRequest('PUT', uri);
+      final request =
+          http.MultipartRequest('POST', uri); // Use POST instead of PUT
 
       // Add headers
       request.headers.addAll(_authHeaders);
+
+      // Add _method field to simulate PUT request
+      request.fields['_method'] = 'PUT';
 
       // Add files
       if (files != null) {

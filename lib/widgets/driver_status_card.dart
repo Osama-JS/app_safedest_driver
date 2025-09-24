@@ -82,43 +82,65 @@ class DriverStatusCard extends StatelessWidget {
 
                 const SizedBox(height: 16),
 
-                // Available/Busy Status
+                // Location Test Button (for testing GPS and location sending)
+                if (locationService.isOnline)
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    child: ElevatedButton.icon(
+                      onPressed: () =>
+                          _sendLocationManually(context, locationService),
+                      icon: const Icon(Icons.gps_fixed, size: 18),
+                      label: Text(AppLocalizations.of(context)!.updateLocation),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            Theme.of(context).colorScheme.secondary,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                // Available/Busy Status (Read-only - controlled by system)
                 Row(
                   children: [
                     Icon(
-                      locationService.isFree ? Icons.check_circle : Icons.work,
+                      driver?.free == true ? Icons.check_circle : Icons.work,
                       color:
-                          locationService.isFree ? Colors.green : Colors.orange,
+                          driver?.free == true ? Colors.green : Colors.orange,
                       size: 20,
                     ),
                     const SizedBox(width: 12),
                     Text(
-                      locationService.isFree
-                          ? l10n.availableForTasks
-                          : l10n.busy,
+                      driver?.free == true ? l10n.availableForTasks : l10n.busy,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: locationService.isFree
+                            color: driver?.free == true
                                 ? Colors.green
                                 : Colors.orange,
                             fontWeight: FontWeight.w500,
                           ),
                     ),
                     const Spacer(),
-                    if (locationService.isOnline)
-                      TextButton(
-                        onPressed: () async {
-                          if (locationService.isFree) {
-                            await locationService.setBusy();
-                          } else {
-                            await locationService.setAvailable();
-                          }
-                        },
-                        child: Text(
-                          locationService.isFree
-                              ? l10n.setBusy
-                              : l10n.setAvailable,
-                        ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
                       ),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        'يتحكم به النظام',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Colors.grey[600],
+                              fontSize: 10,
+                            ),
+                      ),
+                    ),
                   ],
                 ),
 
@@ -179,6 +201,136 @@ class DriverStatusCard extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  // Send location manually for testing
+  Future<void> _sendLocationManually(
+    BuildContext context,
+    LocationService locationService,
+  ) async {
+    // Show loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        content: Row(
+          children: [
+            const CircularProgressIndicator(),
+            const SizedBox(width: 16),
+            Text(AppLocalizations.of(context)!.sendingLocation),
+          ],
+        ),
+      ),
+    );
+
+    try {
+      final response = await locationService.sendLocationManually();
+
+      // Close loading dialog
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+
+      // Show result
+      if (context.mounted) {
+        if (response.isSuccess && response.data != null) {
+          // Success case
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text((response.message?.toString() ??
+                  AppLocalizations.of(context)!.locationSent)),
+              backgroundColor: Colors.green,
+              duration: const Duration(seconds: 3),
+              action: SnackBarAction(
+                label: 'التفاصيل',
+                textColor: Colors.white,
+                onPressed: () {
+                  _showLocationDetails(context, response.data!);
+                },
+              ),
+            ),
+          );
+        } else {
+          // Error case - show simple SnackBar without dialog
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text((response.message?.toString() ??
+                  AppLocalizations.of(context)!.locationSendError.toString())),
+              backgroundColor: Colors.red,
+              duration: const Duration(seconds: 3),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      // Close loading dialog
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+
+      // Show error
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+                '${AppLocalizations.of(context)!.locationSendError.toString()}: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    }
+  }
+
+  // Show location details dialog
+  void _showLocationDetails(BuildContext context, Map<String, dynamic> data) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('تفاصيل الموقع المرسل'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildDetailRow(
+                'خط العرض:', '${data['latitude']?.toStringAsFixed(6)}'),
+            _buildDetailRow(
+                'خط الطول:', '${data['longitude']?.toStringAsFixed(6)}'),
+            _buildDetailRow(
+                'الدقة:', '${data['accuracy']?.toStringAsFixed(2)} متر'),
+            _buildDetailRow('الوقت:', '${data['timestamp']}'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('إغلاق'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Build detail row for location info
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 80,
+            child: Text(
+              label,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Expanded(
+            child: Text(value),
+          ),
+        ],
+      ),
     );
   }
 

@@ -4,6 +4,7 @@ class AppNotification {
   final String title;
   final String body;
   final Map<String, dynamic> data;
+  final bool isRead;
   final DateTime? readAt;
   final DateTime createdAt;
 
@@ -13,6 +14,7 @@ class AppNotification {
     required this.title,
     required this.body,
     required this.data,
+    required this.isRead,
     this.readAt,
     required this.createdAt,
   });
@@ -24,6 +26,7 @@ class AppNotification {
       title: json['title'] ?? '',
       body: json['body'] ?? '',
       data: json['data'] ?? {},
+      isRead: json['is_read'] ?? false,
       readAt: json['read_at'] != null ? DateTime.parse(json['read_at']) : null,
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
@@ -38,13 +41,13 @@ class AppNotification {
       'title': title,
       'body': body,
       'data': data,
+      'is_read': isRead,
       'read_at': readAt?.toIso8601String(),
       'created_at': createdAt.toIso8601String(),
     };
   }
 
-  bool get isRead => readAt != null;
-  bool get isUnread => readAt == null;
+  bool get isUnread => !isRead;
 
   AppNotification copyWith({
     String? id,
@@ -52,6 +55,7 @@ class AppNotification {
     String? title,
     String? body,
     Map<String, dynamic>? data,
+    bool? isRead,
     DateTime? readAt,
     DateTime? createdAt,
   }) {
@@ -61,6 +65,7 @@ class AppNotification {
       title: title ?? this.title,
       body: body ?? this.body,
       data: data ?? this.data,
+      isRead: isRead ?? this.isRead,
       readAt: readAt ?? this.readAt,
       createdAt: createdAt ?? this.createdAt,
     );

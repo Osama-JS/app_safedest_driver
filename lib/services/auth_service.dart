@@ -8,6 +8,7 @@ import '../models/api_response.dart';
 import '../models/driver.dart';
 import 'api_service.dart';
 import 'notification_service.dart';
+import 'location_service.dart';
 
 class AuthService extends ChangeNotifier {
   static final AuthService _instance = AuthService._internal();
@@ -17,6 +18,7 @@ class AuthService extends ChangeNotifier {
   final ApiService _apiService = ApiService();
   final _storage = const FlutterSecureStorage();
   final NotificationService _notificationService = NotificationService();
+  final LocationService _locationService = LocationService();
 
   Driver? _currentDriver;
   bool _isAuthenticated = false;
@@ -136,6 +138,12 @@ class AuthService extends ChangeNotifier {
               // Update local state
               _currentDriver = loginData.driver;
               _isAuthenticated = true;
+
+              // Sync LocationService with driver data from login
+              _locationService.syncWithDriverData(
+                online: _currentDriver!.online,
+                free: _currentDriver!.free,
+              );
 
               debugPrint('Login successful: User authenticated');
               debugPrint('Current driver: ${_currentDriver?.name}');
@@ -278,6 +286,14 @@ class AuthService extends ChangeNotifier {
           _currentDriver = Driver.fromJson(driverData);
           debugPrint(
               'Driver data loaded successfully: ${_currentDriver?.name}');
+
+          // Sync LocationService with driver data
+          if (_currentDriver != null) {
+            _locationService.syncWithDriverData(
+              online: _currentDriver!.online,
+              free: _currentDriver!.free,
+            );
+          }
         } else {
           debugPrint('Invalid driver data format');
           _currentDriver = null;
@@ -446,6 +462,13 @@ class AuthService extends ChangeNotifier {
       if (response.isSuccess && response.data != null) {
         _currentDriver = response.data;
         await _saveDriverData(_currentDriver!);
+
+        // Sync LocationService with updated driver data
+        _locationService.syncWithDriverData(
+          online: _currentDriver!.online,
+          free: _currentDriver!.free,
+        );
+
         debugPrint('Profile updated successfully');
         notifyListeners();
       } else {
@@ -525,6 +548,33 @@ class AuthService extends ChangeNotifier {
       return ApiResponse<void>(
         success: false,
         message: 'فشل في إرسال رابط إعادة تعيين كلمة المرور: $e',
+      );
+    }
+  }
+
+  // Get driver's additional data with proper filtering
+  Future<ApiResponse<Map<String, dynamic>>> getAdditionalData() async {
+    try {
+      debugPrint('Fetching driver additional data...');
+
+      final response = await _apiService.get<Map<String, dynamic>>(
+        AppConfig.additionalDataEndpoint,
+        fromJson: (data) => Map<String, dynamic>.from(data),
+      );
+
+      if (response.isSuccess && response.data != null) {
+        debugPrint('Additional data fetched successfully');
+        debugPrint('Data: ${response.data}');
+      } else {
+        debugPrint('Failed to fetch additional data: ${response.errorMessage}');
+      }
+
+      return response;
+    } catch (e) {
+      debugPrint('Error fetching additional data: $e');
+      return ApiResponse<Map<String, dynamic>>(
+        success: false,
+        message: 'فشل في جلب البيانات الإضافية: $e',
       );
     }
   }

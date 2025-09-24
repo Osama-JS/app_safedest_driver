@@ -189,6 +189,11 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
   }
 
   Widget _buildEmptyChart(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) {
+      // Fallback or error handling
+      return const SizedBox.shrink();
+    }
     return Container(
       height: 200,
       decoration: BoxDecoration(
@@ -210,7 +215,7 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
             ),
             const SizedBox(height: 12),
             Text(
-              'لا توجد بيانات أرباح',
+              l10n.noEarningsData,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: Theme.of(context)
                         .colorScheme

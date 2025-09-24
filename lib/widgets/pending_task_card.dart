@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../l10n/generated/app_localizations.dart';
 import '../services/task_service.dart';
 import '../models/task.dart';
 import 'dart:async';
@@ -62,8 +63,8 @@ class _PendingTaskCardState extends State<PendingTaskCard>
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('انتهت مهلة الاستجابة، تم تحويل المهمة لسائق آخر'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.taskExpiredTransferred),
           backgroundColor: Colors.orange,
         ),
       );
@@ -192,7 +193,7 @@ class _PendingTaskCardState extends State<PendingTaskCard>
                               child: ElevatedButton.icon(
                                 onPressed: () => _showTaskDetails(pendingTask),
                                 icon: const Icon(Icons.visibility),
-                                label: const Text('عرض التفاصيل'),
+                                label: Text(AppLocalizations.of(context)!.viewDetails),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.white,
                                   foregroundColor: Colors.orange[600],
@@ -207,7 +208,7 @@ class _PendingTaskCardState extends State<PendingTaskCard>
                               child: ElevatedButton.icon(
                                 onPressed: () => _acceptTask(pendingTask),
                                 icon: const Icon(Icons.check),
-                                label: const Text('قبول'),
+                                label: Text(AppLocalizations.of(context)!.accept),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.green,
                                   foregroundColor: Colors.white,
@@ -336,8 +337,8 @@ class _PendingTaskCardState extends State<PendingTaskCard>
     taskService.acceptPendingTask();
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('تم قبول المهمة بنجاح'),
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!.taskAcceptedSuccessfully),
         backgroundColor: Colors.green,
       ),
     );
@@ -349,8 +350,8 @@ class _PendingTaskCardState extends State<PendingTaskCard>
     taskService.rejectPendingTask();
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('تم رفض المهمة'),
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!.taskRejected),
         backgroundColor: Colors.red,
       ),
     );

@@ -158,7 +158,7 @@ class TaskAdsService {
       };
 
       final response = await _apiService.put<TaskOffer>(
-        '/driver/offers/$offerId',
+        '/driver/task-ads/offers/$offerId',
         body: body,
         fromJson: (json) => TaskOffer.fromJson(json['data'] ?? json),
       );

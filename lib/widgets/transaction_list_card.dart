@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import '../services/wallet_service.dart';
 import '../models/wallet.dart';
 import 'error_state_widget.dart';
+import '../l10n/generated/app_localizations.dart';
+import '../screens/wallet/advanced_transactions_screen.dart';
 
 class TransactionListCard extends StatelessWidget {
   const TransactionListCard({super.key});
@@ -12,7 +14,11 @@ class TransactionListCard extends StatelessWidget {
     return Consumer<WalletService>(
       builder: (context, walletService, child) {
         final recentTransactions = walletService.recentTransactionsShort;
-
+        final l10n = AppLocalizations.of(context);
+        if (l10n == null) {
+          // Fallback or error handling
+          return const SizedBox.shrink();
+        }
         return Card(
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -28,7 +34,7 @@ class TransactionListCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 12),
                     Text(
-                      'المعاملات الأخيرة',
+                      l10n.recentTransactions,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -36,13 +42,14 @@ class TransactionListCard extends StatelessWidget {
                     const Spacer(),
                     TextButton(
                       onPressed: () {
-                        // TODO: Navigate to all transactions
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('جميع المعاملات قريباً')),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const TransactionsScreen(),
+                          ),
                         );
                       },
-                      child: const Text('عرض الكل'),
+                      child: Text(l10n.viewAll),
                     ),
                   ],
                 ),
@@ -58,9 +65,9 @@ class TransactionListCard extends StatelessWidget {
                   onRetry: () async {
                     await walletService.getTransactions(refresh: true);
                   },
-                  emptyMessage: 'لا توجد معاملات',
-                  emptyDescription: 'لم يتم تسجيل أي معاملات مالية بعد',
-                  loadingMessage: 'جاري تحميل المعاملات...',
+                  emptyMessage: l10n.noTransactions,
+                  emptyDescription: l10n.noTransactionsRecorded,
+                  loadingMessage: l10n.loadingTransactions,
                   builder: (transactions) => Column(
                     children: transactions
                         .map((transaction) => _buildTransactionItem(
@@ -77,6 +84,11 @@ class TransactionListCard extends StatelessWidget {
   }
 
   Widget _buildEmptyState(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) {
+      // Fallback or error handling
+      return const SizedBox.shrink();
+    }
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -88,7 +100,7 @@ class TransactionListCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'لا توجد معاملات حالياً',
+            l10n.noTransactionsCurrently,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color:
                       Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
@@ -162,24 +174,6 @@ class TransactionListCard extends StatelessWidget {
                                 .withOpacity(0.6),
                           ),
                     ),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: _getStatusColor(transaction.status)
-                            .withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        _getStatusText(transaction.status),
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                          color: _getStatusColor(transaction.status),
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ],
@@ -237,12 +231,7 @@ class TransactionListCard extends StatelessWidget {
         return 'إيداع';
       case 'debit':
         return 'سحب';
-      case 'commission':
-        return 'عمولة';
-      case 'withdrawal':
-        return 'سحب نقدي';
-      case 'deposit':
-        return 'إيداع نقدي';
+
       default:
         return type;
     }

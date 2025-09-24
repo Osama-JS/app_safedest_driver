@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/wallet_service.dart';
+import '../l10n/generated/app_localizations.dart';
 
 class WalletBalanceCard extends StatelessWidget {
   const WalletBalanceCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) {
+      // Fallback or error handling
+      return const SizedBox.shrink();
+    }
     return Consumer<WalletService>(
       builder: (context, walletService, child) {
         final wallet = walletService.wallet;
@@ -38,7 +44,7 @@ class WalletBalanceCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 12),
                     Text(
-                      'رصيد المحفظة',
+                      l10n.walletBalance,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -67,7 +73,7 @@ class WalletBalanceCard extends StatelessWidget {
                 const SizedBox(height: 8),
 
                 Text(
-                  'الرصيد المتاح',
+                  l10n.availableBalance,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Colors.white.withOpacity(0.8),
                       ),
@@ -81,7 +87,7 @@ class WalletBalanceCard extends StatelessWidget {
                     Expanded(
                       child: _buildBalanceInfo(
                         context,
-                        'السحب',
+                        l10n.withdrawals,
                         '${wallet?.pendingAmount.toStringAsFixed(2) ?? '0.00'}',
                         Icons.trending_up,
                       ),
@@ -94,7 +100,7 @@ class WalletBalanceCard extends StatelessWidget {
                     Expanded(
                       child: _buildBalanceInfo(
                         context,
-                        'الدخل',
+                        l10n.income,
                         '${wallet?.totalEarnings.toStringAsFixed(2) ?? '0.00'}',
                         Icons.trending_down,
                       ),

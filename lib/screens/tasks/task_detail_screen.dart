@@ -5,6 +5,7 @@ import '../../models/task.dart';
 import '../../services/task_service.dart';
 import '../../widgets/task_status_stepper.dart';
 import '../../widgets/task_history_sheet.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class TaskDetailScreen extends StatefulWidget {
   final Task task;
@@ -45,11 +46,12 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
       }
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         setState(() {
           _isLoading = false;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('خطأ في جلب تفاصيل المهمة: $e')),
+          SnackBar(content: Text(l10n.taskDetailsError(e.toString()))),
         );
       }
     }
@@ -57,9 +59,11 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     if (_isLoading) {
       return Scaffold(
-        backgroundColor: Colors.grey[50],
+        backgroundColor: Theme.of(context).colorScheme.surface,
         body: const Center(
           child: CircularProgressIndicator(),
         ),
@@ -68,12 +72,12 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
 
     if (_currentTask == null) {
       return Scaffold(
-        backgroundColor: Colors.grey[50],
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBar(
-          title: const Text('خطأ'),
+          title: Text(l10n.error),
         ),
-        body: const Center(
-          child: Text('لم يتم العثور على المهمة'),
+        body: Center(
+          child: Text(l10n.taskNotFound),
         ),
       );
     }
@@ -81,7 +85,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     final task = _currentTask!;
 
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: CustomScrollView(
         slivers: [
           // Modern App Bar
@@ -94,12 +98,12 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
               IconButton(
                 onPressed: () => _showTaskHistory(),
                 icon: const Icon(Icons.history, color: Colors.white),
-                tooltip: 'سجل المهمة',
+                tooltip: l10n.taskHistory,
               ),
             ],
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
-                'مهمة #${task.id}',
+                l10n.taskNumber(task.id.toString()),
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -190,9 +194,9 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                           // Earnings
                           Column(
                             children: [
-                              const Text(
-                                'مستحقاتك',
-                                style: TextStyle(
+                              Text(
+                                l10n.yourEarnings,
+                                style: const TextStyle(
                                   color: Colors.white70,
                                   fontSize: 14,
                                 ),
@@ -251,6 +255,13 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                   if (task.items != null && task.items!.isNotEmpty)
                     _buildItemsCard(),
 
+                  const SizedBox(height: 16),
+
+                  // Additional Data Card
+                  if (task.additionalData != null &&
+                      task.additionalData!.isNotEmpty)
+                    _buildAdditionalDataCard(),
+
                   const SizedBox(height: 32),
                 ],
               ),
@@ -263,6 +274,8 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
 
   Widget _buildQuickActionsCard() {
     final task = _currentTask!;
+    final l10n = AppLocalizations.of(context)!;
+
     if (task.pickupPoint == null && task.deliveryPoint == null) {
       return const SizedBox.shrink();
     }
@@ -291,7 +304,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  'التنقل السريع',
+                  l10n.quickNavigation,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -307,10 +320,10 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                       onPressed: () => _openGoogleMaps(
                         task.pickupPoint!.latitude,
                         task.pickupPoint!.longitude,
-                        'نقطة الاستلام',
+                        l10n.pickupPoint,
                       ),
                       icon: const Icon(Icons.location_on, size: 20),
-                      label: const Text('نقطة الاستلام'),
+                      label: Text(l10n.pickupPoint),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
                         foregroundColor: Colors.white,
@@ -329,10 +342,10 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                       onPressed: () => _openGoogleMaps(
                         task.deliveryPoint!.latitude,
                         task.deliveryPoint!.longitude,
-                        'نقطة التسليم',
+                        l10n.deliveryPoint,
                       ),
                       icon: const Icon(Icons.flag, size: 20),
-                      label: const Text('نقطة التسليم'),
+                      label: Text(l10n.deliveryPoint),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                         foregroundColor: Colors.white,
@@ -354,6 +367,8 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   Widget _buildPickupPointCard() {
     final task = _currentTask!;
     final point = task.pickupPoint!;
+    final l10n = AppLocalizations.of(context)!;
+
     return Card(
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -382,7 +397,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'نقطة الاستلام',
+                        l10n.pickupPoint,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: Colors.green[700],
@@ -406,11 +421,13 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
             // إخفاء معلومات الاتصال للمهام المتاحة (assign status)
             if (task.status != 'assign') ...[
               if (point.contactName != null) ...[
-                _buildContactRow(Icons.person, 'اسم المسؤول', point.contactName!),
+                _buildContactRow(
+                    Icons.person, l10n.contactName, point.contactName!),
                 const SizedBox(height: 12),
               ],
               if (point.contactPhone != null) ...[
-                _buildContactRow(Icons.phone, 'رقم الهاتف', point.contactPhone!),
+                _buildContactRow(
+                    Icons.phone, l10n.phoneNumber, point.contactPhone!),
                 const SizedBox(height: 12),
               ],
             ],
@@ -421,10 +438,10 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                 onPressed: () => _openGoogleMaps(
                   point.latitude,
                   point.longitude,
-                  'نقطة الاستلام',
+                  l10n.pickupPoint,
                 ),
                 icon: const Icon(Icons.navigation, size: 20),
-                label: const Text('فتح في خرائط جوجل'),
+                label: Text(l10n.openInGoogleMaps),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
                   foregroundColor: Colors.white,
@@ -444,6 +461,8 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   Widget _buildDeliveryPointCard() {
     final task = _currentTask!;
     final point = task.deliveryPoint!;
+    final l10n = AppLocalizations.of(context)!;
+
     return Card(
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -472,7 +491,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'نقطة التسليم',
+                        l10n.deliveryPoint,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: Colors.red[700],
@@ -496,11 +515,13 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
             // إخفاء معلومات الاتصال للمهام المتاحة (assign status)
             if (task.status != 'assign') ...[
               if (point.contactName != null) ...[
-                _buildContactRow(Icons.person, 'اسم المسؤول', point.contactName!),
+                _buildContactRow(
+                    Icons.person, l10n.contactName, point.contactName!),
                 const SizedBox(height: 12),
               ],
               if (point.contactPhone != null) ...[
-                _buildContactRow(Icons.phone, 'رقم الهاتف', point.contactPhone!),
+                _buildContactRow(
+                    Icons.phone, l10n.phoneNumber, point.contactPhone!),
                 const SizedBox(height: 12),
               ],
             ],
@@ -511,10 +532,10 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                 onPressed: () => _openGoogleMaps(
                   point.latitude,
                   point.longitude,
-                  'نقطة التسليم',
+                  l10n.deliveryPoint,
                 ),
                 icon: const Icon(Icons.navigation, size: 20),
-                label: const Text('فتح في خرائط جوجل'),
+                label: Text(l10n.openInGoogleMaps),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
                   foregroundColor: Colors.white,
@@ -591,6 +612,8 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
 
   Widget _buildItemsCard() {
     final task = _currentTask!;
+    final l10n = AppLocalizations.of(context)!;
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -598,7 +621,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'العناصر',
+              l10n.items,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -609,9 +632,57 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: Text('عنصر غير محدد'),
+                        child: Text(item.description.isNotEmpty
+                            ? item.description
+                            : l10n.unspecifiedItem),
                       ),
-                      Text('الكمية: ${item.quantity}'),
+                      Text('${l10n.quantity}: ${item.quantity}'),
+                    ],
+                  ),
+                )),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAdditionalDataCard() {
+    final task = _currentTask!;
+    final l10n = AppLocalizations.of(context)!;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.additionalData,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 16),
+            ...task.additionalData!.entries.map((entry) => Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          entry.key,
+                          style: const TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        flex: 3,
+                        child: Text(
+                          entry.value?.toString() ?? '',
+                          style: TextStyle(color: Colors.grey[700]),
+                        ),
+                      ),
                     ],
                   ),
                 )),
@@ -630,6 +701,8 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   }
 
   Widget _getActionButtonForStatus(String status, TaskService taskService) {
+    final l10n = AppLocalizations.of(context)!;
+
     switch (status) {
       case 'pending':
         // أزرار القبول والرفض تظهر فقط في المهام المتاحة
@@ -647,7 +720,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  'في انتظار الموافقة',
+                  l10n.pendingApproval,
                   style: TextStyle(
                     color: Colors.orange[700],
                     fontWeight: FontWeight.w600,
@@ -661,7 +734,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         return ElevatedButton.icon(
           onPressed: () => _updateTaskStatus(taskService, 'started'),
           icon: const Icon(Icons.play_arrow),
-          label: const Text('بدء المهمة'),
+          label: Text(l10n.startTask),
           style: ElevatedButton.styleFrom(
             minimumSize: const Size(double.infinity, 48),
           ),
@@ -670,7 +743,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         return ElevatedButton.icon(
           onPressed: () => _updateTaskStatus(taskService, 'in pickup point'),
           icon: const Icon(Icons.location_on),
-          label: const Text('وصلت لنقطة الاستلام'),
+          label: Text(l10n.arrivedAtPickupPoint),
           style: ElevatedButton.styleFrom(
             minimumSize: const Size(double.infinity, 48),
           ),
@@ -679,7 +752,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         return ElevatedButton.icon(
           onPressed: () => _updateTaskStatus(taskService, 'loading'),
           icon: const Icon(Icons.upload),
-          label: const Text('بدء التحميل'),
+          label: Text(l10n.startLoading),
           style: ElevatedButton.styleFrom(
             minimumSize: const Size(double.infinity, 48),
           ),
@@ -688,7 +761,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         return ElevatedButton.icon(
           onPressed: () => _updateTaskStatus(taskService, 'in the way'),
           icon: const Icon(Icons.local_shipping),
-          label: const Text('في الطريق'),
+          label: Text(l10n.onTheWay),
           style: ElevatedButton.styleFrom(
             minimumSize: const Size(double.infinity, 48),
           ),
@@ -697,7 +770,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         return ElevatedButton.icon(
           onPressed: () => _updateTaskStatus(taskService, 'in delivery point'),
           icon: const Icon(Icons.location_on),
-          label: const Text('وصلت لنقطة التسليم'),
+          label: Text(l10n.arrivedAtDeliveryPoint),
           style: ElevatedButton.styleFrom(
             minimumSize: const Size(double.infinity, 48),
           ),
@@ -706,7 +779,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         return ElevatedButton.icon(
           onPressed: () => _updateTaskStatus(taskService, 'unloading'),
           icon: const Icon(Icons.download),
-          label: const Text('بدء التفريغ'),
+          label: Text(l10n.startUnloading),
           style: ElevatedButton.styleFrom(
             minimumSize: const Size(double.infinity, 48),
           ),
@@ -715,7 +788,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         return ElevatedButton.icon(
           onPressed: () => _updateTaskStatus(taskService, 'completed'),
           icon: const Icon(Icons.done),
-          label: const Text('إكمال المهمة'),
+          label: Text(l10n.completeTask),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.green,
             minimumSize: const Size(double.infinity, 48),
@@ -728,6 +801,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
 
   Future<void> _openGoogleMaps(
       double latitude, double longitude, String label) async {
+    final l10n = AppLocalizations.of(context)!;
     final url =
         'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
 
@@ -738,113 +812,119 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('لا يمكن فتح خرائط جوجل')),
+            SnackBar(content: Text(l10n.cannotOpenGoogleMaps)),
           );
         }
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('حدث خطأ في فتح الخريطة')),
+          SnackBar(content: Text(l10n.mapOpenError)),
         );
       }
     }
   }
 
   Future<bool> _showStatusUpdateConfirmation(String newStatus) async {
+    final l10n = AppLocalizations.of(context)!;
     final statusName = TaskStatusExtension.fromString(newStatus).displayName;
 
     return await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(
-          children: [
-            Icon(
-              Icons.help_outline,
-              color: Theme.of(context).primaryColor,
-              size: 28,
-            ),
-            const SizedBox(width: 12),
-            const Text(
-              'تأكيد تحديث الحالة',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'هل أنت متأكد من تحديث حالة المهمة إلى:',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: Theme.of(context).primaryColor.withOpacity(0.3),
-                ),
-              ),
-              child: Text(
-                statusName,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+          context: context,
+          builder: (context) => AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            title: Row(
+              children: [
+                Icon(
+                  Icons.help_outline,
                   color: Theme.of(context).primaryColor,
+                  size: 28,
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  l10n.confirmStatusUpdate,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.confirmStatusUpdateMessage,
+                  style: const TextStyle(fontSize: 16),
+                ),
+                const SizedBox(height: 12),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: Theme.of(context).primaryColor.withOpacity(0.3),
+                    ),
+                  ),
+                  child: Text(
+                    statusName,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  l10n.cannotUndo,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text(
+                  l10n.cancel,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'لا يمكن التراجع عن هذا الإجراء.',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey,
-                fontStyle: FontStyle.italic,
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Text(
+                  l10n.confirm,
+                  style: const TextStyle(fontSize: 16),
+                ),
               ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text(
-              'إلغاء',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
-            ),
+            ],
           ),
-          ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).primaryColor,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            child: const Text(
-              'تأكيد',
-              style: TextStyle(fontSize: 16),
-            ),
-          ),
-        ],
-      ),
-    ) ?? false;
+        ) ??
+        false;
   }
 
   Future<void> _updateTaskStatus(
       TaskService taskService, String newStatus) async {
+    final l10n = AppLocalizations.of(context)!;
+
     // Show confirmation dialog first
     final confirmed = await _showStatusUpdateConfirmation(newStatus);
     if (!confirmed) return;
@@ -856,16 +936,16 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const Center(
+      builder: (context) => Center(
         child: Card(
           child: Padding(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                CircularProgressIndicator(),
-                SizedBox(height: 16),
-                Text('جاري تحديث حالة المهمة...'),
+                const CircularProgressIndicator(),
+                const SizedBox(height: 16),
+                Text(l10n.updatingTaskStatus),
               ],
             ),
           ),
@@ -898,12 +978,13 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     } catch (e) {
       if (mounted) {
         Navigator.of(context).pop(); // Close loading dialog
-        _showStatusUpdateError('حدث خطأ غير متوقع: $e');
+        _showStatusUpdateError(l10n.unexpectedError(e.toString()));
       }
     }
   }
 
   void _showStatusUpdateSuccess(String newStatus) {
+    final l10n = AppLocalizations.of(context)!;
     final statusName = TaskStatusExtension.fromString(newStatus).displayName;
 
     showDialog(
@@ -927,14 +1008,14 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'تم التحديث بنجاح',
+              l10n.updatedSuccessfully,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
             const SizedBox(height: 8),
             Text(
-              'تم تحديث حالة المهمة إلى: $statusName',
+              l10n.taskStatusUpdatedTo(statusName),
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.grey[600]),
             ),
@@ -943,7 +1024,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('حسناً'),
+            child: Text(l10n.ok),
           ),
         ],
       ),
@@ -951,6 +1032,8 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   }
 
   void _showStatusUpdateError(String errorMessage) {
+    final l10n = AppLocalizations.of(context)!;
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -972,7 +1055,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'فشل في التحديث',
+              l10n.updateFailed,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -988,7 +1071,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('حسناً'),
+            child: Text(l10n.ok),
           ),
         ],
       ),

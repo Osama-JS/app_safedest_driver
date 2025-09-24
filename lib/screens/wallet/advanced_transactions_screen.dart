@@ -6,6 +6,7 @@ import '../../services/wallet_service.dart';
 import '../../models/wallet.dart';
 import '../../utils/debug_helper.dart';
 import '../../config/app_config.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class TransactionsScreen extends StatefulWidget {
   const TransactionsScreen({super.key});
@@ -135,9 +136,14 @@ class _TransactionsScreenState extends State<TransactionsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) {
+      // Fallback or error handling
+      return const SizedBox.shrink();
+    }
     return Scaffold(
       appBar: AppBar(
-        title: const Text('سجل المعاملات'),
+        title: Text(l10n.transactionHistory),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(120),
           child: Column(
@@ -148,7 +154,8 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                 child: TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
-                    hintText: 'البحث في المعاملات...',
+                    hintText:
+                        AppLocalizations.of(context)!.searchInTransactions,
                     prefixIcon: const Icon(Icons.search),
                     suffixIcon: _searchQuery.isNotEmpty
                         ? IconButton(
@@ -178,11 +185,15 @@ class _TransactionsScreenState extends State<TransactionsScreen>
               TabBar(
                 controller: _tabController,
                 isScrollable: true,
-                tabs: const [
-                  Tab(text: 'الكل'),
-                  Tab(text: 'الإيداعات'),
-                  Tab(text: 'السحوبات'),
-                  Tab(text: 'مع مرفقات'),
+                labelColor: Colors.white, // لون النص للتبويب المحدد
+                unselectedLabelColor: Colors.white
+                    .withValues(alpha: 0.7), // لون النص للتبويبات غير المحددة
+                indicatorColor: Colors.white, // لون المؤشر
+                tabs: [
+                  Tab(text: AppLocalizations.of(context)!.all),
+                  Tab(text: AppLocalizations.of(context)!.deposits),
+                  Tab(text: AppLocalizations.of(context)!.withdrawals),
+                  Tab(text: AppLocalizations.of(context)!.withAttachments),
                 ],
               ),
             ],
@@ -233,11 +244,11 @@ class _TransactionsScreenState extends State<TransactionsScreen>
             errorMessage: walletService.errorMessage,
             data: transactions,
             onRetry: _loadTransactions,
-            emptyMessage: 'لا توجد معاملات',
+            emptyMessage: AppLocalizations.of(context)!.noTransactions,
             emptyDescription: type != null
-                ? 'لا توجد معاملات من نوع ${type.displayName}'
-                : 'لم يتم العثور على معاملات تطابق البحث',
-            loadingMessage: 'جاري تحميل المعاملات...',
+                ? '${AppLocalizations.of(context)!.noTransactionsOfType} ${type.displayName}'
+                : AppLocalizations.of(context)!.noTransactionsFound,
+            loadingMessage: AppLocalizations.of(context)!.loadingTransactions,
             builder: (transactions) => ListView.builder(
               controller: _scrollController,
               padding: const EdgeInsets.all(16),
@@ -280,10 +291,11 @@ class _TransactionsScreenState extends State<TransactionsScreen>
             errorMessage: walletService.errorMessage,
             data: transactions,
             onRetry: _loadTransactions,
-            emptyMessage: 'لا توجد معاملات مع مرفقات',
-            emptyDescription:
-                'لم يتم العثور على معاملات تحتوي على صور أو ملفات',
-            loadingMessage: 'جاري تحميل المعاملات...',
+            emptyMessage:
+                AppLocalizations.of(context)!.noTransactionsWithAttachments,
+            emptyDescription: AppLocalizations.of(context)!
+                .noTransactionsWithAttachmentsDescription,
+            loadingMessage: AppLocalizations.of(context)!.loadingTransactions,
             builder: (transactions) => ListView.builder(
               controller: _scrollController,
               padding: const EdgeInsets.all(16),
@@ -380,7 +392,8 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                                     ),
                                     const SizedBox(width: 4),
                                     Text(
-                                      'مرفق',
+                                      AppLocalizations.of(context)!
+                                          .attachmentLabel,
                                       style: TextStyle(
                                         color: Colors.blue,
                                         fontSize: 12,
@@ -460,7 +473,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    'رقم المرجع: ${transaction.referenceId}',
+                    '${AppLocalizations.of(context)!.referenceNumberLabel}: ${transaction.referenceId}',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           fontFamily: 'monospace',
                           color: Colors.grey[700],
@@ -574,20 +587,21 @@ class _TransactionsScreenState extends State<TransactionsScreen>
             ],
           ),
           const SizedBox(height: 24),
-          _buildDetailRow(
-              'المبلغ', '${transaction.amount.toStringAsFixed(2)} ر.س'),
-          _buildDetailRow('النوع',
+          _buildDetailRow(AppLocalizations.of(context)!.amount,
+              '${transaction.amount.toStringAsFixed(2)} ر.س'),
+          _buildDetailRow(AppLocalizations.of(context)!.type,
               WalletTransactionType.fromString(transaction.type).displayName),
-          _buildDetailRow('الوصف', transaction.description),
-          _buildDetailRow('الحالة', _getStatusText(transaction.status)),
-          _buildDetailRow('التاريخ',
+          _buildDetailRow(AppLocalizations.of(context)!.description,
+              transaction.description),
+          _buildDetailRow(AppLocalizations.of(context)!.date,
               '${transaction.createdAt.day}/${transaction.createdAt.month}/${transaction.createdAt.year}'),
-          _buildDetailRow('الوقت',
+          _buildDetailRow(AppLocalizations.of(context)!.time,
               '${transaction.createdAt.hour.toString().padLeft(2, '0')}:${transaction.createdAt.minute.toString().padLeft(2, '0')}'),
           if (transaction.referenceId != null)
-            _buildDetailRow('رقم المرجع', transaction.referenceId!),
+            _buildDetailRow(AppLocalizations.of(context)!.referenceNumber,
+                transaction.referenceId!),
           if (transaction.maturityTime != null)
-            _buildDetailRow('تاريخ الاستحقاق',
+            _buildDetailRow(AppLocalizations.of(context)!.maturityDate,
                 '${transaction.maturityTime!.day}/${transaction.maturityTime!.month}/${transaction.maturityTime!.year}'),
           if (hasAttachment) ...[
             const SizedBox(height: 24),
@@ -602,7 +616,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'المرفق',
+                  AppLocalizations.of(context)!.attachment,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: Colors.blue[600],
@@ -694,7 +708,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                                 Icon(Icons.error_outline,
                                     size: 48, color: Colors.grey),
                                 SizedBox(height: 8),
-                                Text('فشل في تحميل الصورة'),
+                                Text('failed To Load Image'),
                               ],
                             ),
                           ),
@@ -721,7 +735,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                'اضغط للعرض',
+                                AppLocalizations.of(context)!.tapToView,
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.grey[600],
@@ -743,7 +757,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                   onPressed: () =>
                       _showWalletAttachmentDialog(imageUrl, fileName),
                   icon: const Icon(Icons.visibility),
-                  label: const Text('عرض'),
+                  label: Text(AppLocalizations.of(context)!.view),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
                     foregroundColor: Colors.white,
@@ -756,7 +770,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                   onPressed: () =>
                       _downloadWalletAttachment(imageUrl, fileName),
                   icon: const Icon(Icons.download),
-                  label: const Text('تحميل'),
+                  label: Text(AppLocalizations.of(context)!.download),
                 ),
               ),
             ],
@@ -770,7 +784,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('فلترة المعاملات'),
+        title: Text(AppLocalizations.of(context)!.filterTransactions),
         content: StatefulBuilder(
           builder: (context, setDialogState) {
             return Column(
@@ -778,45 +792,49 @@ class _TransactionsScreenState extends State<TransactionsScreen>
               children: [
                 DropdownButtonFormField<WalletTransactionType>(
                   value: _selectedType,
-                  decoration: const InputDecoration(
-                    labelText: 'نوع المعاملة',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.type,
+                    border: const OutlineInputBorder(),
                   ),
-                  items: WalletTransactionType.values.map((type) {
-                    return DropdownMenuItem(
-                      value: type,
-                      child: Text(type.displayName),
-                    );
-                  }).toList(),
+                  items: [
+                    DropdownMenuItem(
+                      value: WalletTransactionType.deposit,
+                      child: Text(AppLocalizations.of(context)!.deposit),
+                    ),
+                    DropdownMenuItem(
+                      value: WalletTransactionType.withdrawal,
+                      child: Text(AppLocalizations.of(context)!.withdrawal),
+                    ),
+                  ],
                   onChanged: (value) {
                     setDialogState(() {
                       _selectedType = value;
                     });
                   },
                 ),
-                const SizedBox(height: 16),
-                DropdownButtonFormField<String>(
-                  value: _selectedStatus,
-                  decoration: const InputDecoration(
-                    labelText: 'حالة المعاملة',
-                    border: OutlineInputBorder(),
-                  ),
-                  items: ['completed', 'pending', 'failed'].map((status) {
-                    return DropdownMenuItem(
-                      value: status,
-                      child: Text(_getStatusText(status)),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setDialogState(() {
-                      _selectedStatus = value;
-                    });
-                  },
-                ),
+                // const SizedBox(height: 16),
+                // DropdownButtonFormField<String>(
+                //   value: _selectedStatus,
+                //   decoration: const InputDecoration(
+                //     labelText: 'حالة المعاملة',
+                //     border: OutlineInputBorder(),
+                //   ),
+                //   items: ['completed', 'pending', 'failed'].map((status) {
+                //     return DropdownMenuItem(
+                //       value: status,
+                //       child: Text(_getStatusText(status)),
+                //     );
+                //   }).toList(),
+                //   onChanged: (value) {
+                //     setDialogState(() {
+                //       _selectedStatus = value;
+                //     });
+                //   },
+                // ),
                 const SizedBox(height: 16),
                 ListTile(
                   title: Text(_selectedDateRange == null
-                      ? 'اختيار فترة زمنية'
+                      ? AppLocalizations.of(context)!.selectDateRange
                       : '${_selectedDateRange!.start.day}/${_selectedDateRange!.start.month} - ${_selectedDateRange!.end.day}/${_selectedDateRange!.end.month}'),
                   leading: const Icon(Icons.date_range),
                   onTap: () async {
@@ -848,18 +866,18 @@ class _TransactionsScreenState extends State<TransactionsScreen>
               });
               Navigator.pop(context);
             },
-            child: const Text('مسح الفلاتر'),
+            child: Text(AppLocalizations.of(context)!.clearFilters),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('إلغاء'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           ElevatedButton(
             onPressed: () {
               setState(() {});
               Navigator.pop(context);
             },
-            child: const Text('تطبيق'),
+            child: Text(AppLocalizations.of(context)!.apply),
           ),
         ],
       ),
@@ -898,14 +916,15 @@ class _TransactionsScreenState extends State<TransactionsScreen>
             const Icon(Icons.error_outline, size: 64, color: Colors.red),
             const SizedBox(height: 16),
             Text(
-              errorMessage ?? 'حدث خطأ غير متوقع',
+              errorMessage ??
+                  AppLocalizations.of(context)!.unexpectedErrorOccurred,
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: onRetry,
-              child: const Text('إعادة المحاولة'),
+              child: Text(AppLocalizations.of(context)!.retry),
             ),
           ],
         ),
@@ -1034,13 +1053,13 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                       onPressed: () =>
                           _downloadWalletAttachment(fileUrl, fileName),
                       icon: const Icon(Icons.download),
-                      label: const Text('تحميل'),
+                      label: Text(AppLocalizations.of(context)!.download),
                     ),
                     if (!isImage)
                       ElevatedButton.icon(
                         onPressed: () => _openWalletAttachment(fileUrl),
                         icon: const Icon(Icons.open_in_new),
-                        label: const Text('فتح'),
+                        label: Text(AppLocalizations.of(context)!.open),
                       ),
                   ],
                 ),
@@ -1063,7 +1082,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
           children: [
             const Icon(Icons.error, size: 64, color: Colors.red),
             const SizedBox(height: 16),
-            Text('خطأ في تحميل الصورة: $error'),
+            Text('${AppLocalizations.of(context)!.imageLoadError}: $error'),
           ],
         ),
       ),
@@ -1091,7 +1110,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
           ),
           const SizedBox(height: 8),
           Text(
-            'اضغط على "فتح" لعرض الملف',
+            AppLocalizations.of(context)!.tapOpenToViewFile,
             style: TextStyle(
               color: Colors.grey[600],
               fontSize: 14,
@@ -1111,8 +1130,9 @@ class _TransactionsScreenState extends State<TransactionsScreen>
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('تم فتح الملف للتحميل'),
+            SnackBar(
+              content:
+                  Text(AppLocalizations.of(context)!.fileOpenedForDownload),
               backgroundColor: Colors.green,
             ),
           );

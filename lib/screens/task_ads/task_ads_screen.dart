@@ -6,6 +6,7 @@ import '../../models/api_response.dart';
 import '../../widgets/task_ad_card.dart';
 import 'task_ad_details_screen.dart';
 import 'my_offers_screen.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class TaskAdsScreen extends StatefulWidget {
   const TaskAdsScreen({super.key});
@@ -93,14 +94,15 @@ class _TaskAdsScreenState extends State<TaskAdsScreen>
       } else {
         setState(() {
           _hasError = true;
-          _errorMessage = response.message ?? 'فشل في تحميل الإعلانات';
+          _errorMessage =
+              response.message ?? AppLocalizations.of(context)!.failedToLoadAds;
           _isLoading = false;
         });
       }
     } catch (e) {
       setState(() {
         _hasError = true;
-        _errorMessage = 'حدث خطأ غير متوقع: $e';
+        _errorMessage = '${AppLocalizations.of(context)!.unexpectedError}: $e';
         _isLoading = false;
       });
     }
@@ -169,24 +171,28 @@ class _TaskAdsScreenState extends State<TaskAdsScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('إعلانات المهام'),
+        title: Text(AppLocalizations.of(context)!.taskAds),
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list),
             onPressed: _showFilterDialog,
-            tooltip: 'فلترة',
+            tooltip: AppLocalizations.of(context)!.filter,
           ),
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _refreshCurrentTab,
-            tooltip: 'تحديث',
+            tooltip: AppLocalizations.of(context)!.refresh,
           ),
         ],
         bottom: TabBar(
           controller: _tabController,
-          tabs: const [
-            Tab(text: 'الإعلانات المتاحة'),
-            Tab(text: 'عروضي'),
+          labelColor: Colors.white, // لون النص للتبويب المحدد
+          unselectedLabelColor: Colors.white
+              .withValues(alpha: 0.7), // لون النص للتبويبات غير المحددة
+          indicatorColor: Colors.white, // لون المؤشر
+          tabs: [
+            Tab(text: AppLocalizations.of(context)!.availableAds),
+            Tab(text: AppLocalizations.of(context)!.myOffers),
           ],
         ),
       ),
@@ -209,7 +215,7 @@ class _TaskAdsScreenState extends State<TaskAdsScreen>
           child: TextField(
             controller: _searchController,
             decoration: InputDecoration(
-              hintText: 'البحث في الإعلانات...',
+              hintText: AppLocalizations.of(context)!.searchInAds,
               prefixIcon: const Icon(Icons.search),
               suffixIcon: _searchController.text.isNotEmpty
                   ? IconButton(
@@ -264,9 +270,12 @@ class _TaskAdsScreenState extends State<TaskAdsScreen>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildStatItem('إجمالي الإعلانات', totalAds.toString()),
-          _buildStatItem('عروضي', myOffersCount.toString()),
-          _buildStatItem('متوسط السعر', '${avgPrice.toStringAsFixed(0)} ر.س'),
+          _buildStatItem(
+              AppLocalizations.of(context)!.totalAds, totalAds.toString()),
+          _buildStatItem(
+              AppLocalizations.of(context)!.myOffers, myOffersCount.toString()),
+          _buildStatItem(AppLocalizations.of(context)!.averagePrice,
+              '${avgPrice.toStringAsFixed(0)} ر.س'),
         ],
       ),
     );
@@ -295,13 +304,13 @@ class _TaskAdsScreenState extends State<TaskAdsScreen>
 
   Widget _buildTaskAdsContent() {
     if (_isLoading && _taskAds.isEmpty) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 16),
-            Text('جاري تحميل الإعلانات...'),
+            const CircularProgressIndicator(),
+            const SizedBox(height: 16),
+            Text(AppLocalizations.of(context)!.loadingAds),
           ],
         ),
       );
@@ -313,9 +322,10 @@ class _TaskAdsScreenState extends State<TaskAdsScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(Icons.error_outline, size: 64, color: Colors.red),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
-              _errorMessage ?? 'حدث خطأ غير متوقع',
+              _errorMessage ??
+                  AppLocalizations.of(context)!.unexpectedErrorOccurred,
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 16),
             ),
@@ -335,20 +345,21 @@ class _TaskAdsScreenState extends State<TaskAdsScreen>
         child: ListView(
           children: [
             SizedBox(height: MediaQuery.of(context).size.height * 0.3),
-            const Center(
+            Center(
               child: Column(
                 children: [
                   Icon(Icons.campaign_outlined, size: 64, color: Colors.grey),
                   SizedBox(height: 16),
                   Text(
-                    'لا توجد إعلانات متاحة',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    AppLocalizations.of(context)!.noAdsAvailable,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.w600),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
-                    'لا توجد إعلانات مهام متاحة في الوقت الحالي',
+                    AppLocalizations.of(context)!.noAdsAvailableDescription,
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey),
+                    style: const TextStyle(color: Colors.grey),
                   ),
                 ],
               ),
@@ -439,7 +450,7 @@ class _FilterDialogState extends State<_FilterDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('فلترة الإعلانات'),
+      title: Text(AppLocalizations.of(context)!.filterAds),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -455,9 +466,9 @@ class _FilterDialogState extends State<_FilterDialog> {
                   child: TextField(
                     controller: _minPriceController,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'أقل سعر',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)!.minPrice,
+                      border: const OutlineInputBorder(),
                     ),
                   ),
                 ),
@@ -466,9 +477,9 @@ class _FilterDialogState extends State<_FilterDialog> {
                   child: TextField(
                     controller: _maxPriceController,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'أعلى سعر',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)!.maxPrice,
+                      border: const OutlineInputBorder(),
                     ),
                   ),
                 ),
@@ -477,22 +488,27 @@ class _FilterDialogState extends State<_FilterDialog> {
             const SizedBox(height: 16),
 
             // Sort by
-            const Text('ترتيب حسب',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(AppLocalizations.of(context)!.sortBy,
+                style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
               value: _selectedSortBy,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
               ),
-              items: const [
+              items: [
                 DropdownMenuItem(
-                    value: 'created_at', child: Text('تاريخ الإنشاء')),
-                DropdownMenuItem(value: 'lowest_price', child: Text('أقل سعر')),
+                    value: 'created_at',
+                    child: Text(AppLocalizations.of(context)!.creationDate)),
                 DropdownMenuItem(
-                    value: 'highest_price', child: Text('أعلى سعر')),
+                    value: 'lowest_price',
+                    child: Text(AppLocalizations.of(context)!.lowestPrice)),
                 DropdownMenuItem(
-                    value: 'offers_count', child: Text('عدد العروض')),
+                    value: 'highest_price',
+                    child: Text(AppLocalizations.of(context)!.highestPrice)),
+                DropdownMenuItem(
+                    value: 'offers_count',
+                    child: Text(AppLocalizations.of(context)!.offersCount)),
               ],
               onChanged: (value) {
                 setState(() {
@@ -503,7 +519,8 @@ class _FilterDialogState extends State<_FilterDialog> {
             const SizedBox(height: 16),
 
             // Sort order
-            const Text('ترتيب', style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(AppLocalizations.of(context)!.sortOrder,
+                style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
               value: _selectedSortOrder,
@@ -534,11 +551,11 @@ class _FilterDialogState extends State<_FilterDialog> {
             widget.onApply(null, null, _selectedSortBy, _selectedSortOrder);
             Navigator.pop(context);
           },
-          child: const Text('مسح الفلاتر'),
+          child: Text(AppLocalizations.of(context)!.clearFilters),
         ),
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('إلغاء'),
+          child: Text(AppLocalizations.of(context)!.cancel),
         ),
         ElevatedButton(
           onPressed: () {
@@ -553,7 +570,7 @@ class _FilterDialogState extends State<_FilterDialog> {
                 minPrice, maxPrice, _selectedSortBy, _selectedSortOrder);
             Navigator.pop(context);
           },
-          child: const Text('تطبيق'),
+          child: Text(AppLocalizations.of(context)!.apply),
         ),
       ],
     );

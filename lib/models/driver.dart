@@ -4,6 +4,7 @@ class Driver {
   final int id;
   final String name;
   final String email;
+  final String? username;
   final String phone;
   final String? phoneCode;
   final String? image;
@@ -30,6 +31,7 @@ class Driver {
     required this.id,
     required this.name,
     required this.email,
+    this.username,
     required this.phone,
     this.phoneCode,
     this.image,
@@ -58,6 +60,7 @@ class Driver {
       id: json['id'] ?? 0,
       name: json['name'] ?? '',
       email: json['email'] ?? '',
+      username: json['username'],
       phone: json['phone'] ?? '',
       phoneCode: json['phone_code'],
       image: json['image'],
@@ -99,6 +102,7 @@ class Driver {
       'id': id,
       'name': name,
       'email': email,
+      'username': username,
       'phone': phone,
       'phone_code': phoneCode,
       'image': image,
@@ -126,6 +130,7 @@ class Driver {
     int? id,
     String? name,
     String? email,
+    String? username,
     String? phone,
     String? phoneCode,
     String? image,
@@ -151,6 +156,7 @@ class Driver {
       id: id ?? this.id,
       name: name ?? this.name,
       email: email ?? this.email,
+      username: username ?? this.username,
       phone: phone ?? this.phone,
       phoneCode: phoneCode ?? this.phoneCode,
       image: image ?? this.image,
