@@ -2123,6 +2123,96 @@
   "allText": "All",
   "taskOfferAccepted": "Your offer for this task has been accepted!\n\nDo you want to accept the task and start executing it?\n\nAfter acceptance, the task will be officially assigned to you and will appear in your current tasks list.",
 
+  "supportContact": "Contact Us",
+  "@supportContact": {
+    "description": "Contact us title"
+  },
+
+  "contactEmail": "Email",
+  "@contactEmail": {
+    "description": "Contact email label"
+  },
+
+  "contactWebsite": "Website",
+  "@contactWebsite": {
+    "description": "Contact website label"
+  },
+
+  "contactUs": "Contact Us",
+  "@contactUs": {
+    "description": "Contact us label"
+  },
+
+  "accountInactive": "Account Inactive",
+  "@accountInactive": {
+    "description": "Account inactive message"
+  },
+
+  "accountInactiveMessage": "Your account has been deactivated. Please contact administration for more information.",
+  "@accountInactiveMessage": {
+    "description": "Detailed account inactive message"
+  },
+
+  "accountBlocked": "Account Blocked",
+  "@accountBlocked": {
+    "description": "Account blocked message"
+  },
+
+  "accountBlockedMessage": "Your account has been blocked. Please contact administration.",
+  "@accountBlockedMessage": {
+    "description": "Detailed account blocked message"
+  },
+
+  "deleteAccount": "Delete Account",
+  "@deleteAccount": {
+    "description": "Delete account button"
+  },
+
+  "deleteAccountWarning": "Warning: Delete Account",
+  "@deleteAccountWarning": {
+    "description": "Delete account warning title"
+  },
+
+  "deleteAccountMessage": "Are you sure you want to delete your account? This action cannot be undone and all your data will be deleted.",
+  "@deleteAccountMessage": {
+    "description": "Delete account confirmation message"
+  },
+
+  "enterPasswordToDelete": "Enter your password to confirm account deletion",
+  "@enterPasswordToDelete": {
+    "description": "Enter password to delete account message"
+  },
+
+  "typeDeleteConfirmation": "Type 'DELETE_MY_ACCOUNT' to confirm",
+  "@typeDeleteConfirmation": {
+    "description": "Type confirmation text for account deletion"
+  },
+
+  "confirmDelete": "Confirm Delete",
+  "@confirmDelete": {
+    "description": "Confirm delete button"
+  },
+
+  "accountDeletedSuccessfully": "Account deleted successfully",
+  "@accountDeletedSuccessfully": {
+    "description": "Account deletion success message"
+  },
+
+  "cannotDeleteAccountWithActiveTasks": "Cannot delete account with active tasks",
+  "@cannotDeleteAccountWithActiveTasks": {
+    "description": "Error message when active tasks exist"
+  },
+
+  "invalidPasswordForDelete": "Invalid password",
+  "@invalidPasswordForDelete": {
+    "description": "Invalid password error message"
+  },
+
+  "failedToDeleteAccount": "Failed to delete account",
+  "@failedToDeleteAccount": {
+    "description": "General account deletion error message"
+  },
+
   "loadingRegistrationData": "Loading registration data...",
   "@loadingRegistrationData": {
     "description": "Loading registration data message"

@@ -43,7 +43,7 @@ class _WalletScreenState extends State<WalletScreen> {
         title: Text(l10n.wallet),
         actions: [
           IconButton(
-            icon: const Icon(Icons.history),
+            icon: const Icon(Icons.receipt_long),
             tooltip: l10n.transactionHistory,
             onPressed: () {
               Navigator.push(

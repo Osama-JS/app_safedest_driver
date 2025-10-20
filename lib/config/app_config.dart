@@ -1,8 +1,9 @@
 class AppConfig {
   // API Configuration
-  // static const String baseUrl = 'http://192.168.0.186/safedestssss/public/api'; // For Devlober
-  // static const String baseUrl = 'https://tester.safedest.com/admin/tasks/api'; // For Tester
-  static const String baseUrl = 'https://o.safedest.com/api'; // For Production
+  //static const String baseUrl =
+  // 'http://192.168.0.186/safedestssss/public/api'; // For Devlober
+  static const String baseUrl = 'https://tester.safedest.com/api'; // For Tester
+  // static const String baseUrl = 'https://o.safedest.com/api'; // For Production
 
   // App Information
   static const String appName = 'SafeDests Driver';
@@ -17,6 +18,8 @@ class AppConfig {
       '/driver/profile/additional-data';
   static const String changePasswordEndpoint = '/driver/change-password';
   static const String refreshTokenEndpoint = '/driver/refresh-token';
+  static const String checkStatusEndpoint = '/driver/check-status';
+  static const String deleteAccountEndpoint = '/driver/delete-account';
   static const String forgotPasswordEndpoint = '/driver/forgot-password';
   static const String registrationDataEndpoint = '/driver/registration-data';
   static const String registerEndpoint = '/driver/register';

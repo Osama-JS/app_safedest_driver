@@ -124,8 +124,24 @@ class _SplashScreenState extends State<SplashScreen>
             'SplashScreen: isAuthenticated = ${authService.isAuthenticated}');
 
         if (authService.isAuthenticated) {
-          debugPrint('SplashScreen: Navigating to /main');
-          Navigator.of(context).pushReplacementNamed('/main');
+          // Additional check for driver status
+          final driver = authService.currentDriver;
+          if (driver != null && driver.status != 'active') {
+            debugPrint(
+                'SplashScreen: Driver status is not active: ${driver.status}');
+
+            // Show dialog explaining why account is blocked
+            await _showAccountStatusDialog(driver.status);
+
+            // Force logout and navigate to login
+            await authService.forceLogout();
+            if (mounted) {
+              Navigator.of(context).pushReplacementNamed('/login');
+            }
+          } else {
+            debugPrint('SplashScreen: Navigating to /main');
+            Navigator.of(context).pushReplacementNamed('/main');
+          }
         } else {
           debugPrint('SplashScreen: Navigating to /login');
           Navigator.of(context).pushReplacementNamed('/login');
@@ -510,6 +526,85 @@ class _SplashScreenState extends State<SplashScreen>
                 color: Colors.white.withValues(alpha: 0.6),
               ),
         ),
+      ),
+    );
+  }
+
+  // عرض حوار حالة الحساب
+  Future<void> _showAccountStatusDialog(String status) async {
+    final l10n = AppLocalizations.of(context)!;
+
+    String title;
+    String message;
+    IconData icon;
+    Color color;
+
+    switch (status) {
+      case 'blocked':
+        title = l10n.accountBlocked;
+        message = l10n.accountBlockedMessage;
+        icon = Icons.block;
+        color = Colors.red;
+        break;
+      case 'pending':
+        title = l10n.accountInactive;
+        message = 'حسابك قيد المراجعة. يرجى انتظار موافقة الإدارة.';
+        icon = Icons.pending;
+        color = Colors.orange;
+        break;
+      case 'suspended':
+        title = l10n.accountInactive;
+        message = 'تم تعليق حسابك مؤقتاً. يرجى التواصل مع الإدارة.';
+        icon = Icons.pause_circle;
+        color = Colors.orange;
+        break;
+      default:
+        title = l10n.accountInactive;
+        message = l10n.accountInactiveMessage;
+        icon = Icons.info;
+        color = Colors.grey;
+    }
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(icon, color: color, size: 24),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                ),
+              ),
+            ),
+          ],
+        ),
+        content: Text(
+          message,
+          style: const TextStyle(fontSize: 16),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              l10n.ok,
+              style: TextStyle(color: color),
+            ),
+          ),
+        ],
       ),
     );
   }

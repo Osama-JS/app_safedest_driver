@@ -2381,6 +2381,96 @@
     "description": "نص الكل"
   },
 
+  "supportContact": "تواصل معنا",
+  "@supportContact": {
+    "description": "عنوان تواصل معنا"
+  },
+
+  "contactEmail": "البريد الإلكتروني",
+  "@contactEmail": {
+    "description": "تسمية البريد الإلكتروني للتواصل"
+  },
+
+  "contactWebsite": "الموقع الإلكتروني",
+  "@contactWebsite": {
+    "description": "تسمية الموقع الإلكتروني"
+  },
+
+  "contactUs": "اتصل بنا",
+  "@contactUs": {
+    "description": "تسمية اتصل بنا"
+  },
+
+  "accountInactive": "حساب غير نشط",
+  "@accountInactive": {
+    "description": "رسالة حساب غير نشط"
+  },
+
+  "accountInactiveMessage": "تم إيقاف حسابك. يرجى التواصل مع الإدارة للمزيد من المعلومات.",
+  "@accountInactiveMessage": {
+    "description": "رسالة تفصيلية لحساب غير نشط"
+  },
+
+  "accountBlocked": "حساب محظور",
+  "@accountBlocked": {
+    "description": "رسالة حساب محظور"
+  },
+
+  "accountBlockedMessage": "تم حظر حسابك. يرجى التواصل مع الإدارة.",
+  "@accountBlockedMessage": {
+    "description": "رسالة تفصيلية لحساب محظور"
+  },
+
+  "deleteAccount": "حذف الحساب",
+  "@deleteAccount": {
+    "description": "زر حذف الحساب"
+  },
+
+  "deleteAccountWarning": "تحذير: حذف الحساب",
+  "@deleteAccountWarning": {
+    "description": "عنوان تحذير حذف الحساب"
+  },
+
+  "deleteAccountMessage": "هل أنت متأكد من رغبتك في حذف حسابك؟ هذا الإجراء لا يمكن التراجع عنه وسيتم حذف جميع بياناتك.",
+  "@deleteAccountMessage": {
+    "description": "رسالة تأكيد حذف الحساب"
+  },
+
+  "enterPasswordToDelete": "أدخل كلمة المرور لتأكيد حذف الحساب",
+  "@enterPasswordToDelete": {
+    "description": "رسالة إدخال كلمة المرور لحذف الحساب"
+  },
+
+  "typeDeleteConfirmation": "اكتب 'DELETE_MY_ACCOUNT' للتأكيد",
+  "@typeDeleteConfirmation": {
+    "description": "رسالة كتابة نص التأكيد لحذف الحساب"
+  },
+
+  "confirmDelete": "تأكيد الحذف",
+  "@confirmDelete": {
+    "description": "زر تأكيد الحذف"
+  },
+
+  "accountDeletedSuccessfully": "تم حذف الحساب بنجاح",
+  "@accountDeletedSuccessfully": {
+    "description": "رسالة نجاح حذف الحساب"
+  },
+
+  "cannotDeleteAccountWithActiveTasks": "لا يمكن حذف الحساب مع وجود مهام نشطة",
+  "@cannotDeleteAccountWithActiveTasks": {
+    "description": "رسالة خطأ عند وجود مهام نشطة"
+  },
+
+  "invalidPasswordForDelete": "كلمة المرور غير صحيحة",
+  "@invalidPasswordForDelete": {
+    "description": "رسالة خطأ كلمة مرور خاطئة"
+  },
+
+  "failedToDeleteAccount": "فشل في حذف الحساب",
+  "@failedToDeleteAccount": {
+    "description": "رسالة خطأ عام في حذف الحساب"
+  },
+
   "failedToLoadRegistrationData": "فشل في تحميل بيانات التسجيل",
   "@failedToLoadRegistrationData": {
     "description": "رسالة خطأ عند فشل تحميل بيانات التسجيل"

@@ -179,6 +179,20 @@ class ApiService {
         debugPrint('API Response Data: ${jsonData['data']}');
         return ApiResponse<T>.fromJson(jsonData, fromJson);
       } else {
+        // Handle authentication errors
+        if (response.statusCode == 401) {
+          final errorCode = jsonData['error_code'] as String?;
+          final action = jsonData['action'] as String?;
+
+          debugPrint(
+              'Authentication error detected: $errorCode, action: $action');
+
+          if (action == 'logout' || errorCode == 'TOKEN_INVALID') {
+            // Trigger logout in AuthService
+            _handleAuthenticationError();
+          }
+        }
+
         return ApiResponse<T>(
           success: false,
           message: jsonData['message'] ?? 'Request failed',
@@ -194,6 +208,28 @@ class ApiService {
         message: 'Failed to parse response: $e',
         statusCode: response.statusCode,
       );
+    }
+  }
+
+  // Callback for authentication errors
+  static Function()? _onAuthenticationError;
+
+  // Set authentication error callback
+  static void setAuthenticationErrorCallback(Function() callback) {
+    _onAuthenticationError = callback;
+  }
+
+  // Handle authentication errors
+  void _handleAuthenticationError() {
+    debugPrint(
+        '🚨 Authentication error detected - clearing token and triggering logout');
+
+    // Clear token immediately
+    clearAuthToken();
+
+    // Trigger callback if set
+    if (_onAuthenticationError != null) {
+      _onAuthenticationError!();
     }
   }
 
@@ -378,6 +414,30 @@ class ApiService {
     if (response.isSuccess && response.data != null) {
       await setAuthToken(response.data!);
     }
+
+    return response;
+  }
+
+  // Delete account
+  Future<ApiResponse<String>> deleteAccount({
+    required String password,
+    required String confirmation,
+  }) async {
+    if (!isAuthenticated) {
+      return ApiResponse<String>(
+        success: false,
+        message: 'No auth token available',
+      );
+    }
+
+    final response = await post<String>(
+      AppConfig.deleteAccountEndpoint,
+      body: {
+        'password': password,
+        'confirmation': confirmation,
+      },
+      fromJson: (data) => data['message'] as String,
+    );
 
     return response;
   }

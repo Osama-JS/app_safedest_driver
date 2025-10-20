@@ -1304,6 +1304,65 @@ class AppLocalizationsEn extends AppLocalizations {
   String get allText => 'All';
 
   @override
+  String get supportContact => 'Contact Us';
+
+  @override
+  String get contactEmail => 'Email';
+
+  @override
+  String get contactWebsite => 'Website';
+
+  @override
+  String get contactUs => 'Contact Us';
+
+  @override
+  String get accountInactive => 'Account Inactive';
+
+  @override
+  String get accountInactiveMessage =>
+      'Your account has been deactivated. Please contact administration for more information.';
+
+  @override
+  String get accountBlocked => 'Account Blocked';
+
+  @override
+  String get accountBlockedMessage =>
+      'Your account has been blocked. Please contact administration.';
+
+  @override
+  String get deleteAccount => 'Delete Account';
+
+  @override
+  String get deleteAccountWarning => 'Warning: Delete Account';
+
+  @override
+  String get deleteAccountMessage =>
+      'Are you sure you want to delete your account? This action cannot be undone and all your data will be deleted.';
+
+  @override
+  String get enterPasswordToDelete =>
+      'Enter your password to confirm account deletion';
+
+  @override
+  String get typeDeleteConfirmation => 'Type \'DELETE_MY_ACCOUNT\' to confirm';
+
+  @override
+  String get confirmDelete => 'Confirm Delete';
+
+  @override
+  String get accountDeletedSuccessfully => 'Account deleted successfully';
+
+  @override
+  String get cannotDeleteAccountWithActiveTasks =>
+      'Cannot delete account with active tasks';
+
+  @override
+  String get invalidPasswordForDelete => 'Invalid password';
+
+  @override
+  String get failedToDeleteAccount => 'Failed to delete account';
+
+  @override
   String get failedToLoadRegistrationData => 'Failed to load registration data';
 
   @override

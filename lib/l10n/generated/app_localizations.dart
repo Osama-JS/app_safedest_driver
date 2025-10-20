@@ -2558,6 +2558,114 @@ abstract class AppLocalizations {
   /// **'الكل'**
   String get allText;
 
+  /// عنوان تواصل معنا
+  ///
+  /// In ar, this message translates to:
+  /// **'تواصل معنا'**
+  String get supportContact;
+
+  /// تسمية البريد الإلكتروني للتواصل
+  ///
+  /// In ar, this message translates to:
+  /// **'البريد الإلكتروني'**
+  String get contactEmail;
+
+  /// تسمية الموقع الإلكتروني
+  ///
+  /// In ar, this message translates to:
+  /// **'الموقع الإلكتروني'**
+  String get contactWebsite;
+
+  /// تسمية اتصل بنا
+  ///
+  /// In ar, this message translates to:
+  /// **'اتصل بنا'**
+  String get contactUs;
+
+  /// رسالة حساب غير نشط
+  ///
+  /// In ar, this message translates to:
+  /// **'حساب غير نشط'**
+  String get accountInactive;
+
+  /// رسالة تفصيلية لحساب غير نشط
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إيقاف حسابك. يرجى التواصل مع الإدارة للمزيد من المعلومات.'**
+  String get accountInactiveMessage;
+
+  /// رسالة حساب محظور
+  ///
+  /// In ar, this message translates to:
+  /// **'حساب محظور'**
+  String get accountBlocked;
+
+  /// رسالة تفصيلية لحساب محظور
+  ///
+  /// In ar, this message translates to:
+  /// **'تم حظر حسابك. يرجى التواصل مع الإدارة.'**
+  String get accountBlockedMessage;
+
+  /// زر حذف الحساب
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف الحساب'**
+  String get deleteAccount;
+
+  /// عنوان تحذير حذف الحساب
+  ///
+  /// In ar, this message translates to:
+  /// **'تحذير: حذف الحساب'**
+  String get deleteAccountWarning;
+
+  /// رسالة تأكيد حذف الحساب
+  ///
+  /// In ar, this message translates to:
+  /// **'هل أنت متأكد من رغبتك في حذف حسابك؟ هذا الإجراء لا يمكن التراجع عنه وسيتم حذف جميع بياناتك.'**
+  String get deleteAccountMessage;
+
+  /// رسالة إدخال كلمة المرور لحذف الحساب
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل كلمة المرور لتأكيد حذف الحساب'**
+  String get enterPasswordToDelete;
+
+  /// رسالة كتابة نص التأكيد لحذف الحساب
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب \'DELETE_MY_ACCOUNT\' للتأكيد'**
+  String get typeDeleteConfirmation;
+
+  /// زر تأكيد الحذف
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد الحذف'**
+  String get confirmDelete;
+
+  /// رسالة نجاح حذف الحساب
+  ///
+  /// In ar, this message translates to:
+  /// **'تم حذف الحساب بنجاح'**
+  String get accountDeletedSuccessfully;
+
+  /// رسالة خطأ عند وجود مهام نشطة
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يمكن حذف الحساب مع وجود مهام نشطة'**
+  String get cannotDeleteAccountWithActiveTasks;
+
+  /// رسالة خطأ كلمة مرور خاطئة
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور غير صحيحة'**
+  String get invalidPasswordForDelete;
+
+  /// رسالة خطأ عام في حذف الحساب
+  ///
+  /// In ar, this message translates to:
+  /// **'فشل في حذف الحساب'**
+  String get failedToDeleteAccount;
+
   /// رسالة خطأ عند فشل تحميل بيانات التسجيل
   ///
   /// In ar, this message translates to:

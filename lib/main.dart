@@ -26,6 +26,9 @@ import 'services/registration_service.dart';
 import 'services/settings_service.dart';
 import 'services/task_ads_stats_service.dart';
 
+// Global navigation key for handling authentication errors
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -87,6 +90,7 @@ class _SafeDestsDriverAppState extends State<SafeDestsDriverApp> {
       child: Consumer<SettingsService>(
         builder: (context, settingsService, child) {
           return MaterialApp(
+            navigatorKey: navigatorKey,
             title: AppConfig.appName,
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,

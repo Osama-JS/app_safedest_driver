@@ -1298,6 +1298,63 @@ class AppLocalizationsAr extends AppLocalizations {
   String get allText => 'الكل';
 
   @override
+  String get supportContact => 'تواصل معنا';
+
+  @override
+  String get contactEmail => 'البريد الإلكتروني';
+
+  @override
+  String get contactWebsite => 'الموقع الإلكتروني';
+
+  @override
+  String get contactUs => 'اتصل بنا';
+
+  @override
+  String get accountInactive => 'حساب غير نشط';
+
+  @override
+  String get accountInactiveMessage =>
+      'تم إيقاف حسابك. يرجى التواصل مع الإدارة للمزيد من المعلومات.';
+
+  @override
+  String get accountBlocked => 'حساب محظور';
+
+  @override
+  String get accountBlockedMessage => 'تم حظر حسابك. يرجى التواصل مع الإدارة.';
+
+  @override
+  String get deleteAccount => 'حذف الحساب';
+
+  @override
+  String get deleteAccountWarning => 'تحذير: حذف الحساب';
+
+  @override
+  String get deleteAccountMessage =>
+      'هل أنت متأكد من رغبتك في حذف حسابك؟ هذا الإجراء لا يمكن التراجع عنه وسيتم حذف جميع بياناتك.';
+
+  @override
+  String get enterPasswordToDelete => 'أدخل كلمة المرور لتأكيد حذف الحساب';
+
+  @override
+  String get typeDeleteConfirmation => 'اكتب \'DELETE_MY_ACCOUNT\' للتأكيد';
+
+  @override
+  String get confirmDelete => 'تأكيد الحذف';
+
+  @override
+  String get accountDeletedSuccessfully => 'تم حذف الحساب بنجاح';
+
+  @override
+  String get cannotDeleteAccountWithActiveTasks =>
+      'لا يمكن حذف الحساب مع وجود مهام نشطة';
+
+  @override
+  String get invalidPasswordForDelete => 'كلمة المرور غير صحيحة';
+
+  @override
+  String get failedToDeleteAccount => 'فشل في حذف الحساب';
+
+  @override
   String get failedToLoadRegistrationData => 'فشل في تحميل بيانات التسجيل';
 
   @override

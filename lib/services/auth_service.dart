@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import '../config/app_config.dart';
@@ -13,7 +13,12 @@ import 'location_service.dart';
 class AuthService extends ChangeNotifier {
   static final AuthService _instance = AuthService._internal();
   factory AuthService() => _instance;
-  AuthService._internal();
+  AuthService._internal() {
+    // Set authentication error callback
+    ApiService.setAuthenticationErrorCallback(() {
+      forceLogout();
+    });
+  }
 
   final ApiService _apiService = ApiService();
   final _storage = const FlutterSecureStorage();
@@ -49,8 +54,35 @@ class AuthService extends ChangeNotifier {
       if (_apiService.isAuthenticated) {
         await _loadDriverData();
         if (_currentDriver != null) {
+          // Set as authenticated first (offline mode)
           _isAuthenticated = true;
-          debugPrint('Auth initialized: User is authenticated');
+          debugPrint('Auth initialized: User is authenticated (offline mode)');
+
+          // Try to check driver status with server (online verification)
+          try {
+            final statusCheck = await _checkDriverStatus();
+            if (statusCheck.isSuccess) {
+              debugPrint('Auth initialized: Online verification successful');
+            } else {
+              // Only clear auth if it's a definitive authentication error
+              if (statusCheck.statusCode == 401 ||
+                  statusCheck.errorCode == 'TOKEN_INVALID' ||
+                  statusCheck.statusCode == 403 ||
+                  statusCheck.errorCode == 'ACCOUNT_INACTIVE') {
+                await _clearAuthData();
+                debugPrint(
+                    'Auth initialized: Authentication error, cleared auth');
+              } else {
+                // Network or other error - keep user logged in
+                debugPrint(
+                    'Auth initialized: Network error, keeping user logged in');
+              }
+            }
+          } catch (e) {
+            // Network error - keep user logged in
+            debugPrint(
+                'Auth initialized: Network error during status check: $e');
+          }
         } else {
           // Token exists but driver data is invalid, clear auth
           await _clearAuthData();
@@ -237,6 +269,44 @@ class AuthService extends ChangeNotifier {
     }
   }
 
+  // Force logout (for authentication errors)
+  Future<void> forceLogout() async {
+    try {
+      debugPrint('🚨 Force logout initiated');
+
+      // Clear local data immediately
+      await _clearAuthData();
+
+      // Navigate to login screen using global navigator
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final context = WidgetsBinding.instance.rootElement;
+        if (context != null) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            '/login',
+            (route) => false,
+          );
+        }
+      });
+
+      // Try to call logout API (but don't wait for it)
+      _apiService
+          .post<void>(
+        AppConfig.logoutEndpoint,
+        fromJson: null,
+      )
+          .catchError((e) {
+        debugPrint('Force logout API call failed (ignored): $e');
+        return ApiResponse<void>(success: false, message: 'Ignored error');
+      });
+
+      debugPrint('✅ Force logout completed');
+    } catch (e) {
+      debugPrint('❌ Force logout error: $e');
+      // Ensure auth data is cleared even if there's an error
+      await _clearAuthData();
+    }
+  }
+
   // Get profile
   Future<ApiResponse<Driver>> getProfile() async {
     final response = await _apiService.get<Driver>(
@@ -409,6 +479,48 @@ class AuthService extends ChangeNotifier {
         oldData.address != newData.address ||
         oldData.commissionValue != newData.commissionValue ||
         oldData.appVersion != newData.appVersion;
+  }
+
+  // Check driver status with server
+  Future<ApiResponse<Driver>> _checkDriverStatus() async {
+    try {
+      debugPrint('🔍 Checking driver status with server...');
+
+      final response = await _apiService.get<Driver>(
+        AppConfig.checkStatusEndpoint,
+        fromJson: (json) => Driver.fromJson(json['driver']),
+      );
+
+      if (response.isSuccess && response.data != null) {
+        // Update local driver data with fresh data from server
+        _currentDriver = response.data;
+        await _saveDriverData(_currentDriver!);
+        debugPrint(
+            '✅ Driver status check successful - status: ${_currentDriver!.status}');
+        return response;
+      } else {
+        debugPrint('❌ Driver status check failed: ${response.message}');
+
+        // Check if this is an authentication error
+        if (response.statusCode == 401 ||
+            response.errorCode == 'TOKEN_INVALID') {
+          debugPrint('🚨 Token invalid - forcing logout');
+          await forceLogout();
+        } else if (response.statusCode == 403 ||
+            response.errorCode == 'ACCOUNT_INACTIVE') {
+          debugPrint('🚨 Account inactive - forcing logout');
+          await forceLogout();
+        }
+
+        return response;
+      }
+    } catch (e) {
+      debugPrint('❌ Driver status check error: $e');
+      return ApiResponse<Driver>(
+        success: false,
+        message: 'Failed to check driver status: $e',
+      );
+    }
   }
 
   // Check if token is expired (basic check)
