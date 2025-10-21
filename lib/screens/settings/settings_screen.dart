@@ -21,7 +21,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     if (l10n == null) {
-      // Fallback or error handling
       return const SizedBox.shrink();
     }
     return Scaffold(
@@ -46,19 +45,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildThemeCard(settingsService),
               const SizedBox(height: 32),
 
-              // Notification Settings Section
-              // _buildSectionHeader(l10n.notifications),
-              // const SizedBox(height: 16),
-
-              // _buildNotificationCard(settingsService),
-              // const SizedBox(height: 32),
-
-              // Account Settings Section
-              _buildSectionHeader(l10n.accountInfo),
-              const SizedBox(height: 16),
-
-
-
               // About Section
               _buildSectionHeader(l10n.about),
               const SizedBox(height: 16),
@@ -66,7 +52,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildAboutCard(),
               const SizedBox(height: 32),
 
-                 _buildAccountCard(),
+               _buildAccountCard(),
               const SizedBox(height: 32),
 
               // Reset Settings
@@ -82,9 +68,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Text(
       title,
       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).primaryColor,
-          ),
+        fontWeight: FontWeight.bold,
+        color: Theme.of(context).textTheme.titleLarge?.color,
+      ),
     );
   }
 
@@ -97,71 +83,68 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.blue.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(
-                    Icons.language,
-                    color: Colors.blue[600],
-                    size: 24,
-                  ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.blue.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.language,
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        l10n.chooseLanguage,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.grey[600],
-                            ),
-                      ),
-                    ],
-                  ),
+                child: Icon(
+                  Icons.language,
+                  color: Colors.blue[600],
+                  size: 24,
                 ),
-              ],
-            ),
-            const SizedBox(height: 16),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.language,
+                      style:
+                          Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      l10n.chooseLanguage,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.grey[600],
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
 
-            // Language Options
-            Column(
-              children: [
-                _buildLanguageOption(
-                  settingsService,
-                  'العربية',
-                  'ar',
-                  '🇸🇦',
-                ),
-                const SizedBox(height: 8),
-                _buildLanguageOption(
-                  settingsService,
-                  'English',
-                  'en',
-                  '🇺🇸',
-                ),
-              ],
-            ),
-          ],
-        ),
+          // Language Options
+          Column(
+            children: [
+              _buildLanguageOption(
+                settingsService,
+                'العربية',
+                'ar',
+                '🇸🇦',
+              ),
+              const SizedBox(height: 8),
+              _buildLanguageOption(
+                settingsService,
+                'English',
+                'en',
+                '🇺🇸',
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -180,13 +163,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
-              : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color:
-                isSelected ? Theme.of(context).primaryColor : Colors.grey[300]!,
+                !isSelected ? Colors.transparent : Colors.grey[300]!,
           ),
         ),
         child: Row(
@@ -201,14 +181,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 title,
                 style: TextStyle(
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                  color: isSelected ? Theme.of(context).primaryColor : null,
+                  color: Theme.of(context).textTheme.bodyMedium?.color,
                 ),
               ),
             ),
             if (isSelected)
               Icon(
                 Icons.check_circle,
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).textTheme.bodyMedium?.color,
                 size: 20,
               ),
           ],
@@ -226,83 +206,77 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.purple.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(
-                    settingsService.isDarkMode
-                        ? Icons.dark_mode
-                        : Icons.light_mode,
-                    color: Colors.purple[600],
-                    size: 24,
-                  ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.purple.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.theme,
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        l10n.chooseTheme,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.grey[600],
-                            ),
-                      ),
-                    ],
-                  ),
+                child: Icon(
+                  settingsService.isDarkMode
+                      ? Icons.dark_mode
+                      : Icons.light_mode,
+                  color: Colors.purple[600],
+                  size: 24,
                 ),
-              ],
-            ),
-            const SizedBox(height: 16),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.theme,
+                      style:
+                          Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      l10n.chooseTheme,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.grey[600],
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
 
-            // Theme Options
-            Column(
-              children: [
-                _buildThemeOption(
-                  settingsService,
-                  l10n.lightMode,
-                  false,
-                  Icons.light_mode,
-                  Colors.orange,
-                ),
-                const SizedBox(height: 8),
-                _buildThemeOption(
-                  settingsService,
-                  l10n.darkMode,
-                  true,
-                  Icons.dark_mode,
-                  Colors.indigo,
-                ),
-                const SizedBox(height: 8),
-                _buildThemeOption(
-                  settingsService,
-                  l10n.systemMode,
-                  null,
-                  Icons.auto_mode,
-                  Colors.green,
-                ),
-              ],
-            ),
-          ],
-        ),
+          // Theme Options
+          Column(
+            children: [
+              _buildThemeOption(
+                settingsService,
+                l10n.lightMode,
+                false,
+                Icons.light_mode,
+              ),
+              const SizedBox(height: 8),
+              _buildThemeOption(
+                settingsService,
+                l10n.darkMode,
+                true,
+                Icons.dark_mode,
+              ),
+              const SizedBox(height: 8),
+              _buildThemeOption(
+                settingsService,
+                l10n.systemMode,
+                null,
+                Icons.auto_mode,
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -312,7 +286,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     String title,
     bool? isDark,
     IconData icon,
-    Color color,
   ) {
     final isSelected = settingsService.themeMode ==
         (isDark == null
@@ -331,17 +304,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected ? color.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: isSelected ? color : Colors.grey[300]!,
+            color: isSelected ? Colors.grey[300]!  : Colors.transparent  ,
           ),
         ),
         child: Row(
           children: [
             Icon(
               icon,
-              color: isSelected ? color : Colors.grey[600],
+              color: Theme.of(context).textTheme.bodyMedium?.color  ,
               size: 20,
             ),
             const SizedBox(width: 12),
@@ -350,14 +322,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 title,
                 style: TextStyle(
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                  color: isSelected ? color : null,
+                  color: isSelected ? Theme.of(context).textTheme.bodyMedium?.color : null,
                 ),
               ),
             ),
             if (isSelected)
               Icon(
                 Icons.check_circle,
-                color: color,
+                color: Theme.of(context).textTheme.bodyMedium?.color,
                 size: 20,
               ),
           ],
@@ -365,110 +337,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
-
-  Widget _buildNotificationCard(SettingsService settingsService) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            _buildNotificationTile(
-              settingsService,
-              'إشعارات المهام',
-              'تلقي إشعارات عند وصول مهام جديدة',
-              Icons.task_alt,
-              Colors.blue,
-              settingsService.taskNotificationsEnabled,
-              (value) => settingsService.setTaskNotifications(value),
-            ),
-            const Divider(),
-            _buildNotificationTile(
-              settingsService,
-              'إشعارات المحفظة',
-              'تلقي إشعارات عند تحديث المحفظة',
-              Icons.account_balance_wallet,
-              Colors.green,
-              settingsService.walletNotificationsEnabled,
-              (value) => settingsService.setWalletNotifications(value),
-            ),
-            const Divider(),
-            _buildNotificationTile(
-              settingsService,
-              'إشعارات النظام',
-              'تلقي إشعارات النظام والتحديثات',
-              Icons.notifications,
-              Colors.orange,
-              settingsService.systemNotificationsEnabled,
-              (value) => settingsService.setSystemNotifications(value),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNotificationTile(
-    SettingsService settingsService,
-    String title,
-    String subtitle,
-    IconData icon,
-    Color color,
-    bool value,
-    Function(bool) onChanged,
-  ) {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(icon, color: color, size: 20),
-      ),
-      title: Text(
-        title,
-        style: const TextStyle(fontWeight: FontWeight.w600),
-      ),
-      subtitle: Text(
-        subtitle,
-        style: TextStyle(color: Colors.grey[600], fontSize: 12),
-      ),
-      trailing: Switch(
-        value: value,
-        onChanged: onChanged,
-        activeColor: color,
-      ),
-    );
-  }
-
-  // Widget _buildAccountCard() {
-  //   return Card(
-  //     elevation: 2,
-  //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-  //     child: Column(
-  //       children: [
-  //         _buildAccountTile(
-  //           'تغيير كلمة المرور',
-  //           'تحديث كلمة المرور الخاصة بك',
-  //           Icons.lock_outline,
-  //           Colors.red,
-  //           () => Navigator.pushNamed(context, '/change-password'),
-  //         ),
-  //         const Divider(height: 1),
-  //         _buildAccountTile(
-  //           'تسجيل الخروج',
-  //           'الخروج من الحساب الحالي',
-  //           Icons.logout,
-  //           Colors.red,
-  //           _showLogoutDialog,
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   Widget _buildAccountTile(
     String title,
@@ -634,31 +502,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  void _showLogoutDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('تسجيل الخروج'),
-        content: const Text('هل أنت متأكد من أنك تريد تسجيل الخروج؟'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('إلغاء'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              // TODO: Implement logout
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('تسجيل الخروج',
-                style: TextStyle(color: Colors.white)),
-          ),
-        ],
       ),
     );
   }
@@ -965,7 +808,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         children: [
           _buildAccountTile(
             l10n.deleteAccount,
-            'حذف الحساب نهائياً',
+            l10n.deleteAccountDescription,
             Icons.delete_forever,
             Colors.red,
             _showDeleteAccountDialog,
@@ -1028,7 +871,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     controller: passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
-                      hintText: 'كلمة المرور',
+                      hintText: l10n.password,
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8)),
                       prefixIcon: const Icon(Icons.lock),

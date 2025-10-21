@@ -2426,6 +2426,11 @@
     "description": "زر حذف الحساب"
   },
 
+  "deleteAccountDescription": "حذف الحساب نهائياً",
+  "@deleteAccountDescription": {
+    "description": "زر حذف الحساب نهائياً"
+  },
+
   "deleteAccountWarning": "تحذير: حذف الحساب",
   "@deleteAccountWarning": {
     "description": "عنوان تحذير حذف الحساب"

@@ -2612,6 +2612,12 @@ abstract class AppLocalizations {
   /// **'حذف الحساب'**
   String get deleteAccount;
 
+  /// زر حذف الحساب نهائياً
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف الحساب نهائياً'**
+  String get deleteAccountDescription;
+
   /// عنوان تحذير حذف الحساب
   ///
   /// In ar, this message translates to:

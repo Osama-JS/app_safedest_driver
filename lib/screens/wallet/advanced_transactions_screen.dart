@@ -857,27 +857,31 @@ class _TransactionsScreenState extends State<TransactionsScreen>
           },
         ),
         actions: [
-          TextButton(
-            onPressed: () {
-              setState(() {
-                _selectedType = null;
-                _selectedStatus = null;
-                _selectedDateRange = null;
-              });
-              Navigator.pop(context);
-            },
-            child: Text(AppLocalizations.of(context)!.clearFilters),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(AppLocalizations.of(context)!.cancel),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {});
-              Navigator.pop(context);
-            },
-            child: Text(AppLocalizations.of(context)!.apply),
+          Row(
+            children: [
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _selectedType = null;
+                    _selectedStatus = null;
+                    _selectedDateRange = null;
+                  });
+                  Navigator.pop(context);
+                },
+                child: Text(AppLocalizations.of(context)!.clearFilters),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(AppLocalizations.of(context)!.cancel),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {});
+                  Navigator.pop(context);
+                },
+                child: Text(AppLocalizations.of(context)!.apply),
+              ),
+            ],
           ),
         ],
       ),

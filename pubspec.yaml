@@ -71,3 +71,17 @@ flutter:
   generate: true
   assets:
     - assets/icons/
+
+  fonts:
+    - family: saudi_riyal
+      fonts:
+        - asset: assets/fonts/saudi_riyal.ttf
+    - family: Tajawal
+      fonts:
+        - asset: assets/fonts/tajawal/Tajawal-Black.ttf
+        - asset: assets/fonts/tajawal/Tajawal-Bold.ttf
+        - asset: assets/fonts/tajawal/Tajawal-ExtraBold.ttf
+        - asset: assets/fonts/tajawal/Tajawal-ExtraLight.ttf
+        - asset: assets/fonts/tajawal/Tajawal-Light.ttf
+        - asset: assets/fonts/tajawal/Tajawal-Medium.ttf
+        - asset: assets/fonts/tajawal/Tajawal-Regular.ttf

@@ -2168,6 +2168,11 @@
     "description": "Delete account button"
   },
 
+  "deleteAccountDescription": "Delete account permanently",
+  "@deleteAccountDescription": {
+    "description": "Delete account permanently button"
+  },
+
   "deleteAccountWarning": "Warning: Delete Account",
   "@deleteAccountWarning": {
     "description": "Delete account warning title"

@@ -46,46 +46,43 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
     return Consumer<WalletService>(
       builder: (context, walletService, child) {
         return Card(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      Icons.bar_chart,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 24,
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      l10n.earningsStatistics,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                  ],
-                ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.bar_chart,
+                    color: Theme.of(context).colorScheme.primary,
+                    size: 24,
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    l10n.earningsStatistics,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ],
+              ),
 
-                const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-                // Period Selector
-                _buildPeriodSelector(context),
+              // Period Selector
+              _buildPeriodSelector(context),
 
-                const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-                // Chart or Loading
-                _isLoading
-                    ? _buildLoadingChart(context)
-                    : _buildEarningsChart(context, walletService),
+              // Chart or Loading
+              _isLoading
+                  ? _buildLoadingChart(context)
+                  : _buildEarningsChart(context, walletService),
 
-                const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-                // Quick Stats
-                _buildQuickStats(context, walletService),
-              ],
-            ),
+              // Quick Stats
+              _buildQuickStats(context, walletService),
+            ],
           ),
         );
       },
@@ -138,9 +135,13 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
           _loadEarningsData();
         }
       },
-      selectedColor:
-          Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
-      checkmarkColor: Theme.of(context).colorScheme.primary,
+      selectedColor: Theme.of(context).colorScheme.primary,
+      checkmarkColor: Theme.of(context).colorScheme.onPrimary,
+      labelStyle: TextStyle(
+        color: isSelected
+            ? Theme.of(context).colorScheme.onPrimary
+            : Colors.grey,
+      ),
     );
   }
 

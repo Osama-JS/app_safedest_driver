@@ -330,15 +330,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
 
           // Debug option (only in debug mode)
-          if (AppConfig.isDebug)
-            _buildSettingsTile(
-              icon: Icons.bug_report,
-              title: l10n.systemDiagnostics,
-              subtitle: l10n.systemDiagnosticsDescription,
-              onTap: () {
-                DebugHelper.showDebugDialog(context);
-              },
-            ),
+          // if (AppConfig.isDebug)
+          //   _buildSettingsTile(
+          //     icon: Icons.bug_report,
+          //     title: l10n.systemDiagnostics,
+          //     subtitle: l10n.systemDiagnosticsDescription,
+          //     onTap: () {
+          //       DebugHelper.showDebugDialog(context);
+          //     },
+          //   ),
         ],
       ),
     );

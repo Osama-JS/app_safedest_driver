@@ -73,7 +73,8 @@ class AppTheme {
         foregroundColor: onPrimaryColor,
         elevation: 0,
         centerTitle: true,
-        titleTextStyle: GoogleFonts.cairo(
+        titleTextStyle: TextStyle(
+        fontFamily: "Tajawal",
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: onPrimaryColor,
@@ -123,7 +124,8 @@ class AppTheme {
             borderRadius: BorderRadius.circular(12),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          textStyle: GoogleFonts.cairo(
+          textStyle: TextStyle(
+            fontFamily: "Tajawal",
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
@@ -139,7 +141,8 @@ class AppTheme {
             borderRadius: BorderRadius.circular(12),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          textStyle: GoogleFonts.cairo(
+          textStyle: TextStyle(
+            fontFamily: "Tajawal",
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
@@ -154,7 +157,8 @@ class AppTheme {
             borderRadius: BorderRadius.circular(8),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          textStyle: GoogleFonts.cairo(
+          textStyle: TextStyle(
+            fontFamily: "Tajawal",
             fontSize: 14,
             fontWeight: FontWeight.w600,
           ),
@@ -187,11 +191,13 @@ class AppTheme {
         ),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        hintStyle: GoogleFonts.cairo(
+        hintStyle: TextStyle(
+          fontFamily: "Tajawal",
           color: textHintColor,
           fontSize: 14,
         ),
-        labelStyle: GoogleFonts.cairo(
+        labelStyle: TextStyle(
+          fontFamily: "Tajawal",
           color: textSecondaryColor,
           fontSize: 14,
         ),
@@ -210,11 +216,13 @@ class AppTheme {
         backgroundColor: backgroundColor,
         selectedColor: primaryColor,
         secondarySelectedColor: secondaryColor,
-        labelStyle: GoogleFonts.cairo(
+        labelStyle: TextStyle(
+          fontFamily: "Tajawal",
           fontSize: 12,
           fontWeight: FontWeight.w500,
         ),
-        secondaryLabelStyle: GoogleFonts.cairo(
+        secondaryLabelStyle: TextStyle(
+          fontFamily: "Tajawal",
           fontSize: 12,
           fontWeight: FontWeight.w500,
           color: onSecondaryColor,
@@ -232,12 +240,14 @@ class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        titleTextStyle: GoogleFonts.cairo(
+        titleTextStyle: TextStyle(
+          fontFamily: "Tajawal",
           fontSize: 18,
           fontWeight: FontWeight.w600,
           color: textPrimaryColor,
         ),
-        contentTextStyle: GoogleFonts.cairo(
+        contentTextStyle: TextStyle(
+          fontFamily: "Tajawal",
           fontSize: 14,
           color: textSecondaryColor,
         ),
@@ -246,7 +256,8 @@ class AppTheme {
       // Snack Bar Theme
       snackBarTheme: SnackBarThemeData(
         backgroundColor: onSurfaceColor,
-        contentTextStyle: GoogleFonts.cairo(
+        contentTextStyle: TextStyle(
+          fontFamily: "Tajawal",
           color: surfaceColor,
           fontSize: 14,
         ),
@@ -266,12 +277,14 @@ class AppTheme {
       // List Tile Theme
       listTileTheme: ListTileThemeData(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        titleTextStyle: GoogleFonts.cairo(
+        titleTextStyle: TextStyle(
+          fontFamily: "Tajawal",
           fontSize: 16,
           fontWeight: FontWeight.w500,
           color: textPrimaryColor,
         ),
-        subtitleTextStyle: GoogleFonts.cairo(
+        subtitleTextStyle: TextStyle(
+          fontFamily: "Tajawal",
           fontSize: 14,
           color: textSecondaryColor,
         ),
@@ -307,7 +320,8 @@ class AppTheme {
         foregroundColor: darkOnSurfaceColor,
         elevation: 0,
         centerTitle: true,
-        titleTextStyle: GoogleFonts.cairo(
+        titleTextStyle: TextStyle(
+          fontFamily: "Tajawal",
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: darkOnSurfaceColor,
@@ -364,11 +378,13 @@ class AppTheme {
         ),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        hintStyle: GoogleFonts.cairo(
+        hintStyle: TextStyle(
+          fontFamily: "Tajawal",
           color: Colors.grey[400],
           fontSize: 14,
         ),
-        labelStyle: GoogleFonts.cairo(
+        labelStyle: TextStyle(
+          fontFamily: "Tajawal",
           color: Colors.grey[300],
           fontSize: 14,
         ),
@@ -379,77 +395,92 @@ class AppTheme {
   // Build text theme
   static TextTheme _buildTextTheme() {
     return TextTheme(
-      displayLarge: GoogleFonts.cairo(
+      displayLarge: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 32,
         fontWeight: FontWeight.w700,
         color: textPrimaryColor,
       ),
-      displayMedium: GoogleFonts.cairo(
+      displayMedium: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 28,
         fontWeight: FontWeight.w600,
         color: textPrimaryColor,
       ),
-      displaySmall: GoogleFonts.cairo(
+      displaySmall: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 24,
         fontWeight: FontWeight.w600,
         color: textPrimaryColor,
       ),
-      headlineLarge: GoogleFonts.cairo(
+      headlineLarge: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 22,
         fontWeight: FontWeight.w600,
         color: textPrimaryColor,
       ),
-      headlineMedium: GoogleFonts.cairo(
+      headlineMedium: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 20,
         fontWeight: FontWeight.w600,
         color: textPrimaryColor,
       ),
-      headlineSmall: GoogleFonts.cairo(
+      headlineSmall: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 18,
         fontWeight: FontWeight.w600,
         color: textPrimaryColor,
       ),
-      titleLarge: GoogleFonts.cairo(
+      titleLarge: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 16,
         fontWeight: FontWeight.w600,
         color: textPrimaryColor,
       ),
-      titleMedium: GoogleFonts.cairo(
+      titleMedium: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 14,
         fontWeight: FontWeight.w600,
         color: textPrimaryColor,
       ),
-      titleSmall: GoogleFonts.cairo(
+      titleSmall: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 12,
         fontWeight: FontWeight.w600,
         color: textPrimaryColor,
       ),
-      bodyLarge: GoogleFonts.cairo(
+      bodyLarge: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 16,
         fontWeight: FontWeight.w400,
         color: textPrimaryColor,
       ),
-      bodyMedium: GoogleFonts.cairo(
+      bodyMedium: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 14,
         fontWeight: FontWeight.w400,
         color: textPrimaryColor,
       ),
-      bodySmall: GoogleFonts.cairo(
+      bodySmall: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 12,
         fontWeight: FontWeight.w400,
         color: textSecondaryColor,
       ),
-      labelLarge: GoogleFonts.cairo(
+      labelLarge: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 14,
         fontWeight: FontWeight.w500,
         color: textPrimaryColor,
       ),
-      labelMedium: GoogleFonts.cairo(
+      labelMedium: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 12,
         fontWeight: FontWeight.w500,
         color: textSecondaryColor,
       ),
-      labelSmall: GoogleFonts.cairo(
+      labelSmall: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 10,
         fontWeight: FontWeight.w500,
         color: textSecondaryColor,
@@ -460,77 +491,92 @@ class AppTheme {
   // Build dark text theme
   static TextTheme _buildDarkTextTheme() {
     return TextTheme(
-      displayLarge: GoogleFonts.cairo(
+      displayLarge: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 32,
         fontWeight: FontWeight.w700,
         color: darkOnSurfaceColor,
       ),
-      displayMedium: GoogleFonts.cairo(
+      displayMedium: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 28,
         fontWeight: FontWeight.w600,
         color: darkOnSurfaceColor,
       ),
-      displaySmall: GoogleFonts.cairo(
+      displaySmall: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 24,
         fontWeight: FontWeight.w600,
         color: darkOnSurfaceColor,
       ),
-      headlineLarge: GoogleFonts.cairo(
+      headlineLarge: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 22,
         fontWeight: FontWeight.w600,
         color: darkOnSurfaceColor,
       ),
-      headlineMedium: GoogleFonts.cairo(
+      headlineMedium: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 20,
         fontWeight: FontWeight.w600,
         color: darkOnSurfaceColor,
       ),
-      headlineSmall: GoogleFonts.cairo(
+      headlineSmall: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 18,
         fontWeight: FontWeight.w600,
         color: darkOnSurfaceColor,
       ),
-      titleLarge: GoogleFonts.cairo(
+      titleLarge: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 16,
         fontWeight: FontWeight.w600,
         color: darkOnSurfaceColor,
       ),
-      titleMedium: GoogleFonts.cairo(
+      titleMedium: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 14,
         fontWeight: FontWeight.w600,
         color: darkOnSurfaceColor,
       ),
-      titleSmall: GoogleFonts.cairo(
+      titleSmall: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 12,
         fontWeight: FontWeight.w600,
         color: darkOnSurfaceColor,
       ),
-      bodyLarge: GoogleFonts.cairo(
+      bodyLarge: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 16,
         fontWeight: FontWeight.w400,
         color: darkOnSurfaceColor,
       ),
-      bodyMedium: GoogleFonts.cairo(
+      bodyMedium: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 14,
         fontWeight: FontWeight.w400,
         color: darkOnSurfaceColor,
       ),
-      bodySmall: GoogleFonts.cairo(
+      bodySmall: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 12,
         fontWeight: FontWeight.w400,
         color: Colors.grey[400],
       ),
-      labelLarge: GoogleFonts.cairo(
+      labelLarge: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 14,
         fontWeight: FontWeight.w500,
         color: darkOnSurfaceColor,
       ),
-      labelMedium: GoogleFonts.cairo(
+      labelMedium: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 12,
         fontWeight: FontWeight.w500,
         color: Colors.grey[400],
       ),
-      labelSmall: GoogleFonts.cairo(
+      labelSmall: TextStyle(
+        fontFamily: "Tajawal",
         fontSize: 10,
         fontWeight: FontWeight.w500,
         color: Colors.grey[400],

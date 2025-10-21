@@ -1333,6 +1333,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteAccount => 'Delete Account';
 
   @override
+  String get deleteAccountDescription => 'Delete account permanently';
+
+  @override
   String get deleteAccountWarning => 'Warning: Delete Account';
 
   @override

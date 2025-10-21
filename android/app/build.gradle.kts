@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.safedest.driver.safedest_driver"
+    namespace = "com.safedest.driver"
     compileSdk = 36  // Updated to support all plugins
     ndkVersion = flutter.ndkVersion
 

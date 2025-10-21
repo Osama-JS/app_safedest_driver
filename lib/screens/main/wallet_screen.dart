@@ -65,7 +65,6 @@ class _WalletScreenState extends State<WalletScreen> {
             }
 
             return SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [

@@ -1326,6 +1326,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get deleteAccount => 'حذف الحساب';
 
   @override
+  String get deleteAccountDescription => 'حذف الحساب نهائياً';
+
+  @override
   String get deleteAccountWarning => 'تحذير: حذف الحساب';
 
   @override
