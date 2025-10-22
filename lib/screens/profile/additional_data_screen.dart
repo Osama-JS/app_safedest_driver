@@ -73,6 +73,9 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
   }
 
   Widget _buildErrorState() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final errorColor = Theme.of(context).colorScheme.error;
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -80,13 +83,13 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
           Icon(
             Icons.error_outline,
             size: 64,
-            color: Colors.red[400],
+            color: errorColor,
           ),
           const SizedBox(height: 16),
           Text(
             'حدث خطأ',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: Colors.red[600],
+                  color: errorColor,
                 ),
           ),
           const SizedBox(height: 8),
@@ -94,14 +97,17 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
             _errorMessage!,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.red[500],
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7),
                 ),
           ),
           const SizedBox(height: 32),
           CustomButton(
             text: 'إعادة المحاولة',
             onPressed: _loadAdditionalData,
-            backgroundColor: Colors.red[600]!,
+            backgroundColor: errorColor,
           ),
         ],
       ),
@@ -156,7 +162,10 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
                                 .textTheme
                                 .bodyMedium
                                 ?.copyWith(
-                                  color: Colors.grey[600],
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurface
+                                      .withValues(alpha: 0.6),
                                 ),
                           ),
                         ],
@@ -198,13 +207,17 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
           Icon(
             Icons.info_outline,
             size: 64,
-            color: Colors.grey[400],
+            color:
+                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
           ),
           const SizedBox(height: 16),
           Text(
             'لا توجد بيانات إضافية',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: Colors.grey[600],
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7),
                 ),
           ),
           const SizedBox(height: 8),
@@ -212,7 +225,10 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
             'لم يتم تسجيل أي بيانات إضافية في ملفك الشخصي',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey[500],
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.6),
                 ),
           ),
           const SizedBox(height: 32),
@@ -238,6 +254,8 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
   }
 
   Widget _buildSimpleField(String key, String value) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -256,14 +274,29 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
               width: double.infinity,
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.grey[50],
+                color: isDark
+                    ? Theme.of(context)
+                        .colorScheme
+                        .surface
+                        .withValues(alpha: 0.5)
+                    : Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey[200]!),
+                border: Border.all(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .outline
+                      .withValues(alpha: 0.3),
+                ),
               ),
               child: Text(
                 value.isNotEmpty ? value : 'غير محدد',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: value.isNotEmpty ? null : Colors.grey[500],
+                      color: value.isNotEmpty
+                          ? Theme.of(context).colorScheme.onSurface
+                          : Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withValues(alpha: 0.5),
                     ),
               ),
             ),
@@ -409,18 +442,25 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
       return _buildEmptyValue();
     }
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = Theme.of(context).primaryColor;
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.blue[50],
+        color: isDark
+            ? primaryColor.withValues(alpha: 0.1)
+            : primaryColor.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.blue[200]!),
+        border: Border.all(
+          color: primaryColor.withValues(alpha: 0.3),
+        ),
       ),
       child: Row(
         children: [
           Icon(
             type == 'image' ? Icons.image : Icons.attach_file,
-            color: Colors.blue[600],
+            color: primaryColor,
             size: 24,
           ),
           const SizedBox(width: 12),
@@ -432,7 +472,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
                   type == 'image' ? 'صورة مرفقة' : 'ملف مرفق',
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
-                    color: Colors.blue[800],
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -440,7 +480,10 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
                   value.toString().split('/').last,
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.blue[600],
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withValues(alpha: 0.7),
                   ),
                 ),
               ],
@@ -457,7 +500,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
             },
             icon: Icon(
               Icons.open_in_new,
-              color: Colors.blue[600],
+              color: primaryColor,
             ),
           ),
         ],
@@ -474,15 +517,21 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.orange[50],
+              color: Theme.of(context)
+                  .colorScheme
+                  .errorContainer
+                  .withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.orange[200]!),
+              border: Border.all(
+                color:
+                    Theme.of(context).colorScheme.error.withValues(alpha: 0.5),
+              ),
             ),
             child: Row(
               children: [
                 Icon(
                   Icons.schedule,
-                  color: Colors.orange[600],
+                  color: Theme.of(context).colorScheme.error,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
@@ -490,7 +539,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
                   'تاريخ انتهاء الصلاحية: $expiration',
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
-                    color: Colors.orange[800],
+                    color: Theme.of(context).colorScheme.onErrorContainer,
                   ),
                 ),
               ],
@@ -516,18 +565,25 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
       return _buildEmptyValue();
     }
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final successColor = Theme.of(context).colorScheme.primary;
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.green[50],
+        color: isDark
+            ? successColor.withValues(alpha: 0.1)
+            : successColor.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.green[200]!),
+        border: Border.all(
+          color: successColor.withValues(alpha: 0.3),
+        ),
       ),
       child: Row(
         children: [
           Icon(
             Icons.calendar_today,
-            color: Colors.green[600],
+            color: successColor,
             size: 20,
           ),
           const SizedBox(width: 12),
@@ -535,7 +591,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
             value.toString(),
             style: TextStyle(
               fontWeight: FontWeight.w600,
-              color: Colors.green[800],
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
         ],
@@ -548,17 +604,25 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
       return _buildEmptyValue();
     }
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.grey[50],
+        color: isDark
+            ? Theme.of(context).colorScheme.surface.withValues(alpha: 0.5)
+            : Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey[200]!),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+        ),
       ),
       child: Text(
         value.toString(),
-        style: Theme.of(context).textTheme.bodyLarge,
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
       ),
     );
   }
@@ -714,18 +778,27 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
   }
 
   Widget _buildEmptyValue() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        color: isDark
+            ? Theme.of(context).colorScheme.surface.withValues(alpha: 0.3)
+            : Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey[200]!),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+        ),
       ),
       child: Text(
         'غير محدد',
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey[500],
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.5),
               fontStyle: FontStyle.italic,
             ),
       ),
