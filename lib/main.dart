@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:provider/provider.dart';
+import 'package:safedest_driver/services/api_service.dart';
 import 'firebase_options.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/generated/app_localizations.dart';
@@ -54,6 +55,24 @@ void main() async {
     return;
   }
 
+  final api = ApiService();
+  await api.initialize();
+
+  // ✅ تفعيل تسجيل الخروج التلقائي عند انتهاء التوكن
+  ApiService.setAuthenticationErrorCallback(() async {
+    debugPrint("🔴 Token invalid — logging out user...");
+
+    // نحذف بيانات المستخدم
+    final authService = AuthService();
+    await authService.logout(); // إن كانت موجودة في كودك
+
+    // نعيد التوجيه إلى شاشة تسجيل الدخول
+    navigatorKey.currentState?.pushNamedAndRemoveUntil(
+      '/login',
+          (route) => false,
+    );
+  });
+
   runApp(const SafeDestsDriverApp());
 }
 
@@ -92,13 +111,17 @@ class _SafeDestsDriverAppState extends State<SafeDestsDriverApp> {
           return MaterialApp(
             navigatorKey: navigatorKey,
             title: AppConfig.appName,
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: settingsService.themeMode,
+            theme: AppTheme.lightTheme, // استخدام الثيم النهاري فقط
+            themeMode: ThemeMode.light, // تعطيل الوضع الليلي
+
+            // theme: AppTheme.lightTheme,
+            // darkTheme: AppTheme.darkTheme,
+            // themeMode: settingsService.themeMode,
             debugShowCheckedModeBanner: false,
 
             // Localization
-            locale: settingsService.getLocale(),
+            // locale: settingsService.getLocale(),
+            locale: const Locale('ar', 'SA'),
             localizationsDelegates: const [
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
@@ -107,7 +130,7 @@ class _SafeDestsDriverAppState extends State<SafeDestsDriverApp> {
             ],
             supportedLocales: const [
               Locale('ar', 'SA'), // Arabic
-              Locale('en', 'US'), // English
+              // Locale('en', 'US'), // English
             ],
 
             // Routes

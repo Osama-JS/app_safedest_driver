@@ -34,16 +34,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             padding: const EdgeInsets.all(16),
             children: [
               // App Settings Section
-              _buildSectionHeader(l10n.appSettings),
-              const SizedBox(height: 16),
-
-              // Language Setting
-              _buildLanguageCard(settingsService),
-              const SizedBox(height: 16),
-
-              // Theme Setting
-              _buildThemeCard(settingsService),
-              const SizedBox(height: 32),
+              // _buildSectionHeader(l10n.appSettings),
+              // const SizedBox(height: 16),
+              //
+              // // Language Setting
+              // _buildLanguageCard(settingsService),
+              // const SizedBox(height: 16),
+              //
+              // // Theme Setting
+              // _buildThemeCard(settingsService),
+              // const SizedBox(height: 32),
 
               // About Section
               _buildSectionHeader(l10n.about),

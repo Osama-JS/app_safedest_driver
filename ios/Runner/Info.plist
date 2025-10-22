@@ -45,5 +45,17 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>يحتاج التطبيق للوصول للموقع لتوفير خدمات التوصيل والملاحة</string>
+
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>يحتاج التطبيق للوصول للموقع في الخلفية لتتبع الطلبات</string>
+
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>يحتاج التطبيق للوصول للصور لرفع المستندات والإيصالات</string>
+
+    <key>NSCameraUsageDescription</key>
+    <string>يحتاج التطبيق للكاميرا لالتقاط صور المستندات</string>
 </dict>
 </plist>

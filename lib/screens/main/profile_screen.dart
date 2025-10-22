@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../main.dart';
 import '../../services/auth_service.dart';
 import '../../config/app_config.dart';
 import '../../utils/debug_helper.dart';
@@ -388,16 +389,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     final response = await authService.logout();
 
-    if (mounted) {
-      if (response.isSuccess) {
-        Navigator.of(context).pushReplacementNamed('/login');
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(response.errorMessage)),
-        );
-      }
+    if (response.isSuccess) {
+      navigatorKey.currentState?.pushNamedAndRemoveUntil(
+        '/login',
+            (route) => false,
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(response.errorMessage)),
+      );
     }
   }
+
 
   Future<bool> _showLogoutConfirmation() async {
     final l10n = AppLocalizations.of(context)!;

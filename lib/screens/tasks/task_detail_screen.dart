@@ -97,7 +97,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
             actions: [
               IconButton(
                 onPressed: () => _showTaskHistory(),
-                icon: const Icon(Icons.history, color: Colors.white),
+                icon: const Icon(Icons.receipt_long, color: Colors.white),
                 tooltip: l10n.taskHistory,
               ),
             ],
