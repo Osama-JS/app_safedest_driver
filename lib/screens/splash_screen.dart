@@ -1,5 +1,5 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../l10n/generated/app_localizations.dart';
 import '../config/app_config.dart';
@@ -367,7 +367,8 @@ class _SplashScreenState extends State<SplashScreen>
                     child: ElevatedButton.icon(
                       onPressed: () {
                         // ❌ إغلاق التطبيق فوري
-                        exit(0);
+                        // exit(0);
+                        SystemNavigator.pop();
                       },
                       icon: const Icon(Icons.exit_to_app_rounded),
                       label: Text(l10n.exit),
