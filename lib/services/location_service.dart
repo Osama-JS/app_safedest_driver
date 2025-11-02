@@ -25,33 +25,33 @@ class LocationService extends ChangeNotifier {
   bool get isFree => _isFree;
 
   // Initialize location service
-  Future<bool> initialize() async {
-    try {
-      debugPrint('🚀 LocationService: Starting initialization...');
-      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      debugPrint('📍 Location services enabled: $serviceEnabled');
-
-      final hasPermission = await _requestLocationPermission();
-      if (!hasPermission) {
-        debugPrint('⚠️ LocationService: Permission not granted at startup (will request later if needed)');
-      }
-
-      if (hasPermission) {
-        try {
-          await _getCurrentLocation();
-          debugPrint('✅ LocationService: Initial location obtained');
-        } catch (e) {
-          debugPrint('⚠️ Could not get initial location: $e');
-        }
-      }
-
-      debugPrint('✅ LocationService: Initialization completed');
-      return true;
-    } catch (e) {
-      debugPrint('💥 LocationService init error: $e');
-      return true; // لا نوقف تشغيل التطبيق
-    }
-  }
+  // Future<bool> initialize() async {
+  //   try {
+  //     debugPrint('🚀 LocationService: Starting initialization...');
+  //     final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  //     debugPrint('📍 Location services enabled: $serviceEnabled');
+  //
+  //     final hasPermission = await _requestLocationPermission();
+  //     if (!hasPermission) {
+  //       debugPrint('⚠️ LocationService: Permission not granted at startup (will request later if needed)');
+  //     }
+  //
+  //     if (hasPermission) {
+  //       try {
+  //         await _getCurrentLocation();
+  //         debugPrint('✅ LocationService: Initial location obtained');
+  //       } catch (e) {
+  //         debugPrint('⚠️ Could not get initial location: $e');
+  //       }
+  //     }
+  //
+  //     debugPrint('✅ LocationService: Initialization completed');
+  //     return true;
+  //   } catch (e) {
+  //     debugPrint('💥 LocationService init error: $e');
+  //     return true; // لا نوقف تشغيل التطبيق
+  //   }
+  // }
 
   void syncWithDriverData({required bool online, required bool free}) {
     debugPrint('Syncing LocationService: online=$online, free=$free');
@@ -59,14 +59,14 @@ class LocationService extends ChangeNotifier {
     _isOnline = online;
     _isFree = free;
 
-    if (online && !wasOnline) {
-      debugPrint('Driver online → starting tracking...');
-      startTracking();
-      _startLocationUpdateTimer();
-    } else if (!online && wasOnline) {
-      debugPrint('Driver offline → stopping tracking...');
-      stopTracking();
-    }
+    // if (online && !wasOnline) {
+    //   debugPrint('Driver online → starting tracking...');
+    //   startTracking();
+    //   _startLocationUpdateTimer();
+    // } else if (!online && wasOnline) {
+    //   debugPrint('Driver offline → stopping tracking...');
+    //   stopTracking();
+    // }
     notifyListeners();
   }
 
@@ -76,56 +76,56 @@ class LocationService extends ChangeNotifier {
   }
 
   // دالة تشخيص مفصلة — بدون استخدام permission_handler
-  Future<Map<String, dynamic>> getDetailedPermissionStatus() async {
-    try {
-      bool manifestConfigured = true;
-      String manifestError = '';
-
-      // اختبار Manifest عبر Geolocator فقط
-      try {
-        await Geolocator.checkPermission();
-      } catch (e) {
-        if (e.toString().toLowerCase().contains('no location permissions are defined in the manifest')) {
-          manifestConfigured = false;
-          manifestError = e.toString();
-        }
-      }
-
-      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      final geoPermission = manifestConfigured ? await Geolocator.checkPermission() : LocationPermission.denied;
-
-      final isGranted = geoPermission == LocationPermission.whileInUse ||
-          geoPermission == LocationPermission.always;
-
-      final status = {
-        'manifestConfigured': manifestConfigured,
-        'manifestError': manifestError,
-        'serviceEnabled': serviceEnabled,
-        'geolocatorPermission': geoPermission.toString(),
-        'isGranted': isGranted,
-        'isDenied': geoPermission == LocationPermission.denied,
-        'isPermanentlyDenied': geoPermission == LocationPermission.deniedForever,
-        'diagnosis': _getDiagnosis(manifestConfigured, serviceEnabled, geoPermission),
-      };
-
-      debugPrint('📊 Detailed status: $status');
-      return status;
-    } catch (e) {
-      debugPrint('💥 Error in getDetailedPermissionStatus: $e');
-      return {'error': e.toString()};
-    }
-  }
-
-  String _getDiagnosis(bool manifestConfigured, bool serviceEnabled, LocationPermission permission) {
-    if (!manifestConfigured) return 'CRITICAL: Manifest not configured. Rebuild app.';
-    if (!serviceEnabled) return 'GPS disabled. Enable in device settings.';
-    if (permission == LocationPermission.deniedForever) return 'Permission permanently denied. Open app settings.';
-    if (permission == LocationPermission.denied) return 'Permission denied. Request again.';
-    if (permission == LocationPermission.whileInUse || permission == LocationPermission.always) {
-      return 'All permissions granted. Location should work.';
-    }
-    return 'Unknown state.';
-  }
+  // Future<Map<String, dynamic>> getDetailedPermissionStatus() async {
+  //   try {
+  //     bool manifestConfigured = true;
+  //     String manifestError = '';
+  //
+  //     // اختبار Manifest عبر Geolocator فقط
+  //     try {
+  //       await Geolocator.checkPermission();
+  //     } catch (e) {
+  //       if (e.toString().toLowerCase().contains('no location permissions are defined in the manifest')) {
+  //         manifestConfigured = false;
+  //         manifestError = e.toString();
+  //       }
+  //     }
+  //
+  //     final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  //     final geoPermission = manifestConfigured ? await Geolocator.checkPermission() : LocationPermission.denied;
+  //
+  //     final isGranted = geoPermission == LocationPermission.whileInUse ||
+  //         geoPermission == LocationPermission.always;
+  //
+  //     final status = {
+  //       'manifestConfigured': manifestConfigured,
+  //       'manifestError': manifestError,
+  //       'serviceEnabled': serviceEnabled,
+  //       'geolocatorPermission': geoPermission.toString(),
+  //       'isGranted': isGranted,
+  //       'isDenied': geoPermission == LocationPermission.denied,
+  //       'isPermanentlyDenied': geoPermission == LocationPermission.deniedForever,
+  //       'diagnosis': _getDiagnosis(manifestConfigured, serviceEnabled, geoPermission),
+  //     };
+  //
+  //     debugPrint('📊 Detailed status: $status');
+  //     return status;
+  //   } catch (e) {
+  //     debugPrint('💥 Error in getDetailedPermissionStatus: $e');
+  //     return {'error': e.toString()};
+  //   }
+  // }
+  //
+  // String _getDiagnosis(bool manifestConfigured, bool serviceEnabled, LocationPermission permission) {
+  //   if (!manifestConfigured) return 'CRITICAL: Manifest not configured. Rebuild app.';
+  //   if (!serviceEnabled) return 'GPS disabled. Enable in device settings.';
+  //   if (permission == LocationPermission.deniedForever) return 'Permission permanently denied. Open app settings.';
+  //   if (permission == LocationPermission.denied) return 'Permission denied. Request again.';
+  //   if (permission == LocationPermission.whileInUse || permission == LocationPermission.always) {
+  //     return 'All permissions granted. Location should work.';
+  //   }
+  //   return 'Unknown state.';
+  // }
 
   // Get current status from server
   Future<ApiResponse<Map<String, dynamic>>> getCurrentStatus() async {
@@ -174,31 +174,30 @@ class LocationService extends ChangeNotifier {
   }
 
 // Update FCM token
-  Future<ApiResponse<void>> updateFcmToken(String fcmToken, {String? deviceId}) async {
-    try {
-      final response = await _apiService.post<void>(
-        AppConfig.updateFcmTokenEndpoint,
-        body: {
-          'fcm_token': fcmToken,
-          if (deviceId != null) 'device_id': deviceId,
-        },
-        fromJson: null,
-      );
-      return response;
-    } catch (e) {
-      return ApiResponse<void>(
-        success: false,
-        message: 'فشل في تحديث رمز الإشعارات: $e',
-      );
-    }
-  }
+//   Future<ApiResponse<void>> updateFcmToken(String fcmToken, {String? deviceId}) async {
+//     try {
+//       final response = await _apiService.post<void>(
+//         AppConfig.updateFcmTokenEndpoint,
+//         body: {
+//           'fcm_token': fcmToken,
+//           if (deviceId != null) 'device_id': deviceId,
+//         },
+//         fromJson: null,
+//       );
+//       return response;
+//     } catch (e) {
+//       return ApiResponse<void>(
+//         success: false,
+//         message: 'فشل في تحديث رمز الإشعارات: $e',
+//       );
+//     }
+//   }
 
   // الدالة الوحيدة لطلب الصلاحية — تعتمد على Geolocator فقط
   Future<bool> _requestLocationPermission() async {
     try {
       // 1. تحقق من حالة الصلاحية الحالية
       LocationPermission permission = await Geolocator.checkPermission();
-
       // 2. إذا كانت ممنوحة، نعود true فورًا
       if (permission == LocationPermission.whileInUse || permission == LocationPermission.always) {
         return true;
@@ -251,7 +250,7 @@ class LocationService extends ChangeNotifier {
       accuracy: LocationAccuracy.high,
       distanceFilter: 10,
     );
-
+    _startLocationUpdateTimer();
     _positionStream = Geolocator.getPositionStream(locationSettings: settings).listen(
           (Position position) {
         _currentPosition = position;
@@ -354,7 +353,7 @@ class LocationService extends ChangeNotifier {
     final res = await updateDriverStatus(online: true);
     if (res.isSuccess) {
       await startTracking();
-      _startLocationUpdateTimer();
+      // _startLocationUpdateTimer();
     }
     return res;
   }
@@ -378,27 +377,69 @@ class LocationService extends ChangeNotifier {
     _locationUpdateTimer?.cancel();
     _locationUpdateTimer = null;
   }
-
-  double calculateDistance(double lat1, double lng1, double lat2, double lng2) {
-    return Geolocator.distanceBetween(lat1, lng1, lat2, lng2);
-  }
-
-  double? getDistanceToLocation(double latitude, double longitude) {
-    if (_currentPosition == null) return null;
-    return calculateDistance(_currentPosition!.latitude, _currentPosition!.longitude, latitude, longitude);
-  }
-
-  Future<bool> isLocationServiceEnabled() async {
-    return await Geolocator.isLocationServiceEnabled();
-  }
-
-  Future<void> openDeviceLocationSettings() async {
-    await Geolocator.openLocationSettings();
-  }
+  //
+  // double calculateDistance(double lat1, double lng1, double lat2, double lng2) {
+  //   return Geolocator.distanceBetween(lat1, lng1, lat2, lng2);
+  // }
+  //
+  // double? getDistanceToLocation(double latitude, double longitude) {
+  //   if (_currentPosition == null) return null;
+  //   return calculateDistance(_currentPosition!.latitude, _currentPosition!.longitude, latitude, longitude);
+  // }
+  //
+  // Future<bool> isLocationServiceEnabled() async {
+  //   return await Geolocator.isLocationServiceEnabled();
+  // }
+  //
+  // Future<void> openDeviceLocationSettings() async {
+  //   await Geolocator.openLocationSettings();
+  // }
 
   @override
   void dispose() {
     stopTracking();
     super.dispose();
   }
+
+
+
+  // Future<bool> startTracking2() async {
+  //   if (_isTracking) return true;
+  //
+  //   final hasPermission = await _requestLocationPermission();
+  //   if (!hasPermission) return false;
+  //
+  //   const settings = LocationSettings(
+  //     accuracy: LocationAccuracy.high,
+  //     timeLimit: Duration(minutes: 3)
+  //     // distanceFilter: 10,
+  //   );
+  //
+  //   _positionStream = Geolocator.getPositionStream(locationSettings: settings).listen(
+  //         (Position position) {
+  //       _currentPosition = position;
+  //       notifyListeners();
+  //       if (_isOnline && _currentPosition != null) {
+  //          _sendLocationUpdate(_currentPosition!);
+  //         debugPrint('🕐 Auto location sent (3-min interval)');
+  //       }
+  //       debugPrint('📍 Live position: ${position.latitude}, ${position.longitude}');
+  //     },
+  //     onError: (error) {
+  //       debugPrint('Location stream error: $error');
+  //     },
+  //   );
+  //
+  //   _isTracking = true;
+  //   notifyListeners();
+  //   return true;
+  // }
+  //
+  // void stopTracking2() {
+  //   _positionStream?.cancel();
+  //   // _stopLocationUpdateTimer();
+  //   _isTracking = false;
+  //   notifyListeners();
+  // }
+
 }

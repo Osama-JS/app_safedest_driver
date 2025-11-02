@@ -26,19 +26,24 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _loadData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadData();
+    });
   }
+
 
   Future<void> _loadData() async {
     final taskService = Provider.of<TaskService>(context, listen: false);
     final walletService = Provider.of<WalletService>(context, listen: false);
-    final locationService =
-        Provider.of<LocationService>(context, listen: false);
+    final locationService = Provider.of<LocationService>(context, listen: false);
     final taskAdsStatsService = TaskAdsStatsService();
 
     try {
       // Load initial data
-      await Future.wait([
+
+
+    await Future.wait([
+      locationService.startTracking(),
         taskService.getTasks(page: 1, perPage: 5),
         taskService.checkPendingTasks(),
         walletService.getWallet(),

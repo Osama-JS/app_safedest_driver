@@ -18,7 +18,10 @@ class _WalletScreenState extends State<WalletScreen> {
   @override
   void initState() {
     super.initState();
-    _loadWalletData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadWalletData();
+    });
+    // _loadWalletData();
   }
 
   Future<void> _loadWalletData() async {

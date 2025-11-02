@@ -22,6 +22,8 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
+    print('niaaaaaaaaaaaaaaaa SplashScreen2: initState called');
+
     debugPrint('SplashScreen: initState called');
     _initializeAnimations();
     debugPrint('SplashScreen: Starting initialization...');

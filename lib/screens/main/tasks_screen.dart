@@ -20,7 +20,10 @@ class _TasksScreenState extends State<TasksScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    _loadTasks();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadTasks();
+    });
+    // _loadTasks();
   }
 
   @override

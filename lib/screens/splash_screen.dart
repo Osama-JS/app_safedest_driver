@@ -23,6 +23,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
+    print('niaaaaaaaaaaaaaaaa SplashScreen: initState called');
     debugPrint('SplashScreen: initState called');
     _initializeAnimations();
     debugPrint('SplashScreen: Starting initialization...');
@@ -54,8 +55,9 @@ class _SplashScreenState extends State<SplashScreen>
       final authService = Provider.of<AuthService>(context, listen: false);
       final notificationService =
           Provider.of<NotificationService>(context, listen: false);
-      final locationService =
-          Provider.of<LocationService>(context, listen: false);
+      //TODO SAEED STOPED THIS
+      // final locationService =
+      //     Provider.of<LocationService>(context, listen: false);
 
       debugPrint('SplashScreen: Services obtained successfully');
 
@@ -98,20 +100,21 @@ class _SplashScreenState extends State<SplashScreen>
       await notificationService.initialize();
       debugPrint('SplashScreen: NotificationService initialized');
 
-      await locationService.initialize();
-      debugPrint('SplashScreen: LocationService initialized');
-
-      // Check initial permission status for debugging
-      debugPrint('SplashScreen: Checking initial permission status...');
-      await locationService.getDetailedPermissionStatus();
-
-      // Request GPS permission immediately after LocationService initialization
-      debugPrint('SplashScreen: Requesting GPS permission...');
-      await _requestGPSPermission(locationService);
-
-      // Check final permission status
-      debugPrint('SplashScreen: Checking final permission status...');
-      await locationService.getDetailedPermissionStatus();
+      //TODO SAEED STOPED THIS
+      // await locationService.initialize();
+      // debugPrint('SplashScreen: LocationService initialized');
+      //
+      // // Check initial permission status for debugging
+      // debugPrint('SplashScreen: Checking initial permission status...');
+      // await locationService.getDetailedPermissionStatus();
+      //
+      // // Request GPS permission immediately after LocationService initialization
+      // debugPrint('SplashScreen: Requesting GPS permission...');
+      // await _requestGPSPermission(locationService);
+      //
+      // // Check final permission status
+      // debugPrint('SplashScreen: Checking final permission status...');
+      // await locationService.getDetailedPermissionStatus();
 
       // انتظار مدة الـ Splash
       debugPrint('SplashScreen: Waiting for splash duration...');
@@ -158,113 +161,115 @@ class _SplashScreenState extends State<SplashScreen>
     }
   }
 
-  // Request GPS permission during app startup with comprehensive diagnosis
-  Future<void> _requestGPSPermission(LocationService locationService) async {
-    try {
-      debugPrint(
-          '🚀 SplashScreen: Starting comprehensive GPS permission diagnosis...');
 
-      // Step 1: Get detailed status first for debugging
-      final detailedStatus =
-          await locationService.getDetailedPermissionStatus();
-      debugPrint('📊 SplashScreen: Initial detailed status: $detailedStatus');
-
-      // Step 2: Check if this is a manifest issue
-      if (detailedStatus['manifestConfigured'] == false) {
-        debugPrint('🚨 SplashScreen: CRITICAL MANIFEST ISSUE DETECTED!');
-        debugPrint(
-            '🔧 SplashScreen: Manifest error: ${detailedStatus['manifestError']}');
-        debugPrint('🔧 SplashScreen: IMMEDIATE ACTION REQUIRED:');
-        debugPrint('   1. STOP the app completely');
-        debugPrint('   2. Run: flutter clean');
-        debugPrint('   3. Run: flutter pub get');
-        debugPrint('   4. Completely rebuild and reinstall the app');
-        debugPrint('   5. Check AndroidManifest.xml has location permissions');
-        debugPrint(
-            '🚨 SplashScreen: App will continue but location features will NOT work!');
-        return; // Don't attempt permission requests if manifest is broken
-      }
-
-      // Step 3: Show diagnosis
-      debugPrint('💡 SplashScreen: Diagnosis: ${detailedStatus['diagnosis']}');
-
-      // Step 4: Try multiple permission request strategies
-      bool hasPermission = false;
-      int attempts = 0;
-      const maxAttempts = 3;
-
-      while (!hasPermission && attempts < maxAttempts) {
-        attempts++;
-        debugPrint(
-            '🔄 SplashScreen: Permission attempt $attempts/$maxAttempts');
-
-        // Request permission with enhanced method
-        hasPermission = await locationService.requestGPSPermissionOnly();
-
-        if (!hasPermission && attempts < maxAttempts) {
-          debugPrint('⏳ SplashScreen: Waiting before next attempt...');
-          await Future.delayed(const Duration(seconds: 2));
-
-          // Get updated status
-          final updatedStatus =
-              await locationService.getDetailedPermissionStatus();
-          debugPrint(
-              '📊 SplashScreen: Updated status after attempt $attempts: ${updatedStatus['diagnosis']}');
-        }
-      }
-
-      // Step 5: Final verification
-      if (hasPermission) {
-        debugPrint('✅ SplashScreen: GPS permission granted successfully');
-
-        // Try to get initial location to verify everything works
-        try {
-          final response = await locationService.sendLocationManually();
-          if (response.isSuccess) {
-            debugPrint(
-                '✅ SplashScreen: Location access fully verified and working');
-          } else {
-            debugPrint(
-                '⚠️ SplashScreen: Permission granted but location sending failed: ${response.message}');
-          }
-        } catch (e) {
-          debugPrint('⚠️ SplashScreen: Location verification failed: $e');
-        }
-      } else {
-        debugPrint(
-            '❌ SplashScreen: Failed to get GPS permission after $maxAttempts attempts');
-
-        // Get final comprehensive status for debugging
-        final finalStatus = await locationService.getDetailedPermissionStatus();
-        debugPrint(
-            '📊 SplashScreen: FINAL DIAGNOSIS: ${finalStatus['diagnosis']}');
-        debugPrint('📊 SplashScreen: Complete final status: $finalStatus');
-
-        // Provide specific guidance based on final status
-        if (finalStatus['isPermanentlyDenied'] == true) {
-          debugPrint(
-              '🔧 SplashScreen: USER ACTION REQUIRED: Open app settings and grant location permission');
-        } else if (finalStatus['serviceEnabled'] == false) {
-          debugPrint(
-              '🔧 SplashScreen: USER ACTION REQUIRED: Enable GPS/Location services in device settings');
-        } else {
-          debugPrint(
-              '🔧 SplashScreen: DEVELOPER ACTION REQUIRED: Check app configuration and rebuild');
-        }
-      }
-    } catch (e) {
-      debugPrint('💥 SplashScreen: GPS permission request error: $e');
-
-      // Even on error, try to get diagnostic info
-      try {
-        final errorStatus = await locationService.getDetailedPermissionStatus();
-        debugPrint(
-            '📊 SplashScreen: Error diagnosis: ${errorStatus['diagnosis']}');
-      } catch (e2) {
-        debugPrint('💥 SplashScreen: Could not get error diagnosis: $e2');
-      }
-    }
-  }
+   // TODO SAEED STOPED THIS
+  // // Request GPS permission during app startup with comprehensive diagnosis
+  // Future<void> _requestGPSPermission(LocationService locationService) async {
+  //   try {
+  //     debugPrint(
+  //         '🚀 SplashScreen: Starting comprehensive GPS permission diagnosis...');
+  //
+  //     // Step 1: Get detailed status first for debugging
+  //     final detailedStatus =
+  //         await locationService.getDetailedPermissionStatus();
+  //     debugPrint('📊 SplashScreen: Initial detailed status: $detailedStatus');
+  //
+  //     // Step 2: Check if this is a manifest issue
+  //     if (detailedStatus['manifestConfigured'] == false) {
+  //       debugPrint('🚨 SplashScreen: CRITICAL MANIFEST ISSUE DETECTED!');
+  //       debugPrint(
+  //           '🔧 SplashScreen: Manifest error: ${detailedStatus['manifestError']}');
+  //       debugPrint('🔧 SplashScreen: IMMEDIATE ACTION REQUIRED:');
+  //       debugPrint('   1. STOP the app completely');
+  //       debugPrint('   2. Run: flutter clean');
+  //       debugPrint('   3. Run: flutter pub get');
+  //       debugPrint('   4. Completely rebuild and reinstall the app');
+  //       debugPrint('   5. Check AndroidManifest.xml has location permissions');
+  //       debugPrint(
+  //           '🚨 SplashScreen: App will continue but location features will NOT work!');
+  //       return; // Don't attempt permission requests if manifest is broken
+  //     }
+  //
+  //     // Step 3: Show diagnosis
+  //     debugPrint('💡 SplashScreen: Diagnosis: ${detailedStatus['diagnosis']}');
+  //
+  //     // Step 4: Try multiple permission request strategies
+  //     bool hasPermission = false;
+  //     int attempts = 0;
+  //     const maxAttempts = 3;
+  //
+  //     while (!hasPermission && attempts < maxAttempts) {
+  //       attempts++;
+  //       debugPrint(
+  //           '🔄 SplashScreen: Permission attempt $attempts/$maxAttempts');
+  //
+  //       // Request permission with enhanced method
+  //       hasPermission = await locationService.requestGPSPermissionOnly();
+  //
+  //       if (!hasPermission && attempts < maxAttempts) {
+  //         debugPrint('⏳ SplashScreen: Waiting before next attempt...');
+  //         await Future.delayed(const Duration(seconds: 2));
+  //
+  //         // Get updated status
+  //         final updatedStatus =
+  //             await locationService.getDetailedPermissionStatus();
+  //         debugPrint(
+  //             '📊 SplashScreen: Updated status after attempt $attempts: ${updatedStatus['diagnosis']}');
+  //       }
+  //     }
+  //
+  //     // Step 5: Final verification
+  //     if (hasPermission) {
+  //       debugPrint('✅ SplashScreen: GPS permission granted successfully');
+  //
+  //       // Try to get initial location to verify everything works
+  //       try {
+  //         final response = await locationService.sendLocationManually();
+  //         if (response.isSuccess) {
+  //           debugPrint(
+  //               '✅ SplashScreen: Location access fully verified and working');
+  //         } else {
+  //           debugPrint(
+  //               '⚠️ SplashScreen: Permission granted but location sending failed: ${response.message}');
+  //         }
+  //       } catch (e) {
+  //         debugPrint('⚠️ SplashScreen: Location verification failed: $e');
+  //       }
+  //     } else {
+  //       debugPrint(
+  //           '❌ SplashScreen: Failed to get GPS permission after $maxAttempts attempts');
+  //
+  //       // Get final comprehensive status for debugging
+  //       final finalStatus = await locationService.getDetailedPermissionStatus();
+  //       debugPrint(
+  //           '📊 SplashScreen: FINAL DIAGNOSIS: ${finalStatus['diagnosis']}');
+  //       debugPrint('📊 SplashScreen: Complete final status: $finalStatus');
+  //
+  //       // Provide specific guidance based on final status
+  //       if (finalStatus['isPermanentlyDenied'] == true) {
+  //         debugPrint(
+  //             '🔧 SplashScreen: USER ACTION REQUIRED: Open app settings and grant location permission');
+  //       } else if (finalStatus['serviceEnabled'] == false) {
+  //         debugPrint(
+  //             '🔧 SplashScreen: USER ACTION REQUIRED: Enable GPS/Location services in device settings');
+  //       } else {
+  //         debugPrint(
+  //             '🔧 SplashScreen: DEVELOPER ACTION REQUIRED: Check app configuration and rebuild');
+  //       }
+  //     }
+  //   } catch (e) {
+  //     debugPrint('💥 SplashScreen: GPS permission request error: $e');
+  //
+  //     // Even on error, try to get diagnostic info
+  //     try {
+  //       final errorStatus = await locationService.getDetailedPermissionStatus();
+  //       debugPrint(
+  //           '📊 SplashScreen: Error diagnosis: ${errorStatus['diagnosis']}');
+  //     } catch (e2) {
+  //       debugPrint('💥 SplashScreen: Could not get error diagnosis: $e2');
+  //     }
+  //   }
+  // }
 
   // Dialog عند انقطاع الاتصال
   Future<void> _showConnectivityDialog() async {
