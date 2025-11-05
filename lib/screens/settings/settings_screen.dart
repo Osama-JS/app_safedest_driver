@@ -37,9 +37,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               // _buildSectionHeader(l10n.appSettings),
               // const SizedBox(height: 16),
               //
-              // // Language Setting
-              // _buildLanguageCard(settingsService),
-              // const SizedBox(height: 16),
+              // Language Setting
+              _buildLanguageCard(settingsService),
+              const SizedBox(height: 16),
               //
               // // Theme Setting
               // _buildThemeCard(settingsService),
