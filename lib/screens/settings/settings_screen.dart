@@ -6,6 +6,7 @@ import '../../services/api_service.dart';
 import '../../services/auth_service.dart';
 import '../../widgets/custom_button.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../auth/login_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -935,36 +936,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   // تنفيذ حذف الحساب
   Future<void> _deleteAccount(
-    BuildContext dialogContext,
-    String password,
-    String confirmation,
-    StateSetter setDialogState,
-  ) async {
+      BuildContext dialogContext,
+      String password,
+      String confirmation,
+      StateSetter setDialogState,
+      ) async {
     final l10n = AppLocalizations.of(context);
 
     // التحقق من صحة البيانات
     if (password.isEmpty) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('يرجى إدخال كلمة المرور')),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('يرجى إدخال كلمة المرور')),
+      );
       return;
     }
 
     if (confirmation != 'DELETE_MY_ACCOUNT') {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('يرجى كتابة "DELETE_MY_ACCOUNT" بالضبط')),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('يرجى كتابة "DELETE_MY_ACCOUNT" بالضبط')),
+      );
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
     setDialogState(() {});
+    if (mounted) setState(() => _isLoading = true);
 
     try {
       final apiService = ApiService();
@@ -973,41 +968,45 @@ class _SettingsScreenState extends State<SettingsScreen> {
         confirmation: confirmation,
       );
 
-      setState(() {
-        _isLoading = false;
-      });
-      setDialogState(() {});
+      debugPrint('🔍 Full response structure:');
+      debugPrint('  - isSuccess: ${response.isSuccess}');
+      debugPrint('  - statusCode: ${response.statusCode}');
+      debugPrint('  - message: ${response.message}');
+      debugPrint('  - data: ${response.data}');
 
-      if (response.isSuccess) {
-        // إغلاق الحوار
-        if (Navigator.canPop(dialogContext)) {
-          Navigator.of(dialogContext).pop();
-        }
+      final bool isSuccess = response.statusCode == 200;
 
-        // عرض رسالة نجاح
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(l10n.accountDeletedSuccessfully),
-              backgroundColor: Colors.green,
-            ),
-          );
-        }
+      if (isSuccess) {
+        // ✅ 1. إغلاق الحوار فوراً
+        Navigator.of(dialogContext, rootNavigator: true).pop();
 
-        // تسجيل الخروج والانتقال لشاشة تسجيل الدخول
+        // ✅ 2. إظهار رسالة النجاح
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.accountDeletedSuccessfully),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+
+        // ✅ 3. تسجيل الخروج مع تنظيف كامل
         final authService = AuthService();
         await authService.forceLogout();
 
-        if (mounted) {
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            '/login',
-            (route) => false,
+        // ✅ 4. الانتقال لشاشة تسجيل الدخول بعد تأخير بسيط
+        Future.delayed(const Duration(milliseconds: 500), () {
+          Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => LoginScreen()),
+                (route) => false,
           );
-        }
-      } else {
-        // عرض رسالة الخطأ
-        String errorMessage = l10n.failedToDeleteAccount;
+        });
 
+      } else {
+        // معالجة الأخطاء
+        setDialogState(() {});
+        if (mounted) setState(() => _isLoading = false);
+
+        String errorMessage = l10n.failedToDeleteAccount;
         if (response.message?.contains('Invalid password') == true) {
           errorMessage = l10n.invalidPasswordForDelete;
         } else if (response.message?.contains('active tasks') == true) {
@@ -1016,29 +1015,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
           errorMessage = response.message!;
         }
 
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(errorMessage),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-      }
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-      setDialogState(() {});
-
-      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${l10n.failedToDeleteAccount}: $e'),
+            content: Text(errorMessage),
             backgroundColor: Colors.red,
           ),
         );
       }
+    } catch (e) {
+      setDialogState(() {});
+      if (mounted) setState(() => _isLoading = false);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('${l10n.failedToDeleteAccount}: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 }
