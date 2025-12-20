@@ -274,35 +274,22 @@ class AuthService extends ChangeNotifier {
     try {
       debugPrint('🚨 Force logout initiated');
 
-      // Clear local data immediately
+      try {
+        await _apiService.post<void>(
+          AppConfig.logoutEndpoint,
+          fromJson: null,
+        ).timeout(const Duration(seconds: 5));
+        debugPrint('✅ Logout API call succeeded');
+      } catch (e) {
+        debugPrint('⚠️ Logout API call failed (ignored): $e');
+      }
+
       await _clearAuthData();
-
-      // Navigate to login screen using global navigator
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        final context = WidgetsBinding.instance.rootElement;
-        if (context != null) {
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            '/login',
-            (route) => false,
-          );
-        }
-      });
-
-      // Try to call logout API (but don't wait for it)
-      _apiService
-          .post<void>(
-        AppConfig.logoutEndpoint,
-        fromJson: null,
-      )
-          .catchError((e) {
-        debugPrint('Force logout API call failed (ignored): $e');
-        return ApiResponse<void>(success: false, message: 'Ignored error');
-      });
+      debugPrint('✅ Auth data cleared');
 
       debugPrint('✅ Force logout completed');
     } catch (e) {
       debugPrint('❌ Force logout error: $e');
-      // Ensure auth data is cleared even if there's an error
       await _clearAuthData();
     }
   }
