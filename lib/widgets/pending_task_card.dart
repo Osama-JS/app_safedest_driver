@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../l10n/generated/app_localizations.dart';
-import '../services/task_service.dart';
+import 'package:get/get.dart';
+import '../Controllers/TaskController.dart';
 import '../models/task.dart';
 import 'dart:async';
 
@@ -18,6 +17,7 @@ class _PendingTaskCardState extends State<PendingTaskCard>
   int _remainingSeconds = 180; // 3 minutes
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
+  final TaskController _taskController = Get.find<TaskController>();
 
   @override
   void initState() {
@@ -28,7 +28,7 @@ class _PendingTaskCardState extends State<PendingTaskCard>
     );
     _pulseAnimation = Tween<double>(
       begin: 1.0,
-      end: 1.1,
+      end: 1.05,
     ).animate(CurvedAnimation(
       parent: _pulseController,
       curve: Curves.easeInOut,
@@ -47,9 +47,11 @@ class _PendingTaskCardState extends State<PendingTaskCard>
   void _startCountdown() {
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_remainingSeconds > 0) {
-        setState(() {
-          _remainingSeconds--;
-        });
+        if (mounted) {
+          setState(() {
+            _remainingSeconds--;
+          });
+        }
       } else {
         timer.cancel();
         _handleTimeout();
@@ -58,17 +60,15 @@ class _PendingTaskCardState extends State<PendingTaskCard>
   }
 
   void _handleTimeout() {
-    final taskService = Provider.of<TaskService>(context, listen: false);
-    taskService.rejectPendingTask();
+    _taskController.rejectPendingTask();
 
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context)!.taskExpiredTransferred),
-          backgroundColor: Colors.orange,
-        ),
-      );
-    }
+    Get.snackbar(
+      'errorTitle'.tr,
+      'task_expired_transferred'.tr,
+      backgroundColor: Colors.orange,
+      colorText: Colors.white,
+      snackPosition: SnackPosition.BOTTOM,
+    );
   }
 
   String _formatTime(int seconds) {
@@ -79,177 +79,175 @@ class _PendingTaskCardState extends State<PendingTaskCard>
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<TaskService>(
-      builder: (context, taskService, child) {
-        final pendingTask = taskService.pendingTask;
+    return Obx(() {
+      final pendingTask = _taskController.pendingTask.value;
 
-        if (pendingTask == null) {
-          return const SizedBox.shrink();
-        }
+      if (pendingTask == null) {
+        return const SizedBox.shrink();
+      }
 
-        return AnimatedBuilder(
-          animation: _pulseAnimation,
-          builder: (context, child) {
-            return Transform.scale(
-              scale: _pulseAnimation.value,
-              child: Container(
-                margin: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.orange[400]!,
-                      Colors.orange[600]!,
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.orange.withValues(alpha: 0.3),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
+      return AnimatedBuilder(
+        animation: _pulseAnimation,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: _pulseAnimation.value,
+            child: Container(
+              margin: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.orange[400]!,
+                    Colors.orange[600]!,
                   ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-                child: Card(
-                  elevation: 0,
-                  color: Colors.transparent,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Header with countdown
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(
-                                Icons.notification_important,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.orange.withOpacity(0.3),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Card(
+                elevation: 0,
+                color: Colors.transparent,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Header with countdown
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Icon(
+                              Icons.notification_important,
+                              color: Colors.white,
+                              size: 24,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'newTask'.tr,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  'respondWithin'.trParams({'time': _formatTime(_remainingSeconds)}),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              _formatTime(_remainingSeconds),
+                              style: const TextStyle(
                                 color: Colors.white,
-                                size: 24,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
                               ),
                             ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'مهمة جديدة!',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    'الرد خلال: ${_formatTime(_remainingSeconds)}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(
-                                _formatTime(_remainingSeconds),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
+                      ),
 
-                        const SizedBox(height: 16),
+                      const SizedBox(height: 16),
 
-                        // Task details
-                        _buildTaskDetails(pendingTask),
+                      // Task details
+                      _buildTaskDetails(pendingTask),
 
-                        const SizedBox(height: 16),
+                      const SizedBox(height: 16),
 
-                        // Action buttons
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ElevatedButton.icon(
-                                onPressed: () => _showTaskDetails(pendingTask),
-                                icon: const Icon(Icons.visibility),
-                                label: Text(AppLocalizations.of(context)!.viewDetails),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  foregroundColor: Colors.orange[600],
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: ElevatedButton.icon(
-                                onPressed: () => _acceptTask(pendingTask),
-                                icon: const Icon(Icons.check),
-                                label: Text(AppLocalizations.of(context)!.accept),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.green,
-                                  foregroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            ElevatedButton(
-                              onPressed: () => _rejectTask(pendingTask),
+                      // Action buttons
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              onPressed: () => _showTaskDetails(pendingTask),
+                              icon: const Icon(Icons.visibility),
+                              label: Text('view_details'.tr),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
+                                backgroundColor: Colors.white,
+                                foregroundColor: Colors.orange[600],
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              onPressed: () => _acceptTask(pendingTask),
+                              icon: const Icon(Icons.check),
+                              label: Text('accept'.tr),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
                                 foregroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                padding: const EdgeInsets.all(12),
                               ),
-                              child: const Icon(Icons.close),
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          ),
+                          const SizedBox(width: 12),
+                          ElevatedButton(
+                            onPressed: () => _rejectTask(pendingTask),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              padding: const EdgeInsets.all(12),
+                            ),
+                            child: const Icon(Icons.close),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),
-            );
-          },
-        );
-      },
-    );
+            ),
+          );
+        },
+      );
+    });
   }
 
   Widget _buildTaskDetails(Task task) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.1),
+        color: Colors.white.withOpacity(0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -265,7 +263,7 @@ class _PendingTaskCardState extends State<PendingTaskCard>
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  'من: ${task.pickupAddress ?? 'غير محدد'}',
+                  'from'.trParams({'address': task.pickupAddress ?? 'not_specified'.tr}),
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 14,
@@ -287,7 +285,7 @@ class _PendingTaskCardState extends State<PendingTaskCard>
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  'إلى: ${task.deliveryAddress ?? 'غير محدد'}',
+                  'to'.trParams({'address': task.deliveryAddress ?? 'not_specified'.tr}),
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 14,
@@ -308,7 +306,7 @@ class _PendingTaskCardState extends State<PendingTaskCard>
               ),
               const SizedBox(width: 8),
               Text(
-                'المبلغ: ${task.totalPrice.toStringAsFixed(2)} ر.س',
+                'amount'.trParams({'amount': task.totalPrice.toStringAsFixed(2)}),
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 14,
@@ -323,37 +321,36 @@ class _PendingTaskCardState extends State<PendingTaskCard>
   }
 
   void _showTaskDetails(Task task) {
-    showModalBottomSheet(
-      context: context,
+    Get.bottomSheet(
+      TaskDetailsBottomSheet(task: task),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => TaskDetailsBottomSheet(task: task),
     );
   }
 
   void _acceptTask(Task task) {
     _countdownTimer?.cancel();
-    final taskService = Provider.of<TaskService>(context, listen: false);
-    taskService.acceptPendingTask();
+    _taskController.acceptPendingTask();
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(context)!.taskAcceptedSuccessfully),
-        backgroundColor: Colors.green,
-      ),
+    Get.snackbar(
+      'successTitle'.tr,
+      'task_accepted_successfully'.tr,
+      backgroundColor: Colors.green,
+      colorText: Colors.white,
+      snackPosition: SnackPosition.BOTTOM,
     );
   }
 
   void _rejectTask(Task task) {
     _countdownTimer?.cancel();
-    final taskService = Provider.of<TaskService>(context, listen: false);
-    taskService.rejectPendingTask();
+    _taskController.rejectPendingTask();
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(context)!.taskRejected),
-        backgroundColor: Colors.red,
-      ),
+    Get.snackbar(
+      'errorTitle'.tr,
+      'task_rejected'.tr,
+      backgroundColor: Colors.red,
+      colorText: Colors.white,
+      snackPosition: SnackPosition.BOTTOM,
     );
   }
 }
@@ -389,16 +386,16 @@ class TaskDetailsBottomSheet extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               children: [
-                const Text(
-                  'تفاصيل المهمة',
-                  style: TextStyle(
+                Text(
+                  'taskDetails'.tr,
+                  style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const Spacer(),
                 IconButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => Get.back(),
                   icon: const Icon(Icons.close),
                 ),
               ],
@@ -414,21 +411,21 @@ class TaskDetailsBottomSheet extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildDetailRow('رقم المهمة', task.id.toString()),
+                  _buildDetailRow('task_id'.tr, task.id.toString()),
                   _buildDetailRow(
-                      'طريقة الدفع', task.paymentMethod ?? 'غير محدد'),
-                  _buildDetailRow('الحالة', task.status),
+                      'paymentMethod'.tr, task.paymentMethod ?? 'not_specified'.tr),
+                  _buildDetailRow('status'.tr, task.status),
                   _buildDetailRow(
-                      'عنوان الاستلام', task.pickupAddress ?? 'غير محدد'),
+                      'pickup_address'.tr, task.pickupAddress ?? 'not_specified'.tr),
                   _buildDetailRow(
-                      'عنوان التسليم', task.deliveryAddress ?? 'غير محدد'),
-                  _buildDetailRow('المبلغ الإجمالي',
-                      '${task.totalPrice.toStringAsFixed(2)} ر.س'),
+                      'delivery_address'.tr, task.deliveryAddress ?? 'not_specified'.tr),
+                  _buildDetailRow('total_amount'.tr,
+                      '${task.totalPrice.toStringAsFixed(2)} ${'sar'.tr}'),
                   _buildDetailRow(
-                      'العمولة', '${task.commission.toStringAsFixed(2)} ر.س'),
-                  _buildDetailRow('تاريخ الإنشاء', task.createdAt.toString()),
+                      'commission'.tr, '${task.commission.toStringAsFixed(2)} ${'sar'.tr}'),
+                  _buildDetailRow('creationDate'.tr, task.createdAt.toString()),
                   if (task.notes != null && task.notes!.isNotEmpty)
-                    _buildDetailRow('ملاحظات', task.notes!),
+                    _buildDetailRow('notes'.tr, task.notes!),
                 ],
               ),
             ),

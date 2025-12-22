@@ -70,7 +70,7 @@ class CustomTextField extends StatelessWidget {
             filled: true,
             fillColor: enabled
                 ? Theme.of(context).colorScheme.surface
-                : Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
+                : Theme.of(context).colorScheme.surface.withOpacity(0.5),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(
@@ -83,7 +83,7 @@ class CustomTextField extends StatelessWidget {
                 color: Theme.of(context)
                     .colorScheme
                     .outline
-                    .withValues(alpha: 0.5),
+                    .withOpacity(0.5),
               ),
             ),
             focusedBorder: OutlineInputBorder(

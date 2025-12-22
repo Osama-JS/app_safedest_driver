@@ -86,7 +86,7 @@ class _SettingsScreenLocalizedState extends State<SettingsScreenLocalized> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Colors.blue.withValues(alpha: 0.1),
+                    color: Colors.blue.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -159,7 +159,7 @@ class _SettingsScreenLocalizedState extends State<SettingsScreenLocalized> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
           color: isSelected
-              ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
+              ? Theme.of(context).primaryColor.withOpacity(0.1)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
@@ -209,7 +209,7 @@ class _SettingsScreenLocalizedState extends State<SettingsScreenLocalized> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Colors.purple.withValues(alpha: 0.1),
+                    color: Colors.purple.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -303,7 +303,7 @@ class _SettingsScreenLocalizedState extends State<SettingsScreenLocalized> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected ? color.withValues(alpha: 0.1) : Colors.transparent,
+          color: isSelected ? color.withOpacity(0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: isSelected ? color : Colors.grey[300]!,
@@ -395,7 +395,7 @@ class _SettingsScreenLocalizedState extends State<SettingsScreenLocalized> {
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
+          color: color.withOpacity(0.1),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Icon(icon, color: color, size: 20),
@@ -477,7 +477,7 @@ class _SettingsScreenLocalizedState extends State<SettingsScreenLocalized> {
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
+          color: color.withOpacity(0.1),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Icon(icon, color: color, size: 20),
@@ -507,7 +507,7 @@ class _SettingsScreenLocalizedState extends State<SettingsScreenLocalized> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Colors.red.withValues(alpha: 0.1),
+                    color: Colors.red.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(

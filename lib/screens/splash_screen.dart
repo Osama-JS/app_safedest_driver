@@ -291,8 +291,8 @@ class _SplashScreenState extends State<SplashScreen>
             color: Theme.of(context).colorScheme.surface,
             border: Border.all(
               color: isDark
-                  ? Colors.red.withValues(alpha: 0.3)
-                  : Colors.red.withValues(alpha: 0.2),
+                  ? Colors.red.withOpacity(0.3)
+                  : Colors.red.withOpacity(0.2),
               width: 1,
             ),
           ),
@@ -305,12 +305,12 @@ class _SplashScreenState extends State<SplashScreen>
                 height: 80,
                 decoration: BoxDecoration(
                   color: isDark
-                      ? Colors.red.withValues(alpha: 0.2)
-                      : Colors.red.withValues(alpha: 0.1),
+                      ? Colors.red.withOpacity(0.2)
+                      : Colors.red.withOpacity(0.1),
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.red.withValues(alpha: 0.3),
+                      color: Colors.red.withOpacity(0.3),
                       blurRadius: 15,
                       spreadRadius: 2,
                     ),
@@ -340,7 +340,7 @@ class _SplashScreenState extends State<SplashScreen>
                       color: Theme.of(context)
                           .colorScheme
                           .onSurface
-                          .withValues(alpha: 0.8),
+                          .withOpacity(0.8),
                       height: 1.5,
                     ),
                 textAlign: TextAlign.center,
@@ -411,7 +411,7 @@ class _SplashScreenState extends State<SplashScreen>
           l10n.initializationErrorMessage,
           style: TextStyle(
             color:
-                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+                Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
           ),
         ),
         actions: [
@@ -491,7 +491,7 @@ class _SplashScreenState extends State<SplashScreen>
                     Text(
                       l10n.driversApp,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: Colors.white.withValues(alpha: 0.8),
+                            color: Colors.white.withOpacity(0.8),
                           ),
                     ),
 
@@ -511,7 +511,7 @@ class _SplashScreenState extends State<SplashScreen>
                     Text(
                       l10n.loading,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.white.withValues(alpha: 0.7),
+                            color: Colors.white.withOpacity(0.7),
                           ),
                     ),
                   ],
@@ -529,7 +529,7 @@ class _SplashScreenState extends State<SplashScreen>
           '${l10n.version} ${AppConfig.appVersion}',
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.white.withValues(alpha: 0.6),
+                color: Colors.white.withOpacity(0.6),
               ),
         ),
       ),
@@ -581,7 +581,7 @@ class _SplashScreenState extends State<SplashScreen>
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.1),
+                color: color.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(icon, color: color, size: 24),

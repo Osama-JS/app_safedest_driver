@@ -186,6 +186,8 @@ class EarningsStats {
     required this.allTime,
   });
 
+  double get totalEarnings => stats.totalEarnings;
+
   factory EarningsStats.fromJson(Map<String, dynamic> json) {
     return EarningsStats(
       period: json['period'] ?? 'month',

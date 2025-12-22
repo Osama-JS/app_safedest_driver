@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../l10n/generated/app_localizations.dart';
+import 'package:get/get.dart';
 import '../models/task.dart';
 import '../screens/tasks/task_detail_screen.dart';
 import '../theme/app_theme.dart';
@@ -22,7 +22,6 @@ class TaskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     final statusColor = AppTheme.getTaskStatusColor(task.status);
 
     return Card(
@@ -38,9 +37,6 @@ class TaskCard extends StatelessWidget {
             _buildHeader(context, statusColor),
 
             const SizedBox(height: 12),
-
-            // Customer Info
-            // if (task.customerName != null) _buildCustomerInfo(context),
 
             // Addresses
             _buildAddresses(context),
@@ -68,13 +64,11 @@ class TaskCard extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context, Color statusColor) {
-    final l10n = AppLocalizations.of(context)!;
-
     return Row(
       children: [
         Expanded(
           child: Text(
-            l10n.taskNumber(task.id.toString()),
+            'taskNumber'.trParams({'id': task.id.toString()}),
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -99,55 +93,13 @@ class TaskCard extends StatelessWidget {
     );
   }
 
-  // Widget _buildCustomerInfo(BuildContext context) {
-  //   return Container(
-  //     margin: const EdgeInsets.only(bottom: 12),
-  //     padding: const EdgeInsets.all(12),
-  //     decoration: BoxDecoration(
-  //       color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-  //       borderRadius: BorderRadius.circular(8),
-  //     ),
-  //     child: Row(
-  //       children: [
-  //         Icon(
-  //           Icons.person,
-  //           color: Theme.of(context).colorScheme.primary,
-  //           size: 20,
-  //         ),
-  //         const SizedBox(width: 8),
-  //         Text(
-  //           task.customerName!,
-  //           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-  //                 fontWeight: FontWeight.w600,
-  //               ),
-  //         ),
-  //         if (task.customer?.phone != null) ...[
-  //           const Spacer(),
-  //           Icon(
-  //             Icons.phone,
-  //             color: Theme.of(context).colorScheme.primary,
-  //             size: 16,
-  //           ),
-  //           const SizedBox(width: 4),
-  //           Text(
-  //             task.customer!.phone!,
-  //             style: Theme.of(context).textTheme.bodySmall,
-  //           ),
-  //         ],
-  //       ],
-  //     ),
-  //   );
-  // }
-
   Widget _buildAddresses(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
     return Column(
       children: [
         if (task.pickupAddress != null)
           _buildAddressRow(
             context,
-            l10n.pickupPoint,
+            'pickupPoint'.tr,
             task.pickupAddress!,
             Icons.location_on,
             Colors.blue,
@@ -157,7 +109,7 @@ class TaskCard extends StatelessWidget {
         if (task.deliveryAddress != null)
           _buildAddressRow(
             context,
-            l10n.deliveryPoint,
+            'deliveryPoint'.tr,
             task.deliveryAddress!,
             Icons.flag,
             Colors.green,
@@ -206,8 +158,6 @@ class TaskCard extends StatelessWidget {
   }
 
   Widget _buildItems(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
@@ -230,7 +180,7 @@ class TaskCard extends StatelessWidget {
               ),
               const SizedBox(width: 6),
               Text(
-                l10n.items,
+                'items'.tr,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).colorScheme.primary,
@@ -252,8 +202,6 @@ class TaskCard extends StatelessWidget {
   }
 
   Widget _buildPriceInfo(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -262,7 +210,7 @@ class TaskCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(
+          const Icon(
             Icons.monetization_on,
             color: Colors.green,
             size: 20,
@@ -272,14 +220,8 @@ class TaskCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Text(
-                //   'إجمالي المبلغ: ${task.totalPrice.toStringAsFixed(2)} ر.س',
-                //   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                //         fontWeight: FontWeight.w600,
-                //       ),
-                // ),
                 Text(
-                  '${l10n.yourEarnings}: ${task.driverEarnings.toStringAsFixed(2)} ر.س',
+                  '${'yourEarnings'.tr}: ${task.driverEarnings.toStringAsFixed(2)} ${'sar'.tr}',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -300,14 +242,12 @@ class TaskCard extends StatelessWidget {
   }
 
   Widget _buildCompletedTaskActions(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
     return SizedBox(
       width: double.infinity,
       child: OutlinedButton.icon(
         onPressed: () => _viewTaskDetails(context),
         icon: const Icon(Icons.visibility, size: 18),
-        label: Text(l10n.viewDetails),
+        label: Text('view_details'.tr),
         style: OutlinedButton.styleFrom(
           foregroundColor: Theme.of(context).colorScheme.primary,
           side: BorderSide(color: Theme.of(context).colorScheme.primary),
@@ -317,8 +257,6 @@ class TaskCard extends StatelessWidget {
   }
 
   Widget _buildActions(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
     return Column(
       children: [
         // View Details Button
@@ -327,7 +265,7 @@ class TaskCard extends StatelessWidget {
           child: OutlinedButton.icon(
             onPressed: () => _viewTaskDetails(context),
             icon: const Icon(Icons.visibility, size: 18),
-            label: Text(l10n.viewDetails),
+            label: Text('view_details'.tr),
           ),
         ),
         const SizedBox(height: 8),
@@ -338,8 +276,6 @@ class TaskCard extends StatelessWidget {
   }
 
   Widget _buildActionButton(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
     // أزرار القبول والرفض تظهر للمهام المتاحة (التي لها pending_driver_id ولكن driver_id فارغ)
     bool isAvailableTask =
         (task.pendingDriverId != null && task.driverId == null) ||
@@ -355,7 +291,7 @@ class TaskCard extends StatelessWidget {
             child: OutlinedButton.icon(
               onPressed: () => onReject!(task),
               icon: const Icon(Icons.close, size: 18),
-              label: Text(l10n.reject),
+              label: Text('reject'.tr),
               style: OutlinedButton.styleFrom(
                 foregroundColor: Colors.red,
                 side: const BorderSide(color: Colors.red),
@@ -368,7 +304,7 @@ class TaskCard extends StatelessWidget {
             child: ElevatedButton.icon(
               onPressed: () => onAccept!(task),
               icon: const Icon(Icons.check, size: 18),
-              label: Text(l10n.accept),
+              label: Text('accept'.tr),
             ),
           ),
         ],
@@ -385,7 +321,7 @@ class TaskCard extends StatelessWidget {
               ? () => onStatusUpdate!(task, TaskStatus.inPickupPoint.value)
               : null,
           icon: const Icon(Icons.location_on, size: 18),
-          label: Text(l10n.arrivedAtPickupPoint),
+          label: Text('arrivedAtPickupPoint'.tr),
         ),
       );
     } else if (task.status == TaskStatus.inPickupPoint.value) {
@@ -396,7 +332,7 @@ class TaskCard extends StatelessWidget {
               ? () => onStatusUpdate!(task, TaskStatus.loading.value)
               : null,
           icon: const Icon(Icons.upload, size: 18),
-          label: Text(l10n.startLoading),
+          label: Text('startLoading'.tr),
         ),
       );
     } else if (task.status == TaskStatus.loading.value) {
@@ -407,7 +343,7 @@ class TaskCard extends StatelessWidget {
               ? () => onStatusUpdate!(task, TaskStatus.inTheWay.value)
               : null,
           icon: const Icon(Icons.local_shipping, size: 18),
-          label: Text(l10n.onTheWay),
+          label: Text('onTheWay'.tr),
         ),
       );
     } else if (task.status == TaskStatus.inTheWay.value) {
@@ -418,7 +354,7 @@ class TaskCard extends StatelessWidget {
               ? () => onStatusUpdate!(task, TaskStatus.inDeliveryPoint.value)
               : null,
           icon: const Icon(Icons.location_on, size: 18),
-          label: Text(l10n.arrivedAtDeliveryPoint),
+          label: Text('arrivedAtDeliveryPoint'.tr),
         ),
       );
     } else if (task.status == TaskStatus.inDeliveryPoint.value) {
@@ -429,7 +365,7 @@ class TaskCard extends StatelessWidget {
               ? () => onStatusUpdate!(task, TaskStatus.unloading.value)
               : null,
           icon: const Icon(Icons.download, size: 18),
-          label: Text(l10n.startUnloading),
+          label: Text('startUnloading'.tr),
         ),
       );
     } else if (task.status == TaskStatus.unloading.value) {
@@ -440,7 +376,7 @@ class TaskCard extends StatelessWidget {
               ? () => onStatusUpdate!(task, TaskStatus.completed.value)
               : null,
           icon: const Icon(Icons.done, size: 18),
-          label: Text(l10n.completeTask),
+          label: Text('completeTask'.tr),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.green,
           ),
@@ -452,53 +388,46 @@ class TaskCard extends StatelessWidget {
   }
 
   void _viewTaskDetails(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => TaskDetailScreen(task: task),
-      ),
-    );
+    Get.to(() => TaskDetailScreen(task: task));
   }
 
   String _getStatusText(BuildContext context, String status) {
-    final l10n = AppLocalizations.of(context)!;
-
     switch (status.toLowerCase()) {
       case 'assign':
-        return l10n.taskStatusAssign;
+        return 'taskStatusAssign'.tr;
       case 'started':
-        return l10n.taskStatusStarted;
+        return 'taskStatusStarted'.tr;
       case 'in pickup point':
-        return l10n.taskStatusInPickupPoint;
+        return 'taskStatusInPickupPoint'.tr;
       case 'loading':
-        return l10n.taskStatusLoading;
+        return 'taskStatusLoading'.tr;
       case 'in the way':
-        return l10n.taskStatusInTheWay;
+        return 'taskStatusInTheWay'.tr;
       case 'in delivery point':
-        return l10n.taskStatusInDeliveryPoint;
+        return 'taskStatusInDeliveryPoint'.tr;
       case 'unloading':
-        return l10n.taskStatusUnloading;
+        return 'taskStatusUnloading'.tr;
       case 'completed':
-        return l10n.taskStatusCompleted;
+        return 'taskStatusCompleted'.tr;
       case 'cancelled':
-        return l10n.taskStatusCancelled;
+        return 'taskStatusCancelled'.tr;
       default:
-        return l10n.taskStatusAssign;
+        return 'taskStatusAssign'.tr;
     }
   }
 
   String _formatDate(BuildContext context, DateTime date) {
-    final l10n = AppLocalizations.of(context)!;
     final now = DateTime.now();
     final difference = now.difference(date);
 
     if (difference.inDays > 0) {
-      return l10n.daysAgo(difference.inDays);
+      return 'days_ago'.trParams({'count': difference.inDays.toString()});
     } else if (difference.inHours > 0) {
-      return l10n.hoursAgo(difference.inHours);
+      return 'hours_ago'.trParams({'count': difference.inHours.toString()});
     } else if (difference.inMinutes > 0) {
-      return l10n.minutesAgo(difference.inMinutes);
+      return 'minutes_ago'.trParams({'count': difference.inMinutes.toString()});
     } else {
-      return l10n.now;
+      return 'now'.tr;
     }
   }
 }

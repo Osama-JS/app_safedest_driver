@@ -41,7 +41,7 @@ class PhoneInputField extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color:
-                  Theme.of(context).colorScheme.outline.withValues(alpha: 0.5),
+                  Theme.of(context).colorScheme.outline.withOpacity(0.5),
             ),
           ),
           child: Row(
@@ -60,7 +60,7 @@ class PhoneInputField extends StatelessWidget {
                       color: Theme.of(context)
                           .colorScheme
                           .outline
-                          .withValues(alpha: 0.3),
+                          .withOpacity(0.3),
                     ),
                   ),
                 ),

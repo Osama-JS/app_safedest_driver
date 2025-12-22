@@ -201,8 +201,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
                 color: driver.status == 'active'
-                    ? Colors.green.withValues(alpha: 0.2)
-                    : Colors.orange.withValues(alpha: 0.2),
+                    ? Colors.green.withOpacity(0.2)
+                    : Colors.orange.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
@@ -295,7 +295,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withValues(alpha: 0.6),
+                            .withOpacity(0.6),
                       ),
                 ),
                 Text(

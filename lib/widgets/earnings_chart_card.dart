@@ -152,7 +152,7 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
         ),
       ),
       child: const Center(
@@ -177,7 +177,7 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
         ),
       ),
       child: Padding(
@@ -201,7 +201,7 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
         ),
       ),
       child: Center(
@@ -212,7 +212,7 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
               Icons.analytics_outlined,
               size: 48,
               color:
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
+                  Theme.of(context).colorScheme.primary.withOpacity(0.5),
             ),
             const SizedBox(height: 12),
             Text(
@@ -221,7 +221,7 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
-                        .withValues(alpha: 0.7),
+                        .withOpacity(0.7),
                   ),
             ),
             const SizedBox(height: 8),
@@ -232,7 +232,7 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
-                        .withValues(alpha: 0.5),
+                        .withOpacity(0.5),
                   ),
             ),
           ],
@@ -264,7 +264,7 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
         horizontalInterval: (maxY - minY) / 4,
         getDrawingHorizontalLine: (value) {
           return FlLine(
-            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+            color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
             strokeWidth: 1,
           );
         },
@@ -295,7 +295,7 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
                           color: Theme.of(context)
                               .colorScheme
                               .onSurface
-                              .withValues(alpha: 0.6),
+                              .withOpacity(0.6),
                         ),
                   ),
                 );
@@ -318,7 +318,7 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withValues(alpha: 0.6),
+                            .withOpacity(0.6),
                       ),
                 ),
               );
@@ -351,7 +351,7 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
           ),
           belowBarData: BarAreaData(
             show: true,
-            color: primaryColor.withValues(alpha: 0.1),
+            color: primaryColor.withOpacity(0.1),
           ),
         ),
       ],
@@ -462,10 +462,10 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
+        color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: color.withValues(alpha: 0.3),
+          color: color.withOpacity(0.3),
           width: 1,
         ),
       ),
@@ -491,7 +491,7 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
                   color: Theme.of(context)
                       .colorScheme
                       .onSurface
-                      .withValues(alpha: 0.7),
+                      .withOpacity(0.7),
                 ),
             textAlign: TextAlign.center,
           ),

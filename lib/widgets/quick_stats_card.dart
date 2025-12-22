@@ -1,98 +1,93 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../services/task_service.dart';
-import '../services/wallet_service.dart';
+import 'package:get/get.dart';
+import '../Controllers/TaskController.dart';
+import '../Controllers/WalletController.dart';
 import '../models/task.dart';
-import '../l10n/generated/app_localizations.dart';
 
 class QuickStatsCard extends StatelessWidget {
   const QuickStatsCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    if (l10n == null) {
-      // Fallback or error handling
-      return const SizedBox.shrink();
-    }
-    return Consumer2<TaskService, WalletService>(
-      builder: (context, taskService, walletService, child) {
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      Icons.analytics,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 24,
+    final TaskController taskController = Get.find<TaskController>();
+    final WalletController walletController = Get.find<WalletController>();
+
+    return Obx(() {
+      return Card(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.analytics,
+                    color: Theme.of(context).colorScheme.primary,
+                    size: 24,
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'quick_stats'.tr,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildStatItem(
+                      context,
+                      'available_tasks'.tr,
+                      '${taskController.getTaskCountByStatus('assign')}',
+                      Icons.assignment_outlined,
+                      Colors.blue,
                     ),
-                    const SizedBox(width: 12),
-                    Text(
-                      l10n.quickStats,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: _buildStatItem(
+                      context,
+                      'active_tasks'.tr,
+                      '${taskController.activeTasks.length}',
+                      Icons.work_outline,
+                      Colors.orange,
                     ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildStatItem(
-                        context,
-                        l10n.availableTasks,
-                        '${taskService.getTaskCountByStatus(TaskStatus.assign)}',
-                        Icons.assignment_outlined,
-                        Colors.blue,
-                      ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildStatItem(
+                      context,
+                      'current_balance'.tr,
+                      '${walletController.currentBalance.toStringAsFixed(2)} ${walletController.currency}',
+                      Icons.account_balance_wallet_outlined,
+                      Colors.green,
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: _buildStatItem(
-                        context,
-                        l10n.activeTasks,
-                        '${taskService.activeTasks.length}',
-                        Icons.work_outline,
-                        Colors.orange,
-                      ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: _buildStatItem(
+                      context,
+                      'total_earnings'.tr,
+                      '${walletController.totalEarnings.toStringAsFixed(2)} ${walletController.currency}',
+                      Icons.trending_up,
+                      Colors.purple,
                     ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildStatItem(
-                        context,
-                        l10n.currentBalance,
-                        '${walletService.currentBalance.toStringAsFixed(2)} ${walletService.currency}',
-                        Icons.account_balance_wallet_outlined,
-                        Colors.green,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: _buildStatItem(
-                        context,
-                        l10n.totalEarnings,
-                        '${walletService.totalEarnings.toStringAsFixed(2)} ${walletService.currency}',
-                        Icons.trending_up,
-                        Colors.purple,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
-        );
-      },
-    );
+        ),
+      );
+    });
   }
 
   Widget _buildStatItem(

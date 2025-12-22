@@ -18,7 +18,7 @@ class OfferCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       elevation: offer.isMyOffer ? 3 : 1,
       color: offer.isMyOffer
-          ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.05)
+          ? Theme.of(context).colorScheme.primary.withOpacity(0.05)
           : null,
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -150,10 +150,10 @@ class OfferCard extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: Colors.green.withValues(alpha: 0.1),
+            color: Colors.green.withOpacity(0.1),
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: Colors.green.withValues(alpha: 0.3),
+              color: Colors.green.withOpacity(0.3),
               width: 1,
             ),
           ),
@@ -179,7 +179,7 @@ class OfferCard extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.grey.withValues(alpha: 0.1),
+              color: Colors.grey.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
@@ -212,10 +212,10 @@ class OfferCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.blue.withValues(alpha: 0.1),
+        color: Colors.blue.withOpacity(0.1),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: Colors.blue.withValues(alpha: 0.3),
+          color: Colors.blue.withOpacity(0.3),
           width: 1,
         ),
       ),

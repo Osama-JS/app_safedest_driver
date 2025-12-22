@@ -270,7 +270,7 @@ class _SubmitOfferScreenState extends State<SubmitOfferScreen> {
               borderRadius: BorderRadius.circular(8),
             ),
             filled: true,
-            fillColor: Colors.grey.withValues(alpha: 0.1),
+            fillColor: Colors.grey.withOpacity(0.1),
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
@@ -313,7 +313,7 @@ class _SubmitOfferScreenState extends State<SubmitOfferScreen> {
     final price = double.parse(_priceController.text);
 
     return Card(
-      color: Colors.blue.withValues(alpha: 0.05),
+      color: Colors.blue.withOpacity(0.05),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -403,7 +403,7 @@ class _SubmitOfferScreenState extends State<SubmitOfferScreen> {
               borderRadius: BorderRadius.circular(8),
             ),
             filled: true,
-            fillColor: Colors.grey.withValues(alpha: 0.1),
+            fillColor: Colors.grey.withOpacity(0.1),
           ),
         ),
       ],

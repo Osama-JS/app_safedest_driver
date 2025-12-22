@@ -187,7 +187,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                 isScrollable: true,
                 labelColor: Colors.white, // لون النص للتبويب المحدد
                 unselectedLabelColor: Colors.white
-                    .withValues(alpha: 0.7), // لون النص للتبويبات غير المحددة
+                    .withOpacity(0.7), // لون النص للتبويبات غير المحددة
                 indicatorColor: Colors.white, // لون المؤشر
                 tabs: [
                   Tab(text: AppLocalizations.of(context)!.all),
@@ -343,7 +343,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                     width: 48,
                     height: 48,
                     decoration: BoxDecoration(
-                      color: color.withValues(alpha: 0.1),
+                      color: color.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(24),
                     ),
                     child: Icon(
@@ -377,7 +377,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
-                                  color: Colors.blue.withValues(alpha: 0.1),
+                                  color: Colors.blue.withOpacity(0.1),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Row(
@@ -415,7 +415,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                               ),
                               decoration: BoxDecoration(
                                 color: _getStatusColor(transaction.status)
-                                    .withValues(alpha: 0.1),
+                                    .withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(

@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../models/notification.dart';
-import '../../services/notification_service.dart';
+import '../../Controllers/NotificationController.dart';
 import '../../config/app_config.dart';
 
 class NotificationsScreen extends StatefulWidget {
-  const NotificationsScreen({Key? key}) : super(key: key);
+  const NotificationsScreen({super.key});
 
   @override
   State<NotificationsScreen> createState() => _NotificationsScreenState();
 }
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
+  final NotificationController _notificationController = Get.find<NotificationController>();
   final ScrollController _scrollController = ScrollController();
   int _currentPage = 1;
   bool _isLoadingMore = false;
@@ -41,37 +42,25 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   }
 
   Future<void> _loadNotifications() async {
-    debugPrint('📱 NotificationsScreen: Loading notifications...');
-    final notificationService =
-        Provider.of<NotificationService>(context, listen: false);
-    final response =
-        await notificationService.getNotifications(page: 1, perPage: 20);
-    debugPrint(
-        '📱 NotificationsScreen: Load response - success: ${response.isSuccess}, notifications count: ${notificationService.notifications.length}');
+    await _notificationController.fetchNotifications(page: 1, refresh: true);
     _currentPage = 1;
     _hasMoreData = true;
   }
 
   Future<void> _loadMoreNotifications() async {
-    if (_isLoadingMore) return;
+    if (_isLoadingMore || !_hasMoreData) return;
 
     setState(() {
       _isLoadingMore = true;
     });
 
-    final notificationService =
-        Provider.of<NotificationService>(context, listen: false);
-    final response = await notificationService.getNotifications(
-      page: _currentPage + 1,
-      perPage: 20,
-    );
+    final previousCount = _notificationController.notifications.length;
+    await _notificationController.fetchNotifications(page: _currentPage + 1);
 
-    if (response.isSuccess && response.data != null) {
-      if (response.data!.notifications.isEmpty) {
-        _hasMoreData = false;
-      } else {
-        _currentPage++;
-      }
+    if (_notificationController.notifications.length == previousCount) {
+      _hasMoreData = false;
+    } else {
+      _currentPage++;
     }
 
     setState(() {
@@ -86,153 +75,80 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   String _formatNotificationTime(DateTime dateTime) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
-    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
 
     if (difference.inDays > 0) {
-      if (isArabic) {
-        return '${difference.inDays} ${difference.inDays == 1 ? 'يوم' : 'أيام'} مضت';
-      } else {
-        return '${difference.inDays} ${difference.inDays == 1 ? 'day' : 'days'} ago';
-      }
+      return 'days_ago'.trParams({'days': difference.inDays.toString()});
     } else if (difference.inHours > 0) {
-      if (isArabic) {
-        return '${difference.inHours} ${difference.inHours == 1 ? 'ساعة' : 'ساعات'} مضت';
-      } else {
-        return '${difference.inHours} ${difference.inHours == 1 ? 'hour' : 'hours'} ago';
-      }
+      return 'hours_ago'.trParams({'hours': difference.inHours.toString()});
     } else if (difference.inMinutes > 0) {
-      if (isArabic) {
-        return '${difference.inMinutes} ${difference.inMinutes == 1 ? 'دقيقة' : 'دقائق'} مضت';
-      } else {
-        return '${difference.inMinutes} ${difference.inMinutes == 1 ? 'minute' : 'minutes'} ago';
-      }
+      return 'minutes_ago'.trParams({'minutes': difference.inMinutes.toString()});
     } else {
-      return isArabic ? 'الآن' : 'Now';
+      return 'now'.tr;
     }
   }
 
   Future<void> _showNotificationDetails(AppNotification notification) async {
-    // Show notification details dialog
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
+    await Get.dialog(
+      AlertDialog(
+        title: Row(
+          children: [
+            _buildNotificationIcon(
+              NotificationTypeExtension.fromString(notification.type),
+              !notification.isRead,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                notification.title,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              _buildNotificationIcon(
-                NotificationTypeExtension.fromString(notification.type),
-                notification.isUnread,
+              Text(
+                notification.body,
+                style: const TextStyle(fontSize: 16),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  notification.title,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Icon(
+                    Icons.access_time,
+                    size: 16,
+                    color: Colors.grey[600],
                   ),
-                ),
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  notification.body,
-                  style: const TextStyle(fontSize: 16),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.access_time,
-                      size: 16,
+                  const SizedBox(width: 4),
+                  Text(
+                    _formatNotificationTime(notification.createdAt),
+                    style: TextStyle(
+                      fontSize: 12,
                       color: Colors.grey[600],
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      _formatNotificationTime(notification.createdAt),
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-                if (notification.isUnread) ...[
-                  const SizedBox(height: 8),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: const Color(AppConfig.primaryColorValue)
-                          .withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      Localizations.localeOf(context).languageCode == 'ar'
-                          ? 'جديد'
-                          : 'New',
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: const Color(AppConfig.primaryColorValue),
-                        fontWeight: FontWeight.bold,
-                      ),
                     ),
                   ),
                 ],
-              ],
-            ),
+              ),
+            ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(Localizations.localeOf(context).languageCode == 'ar'
-                  ? 'إغلاق'
-                  : 'Close'),
-            ),
-          ],
-        );
-      },
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text('close'.tr),
+          ),
+        ],
+      ),
     );
 
-    // Mark as read if it was unread
     if (!notification.isRead) {
-      final notificationService =
-          Provider.of<NotificationService>(context, listen: false);
-      await notificationService.markAsRead(notification.id);
-    }
-  }
-
-  Future<void> _markAllAsRead() async {
-    final notificationService =
-        Provider.of<NotificationService>(context, listen: false);
-    final response = await notificationService.markAllAsRead();
-
-    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
-
-    if (response.isSuccess) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(isArabic
-              ? 'تم تحديد جميع الإشعارات كمقروءة'
-              : 'All notifications marked as read'),
-          backgroundColor: Colors.green,
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response.message ??
-              (isArabic
-                  ? 'فشل في تحديث الإشعارات'
-                  : 'Failed to update notifications')),
-          backgroundColor: Colors.red,
-        ),
-      );
+      await _notificationController.markAsRead(notification.id);
     }
   }
 
@@ -240,76 +156,56 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(Localizations.localeOf(context).languageCode == 'ar'
-            ? 'الإشعارات'
-            : 'Notifications'),
-        backgroundColor: const Color(AppConfig.primaryColorValue),
-        foregroundColor: Colors.white,
+        title: Text('notifications'.tr),
         actions: [
-          Consumer<NotificationService>(
-            builder: (context, notificationService, child) {
-              if (notificationService.unreadCount > 0) {
-                return IconButton(
+          Obx(() => _notificationController.unreadCount.value > 0
+              ? IconButton(
                   icon: const Icon(Icons.mark_email_read),
-                  onPressed: _markAllAsRead,
-                  tooltip: Localizations.localeOf(context).languageCode == 'ar'
-                      ? 'تحديد الكل كمقروء'
-                      : 'Mark all as read',
-                );
-              }
-              return const SizedBox.shrink();
-            },
-          ),
+                  onPressed: () => _notificationController.markAllAsRead(),
+                  tooltip: 'mark_all_as_read'.tr,
+                )
+              : const SizedBox.shrink()),
         ],
       ),
-      body: Consumer<NotificationService>(
-        builder: (context, notificationService, child) {
-          if (notificationService.isLoading &&
-              notificationService.notifications.isEmpty) {
-            return const Center(
-              child: CircularProgressIndicator(
-                color: Color(AppConfig.primaryColorValue),
-              ),
-            );
-          }
-
-          if (notificationService.notifications.isEmpty) {
-            return _buildEmptyState();
-          }
-
-          return RefreshIndicator(
-            onRefresh: _refreshNotifications,
-            color: const Color(AppConfig.primaryColorValue),
-            child: ListView.builder(
-              controller: _scrollController,
-              padding: const EdgeInsets.all(16),
-              itemCount: notificationService.notifications.length +
-                  (_isLoadingMore ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index == notificationService.notifications.length) {
-                  return const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: CircularProgressIndicator(
-                        color: Color(AppConfig.primaryColorValue),
-                      ),
-                    ),
-                  );
-                }
-
-                final notification = notificationService.notifications[index];
-                return _buildNotificationCard(notification);
-              },
-            ),
+      body: Obx(() {
+        if (_notificationController.isLoading.value &&
+            _notificationController.notifications.isEmpty) {
+          return const Center(
+            child: CircularProgressIndicator(),
           );
-        },
-      ),
+        }
+
+        if (_notificationController.notifications.isEmpty) {
+          return _buildEmptyState();
+        }
+
+        return RefreshIndicator(
+          onRefresh: _refreshNotifications,
+          child: ListView.builder(
+            controller: _scrollController,
+            padding: const EdgeInsets.all(16),
+            itemCount: _notificationController.notifications.length +
+                (_isLoadingMore ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (index == _notificationController.notifications.length) {
+                return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+
+              final notification = _notificationController.notifications[index];
+              return _buildNotificationCard(notification);
+            },
+          ),
+        );
+      }),
     );
   }
 
   Widget _buildEmptyState() {
-    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
-
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -321,7 +217,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            isArabic ? 'لا توجد إشعارات' : 'No notifications',
+            'no_notifications'.tr,
             style: TextStyle(
               fontSize: 18,
               color: Colors.grey[600],
@@ -330,9 +226,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            isArabic
-                ? 'ستظهر الإشعارات الجديدة هنا'
-                : 'New notifications will appear here',
+            'no_notifications_description'.tr,
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey[500],
@@ -349,12 +243,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
-      elevation: notification.isUnread ? 3 : 1,
+      elevation: !notification.isRead ? 3 : 1,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: notification.isUnread
-            ? const BorderSide(
-                color: Color(AppConfig.primaryColorValue), width: 0.5)
+        side: !notification.isRead
+            ? BorderSide(
+                color: Theme.of(context).primaryColor, width: 0.5)
             : BorderSide.none,
       ),
       child: InkWell(
@@ -364,16 +258,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            color: notification.isUnread
-                ? const Color(AppConfig.primaryColorValue)
-                    .withValues(alpha: 0.08) // لون أغمق للإشعارات غير المقروءة
-                : Colors.grey
-                    .withValues(alpha: 0.03), // لون أفتح للإشعارات المقروءة
+            color: !notification.isRead
+                ? Theme.of(context).primaryColor.withOpacity(0.05)
+                : Colors.transparent,
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildNotificationIcon(notificationType, notification.isUnread),
+              _buildNotificationIcon(notificationType, !notification.isRead),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -386,21 +278,21 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                             notification.title,
                             style: TextStyle(
                               fontSize: 16,
-                              fontWeight: notification.isUnread
+                              fontWeight: !notification.isRead
                                   ? FontWeight.bold
                                   : FontWeight.w600,
-                              color: notification.isUnread
+                              color: !notification.isRead
                                   ? Colors.black87
                                   : Colors.black54,
                             ),
                           ),
                         ),
-                        if (notification.isUnread)
+                        if (!notification.isRead)
                           Container(
                             width: 8,
                             height: 8,
-                            decoration: const BoxDecoration(
-                              color: Color(AppConfig.primaryColorValue),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).primaryColor,
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -411,7 +303,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       notification.body,
                       style: TextStyle(
                         fontSize: 14,
-                        color: notification.isUnread
+                        color: !notification.isRead
                             ? Colors.black87
                             : Colors.black54,
                         height: 1.4,
@@ -441,7 +333,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                           ),
                           decoration: BoxDecoration(
                             color: _getNotificationTypeColor(notificationType)
-                                .withValues(alpha: 0.1),
+                                .withOpacity(0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -472,7 +364,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       height: 40,
       decoration: BoxDecoration(
         color: _getNotificationTypeColor(type)
-            .withValues(alpha: isUnread ? 0.15 : 0.1),
+            .withOpacity(isUnread ? 0.15 : 0.1),
         shape: BoxShape.circle,
       ),
       child: Icon(
@@ -534,31 +426,17 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   String _formatDateTime(DateTime dateTime) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
-    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
 
     if (difference.inMinutes < 1) {
-      return isArabic ? 'الآن' : 'Now';
+      return 'now'.tr;
     } else if (difference.inMinutes < 60) {
-      if (isArabic) {
-        return 'منذ ${difference.inMinutes} دقيقة';
-      } else {
-        return '${difference.inMinutes} ${difference.inMinutes == 1 ? 'minute' : 'minutes'} ago';
-      }
+      return 'minutes_ago'.trParams({'minutes': difference.inMinutes.toString()});
     } else if (difference.inHours < 24) {
-      if (isArabic) {
-        return 'منذ ${difference.inHours} ساعة';
-      } else {
-        return '${difference.inHours} ${difference.inHours == 1 ? 'hour' : 'hours'} ago';
-      }
+      return 'hours_ago'.trParams({'hours': difference.inHours.toString()});
     } else if (difference.inDays < 7) {
-      if (isArabic) {
-        return 'منذ ${difference.inDays} يوم';
-      } else {
-        return '${difference.inDays} ${difference.inDays == 1 ? 'day' : 'days'} ago';
-      }
+      return 'days_ago'.trParams({'days': difference.inDays.toString()});
     } else {
-      return DateFormat('dd/MM/yyyy HH:mm', isArabic ? 'ar' : 'en')
-          .format(dateTime);
+      return DateFormat('dd/MM/yyyy HH:mm').format(dateTime);
     }
   }
 }

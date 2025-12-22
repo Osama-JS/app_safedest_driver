@@ -165,6 +165,10 @@ class SettingsService extends ChangeNotifier {
         return const Locale('ar', 'SA');
       case 'en':
         return const Locale('en', 'US');
+      case 'ur':
+        return const Locale('ur', 'PK');
+      case 'zh':
+        return const Locale('zh', 'CN');
       default:
         return const Locale('ar', 'SA');
     }
@@ -180,6 +184,10 @@ class SettingsService extends ChangeNotifier {
         return 'العربية';
       case 'en':
         return 'English';
+      case 'ur':
+        return 'اردو';
+      case 'zh':
+        return '中文';
       default:
         return 'العربية';
     }

@@ -1,82 +1,61 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../services/task_service.dart';
+import 'package:get/get.dart';
+import '../Controllers/TaskController.dart';
 import '../models/task.dart';
 import '../theme/app_theme.dart';
-import '../l10n/generated/app_localizations.dart';
 
 class RecentTasksCard extends StatelessWidget {
   const RecentTasksCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    if (l10n == null) {
-      // Fallback or error handling
-      return const SizedBox.shrink();
-    }
-    return Consumer<TaskService>(
-      builder: (context, taskService, child) {
-        final recentTasks = taskService.tasks.take(3).toList();
+    final TaskController taskController = Get.find<TaskController>();
 
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      Icons.assignment,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 24,
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      l10n.recentTasks,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                    const Spacer(),
-                    // TextButton(
-                    //   onPressed: () {
-                    //     // TODO: Navigate to tasks screen
-                    //     ScaffoldMessenger.of(context).showSnackBar(
-                    //       const SnackBar(content: Text('عرض جميع المهام')),
-                    //     );
-                    //   },
-                    //   child: Text(l10n.viewAll),
-                    // ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                if (taskService.isLoading)
-                  const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(20),
-                      child: CircularProgressIndicator(),
-                    ),
-                  )
-                else if (recentTasks.isEmpty)
-                  _buildEmptyState(context)
-                else
-                  ...recentTasks.map((task) => _buildTaskItem(context, task)),
-              ],
-            ),
+    return Obx(() {
+      final recentTasks = taskController.tasks.take(3).toList();
+
+      return Card(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.assignment,
+                    color: Theme.of(context).colorScheme.primary,
+                    size: 24,
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'recent_tasks'.tr,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              if (taskController.isLoading.value)
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(20),
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+              else if (recentTasks.isEmpty)
+                _buildEmptyState(context)
+              else
+                ...recentTasks.map((task) => _buildTaskItem(context, task)),
+            ],
           ),
-        );
-      },
-    );
+        ),
+      );
+    });
   }
 
   Widget _buildEmptyState(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    if (l10n == null) {
-      // Fallback or error handling
-      return const SizedBox.shrink();
-    }
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -88,7 +67,7 @@ class RecentTasksCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            l10n.noTasksCurrently,
+            'no_tasks_currently'.tr,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color:
                       Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
@@ -101,11 +80,7 @@ class RecentTasksCard extends StatelessWidget {
 
   Widget _buildTaskItem(BuildContext context, Task task) {
     final statusColor = AppTheme.getTaskStatusColor(task.status);
-    final l10n = AppLocalizations.of(context);
-    if (l10n == null) {
-      // Fallback or error handling
-      return const SizedBox.shrink();
-    }
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
@@ -124,7 +99,7 @@ class RecentTasksCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  '${l10n.taskId} #${task.id}',
+                  '${'task_id'.tr} #${task.id}',
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -199,14 +174,14 @@ class RecentTasksCard extends StatelessWidget {
           const SizedBox(height: 8),
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.monetization_on_outlined,
                 size: 16,
                 color: Colors.green,
               ),
               const SizedBox(width: 6),
               Text(
-                '${(task.totalPrice - task.commission).toStringAsFixed(2)} ر.س',
+                '${(task.totalPrice - task.commission).toStringAsFixed(2)} ${'sar'.tr}',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Colors.green,
                       fontWeight: FontWeight.w600,
@@ -230,19 +205,25 @@ class RecentTasksCard extends StatelessWidget {
   }
 
   String _getStatusText(String status) {
+    // Better to use getLocalizedDisplayName from Task model but needs BuildContext
+    // For now use a simpler manual mapping or add it to Messages.dart
     switch (status.toLowerCase()) {
       case 'pending':
-        return 'في الانتظار';
+        return 'pending'.tr;
       case 'accepted':
-        return 'مقبولة';
+        return 'accepted'.tr;
       case 'picked_up':
-        return 'تم الاستلام';
+        return 'picked_up'.tr;
       case 'in_transit':
-        return 'في الطريق';
+        return 'inTransit'.tr; // Matches Messages.dart
       case 'delivered':
-        return 'تم التسليم';
+        return 'delivered'.tr;
       case 'cancelled':
-        return 'ملغية';
+        return 'cancelled'.tr;
+      case 'assign':
+        return 'assigned'.tr;
+      case 'started':
+        return 'started'.tr;
       default:
         return status;
     }
@@ -253,13 +234,13 @@ class RecentTasksCard extends StatelessWidget {
     final difference = now.difference(date);
 
     if (difference.inDays > 0) {
-      return '${difference.inDays} يوم';
+      return 'days_ago'.trParams({'count': '${difference.inDays}'});
     } else if (difference.inHours > 0) {
-      return '${difference.inHours} ساعة';
+      return 'hours_ago'.trParams({'count': '${difference.inHours}'});
     } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes} دقيقة';
+      return 'minutes_ago'.trParams({'count': '${difference.inMinutes}'});
     } else {
-      return 'الآن';
+      return 'just_now'.tr;
     }
   }
 }

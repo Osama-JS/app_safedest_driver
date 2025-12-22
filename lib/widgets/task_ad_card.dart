@@ -175,7 +175,7 @@ class TaskAdCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.blue.withValues(alpha: 0.1),
+        color: Colors.blue.withOpacity(0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -254,9 +254,9 @@ class TaskAdCard extends StatelessWidget {
       margin: const EdgeInsets.only(top: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: statusColor.withValues(alpha: 0.1),
+        color: statusColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: statusColor.withValues(alpha: 0.3)),
+        border: Border.all(color: statusColor.withOpacity(0.3)),
       ),
       child: Row(
         children: [

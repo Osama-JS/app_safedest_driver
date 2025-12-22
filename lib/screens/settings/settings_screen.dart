@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../services/settings_service.dart';
@@ -78,123 +79,110 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildLanguageCard(SettingsService settingsService) {
     final l10n = AppLocalizations.of(context);
     if (l10n == null) {
-      // Fallback or error handling
       return const SizedBox.shrink();
     }
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.blue.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  Icons.language,
-                  color: Colors.blue[600],
-                  size: 24,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10n.language,
-                      style:
-                          Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      l10n.chooseLanguage,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.grey[600],
-                          ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        leading: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.blue.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
           ),
-          const SizedBox(height: 16),
-
-          // Language Options
-          Column(
-            children: [
-              _buildLanguageOption(
-                settingsService,
-                'العربية',
-                'ar',
-                '🇸🇦',
-              ),
-              const SizedBox(height: 8),
-              _buildLanguageOption(
-                settingsService,
-                'English',
-                'en',
-                '🇺🇸',
-              ),
-            ],
+          child: Icon(
+            Icons.language,
+            color: Colors.blue[600],
+            size: 24,
           ),
-        ],
+        ),
+        title: Text(
+          l10n.language,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+        ),
+        subtitle: Text(
+          l10n.chooseLanguage,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Colors.grey[600],
+              ),
+        ),
+        trailing: GestureDetector(
+          onTap: () => _showLanguageBottomSheet(context, settingsService),
+          child: CircleAvatar(
+            radius: 15,
+            backgroundImage: AssetImage(
+              'assets/flags/${settingsService.currentLanguage}.png',
+            ),
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildLanguageOption(
-    SettingsService settingsService,
-    String title,
-    String languageCode,
-    String flag,
-  ) {
-    final isSelected = settingsService.currentLanguage == languageCode;
-
-    return InkWell(
-      onTap: () => settingsService.changeLanguage(languageCode),
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color:
-                !isSelected ? Colors.transparent : Colors.grey[300]!,
+  void _showLanguageBottomSheet(BuildContext context, SettingsService settingsService) {
+    showModalBottomSheet(
+      backgroundColor: Theme.of(context).cardColor,
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) {
+        return Container(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildLanguageListTile(context, "ar", "AE", settingsService),
+              const SizedBox(height: 10),
+              _buildLanguageListTile(context, "en", "US", settingsService),
+              const SizedBox(height: 10),
+              _buildLanguageListTile(context, "ur", "PK", settingsService),
+              const SizedBox(height: 10),
+              _buildLanguageListTile(context, "zh", "CN", settingsService),
+            ],
           ),
-        ),
-        child: Row(
-          children: [
-            Text(
-              flag,
-              style: const TextStyle(fontSize: 24),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                title,
-                style: TextStyle(
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                  color: Theme.of(context).textTheme.bodyMedium?.color,
-                ),
-              ),
-            ),
-            if (isSelected)
-              Icon(
-                Icons.check_circle,
-                color: Theme.of(context).textTheme.bodyMedium?.color,
-                size: 20,
-              ),
-          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildLanguageListTile(BuildContext context, String languageCode, String countryCode, SettingsService settingsService) {
+    final isSelected = settingsService.currentLanguage == languageCode;
+    return ListTile(
+      leading: ClipOval(
+        child: Image.asset(
+          'assets/flags/$languageCode.png',
+          width: 32,
+          height: 32,
+          fit: BoxFit.cover,
         ),
       ),
+      title: Text(
+        languageCode == "ar" ? "العربية" :
+        languageCode == "en" ? "English" :
+        languageCode == "ur" ? "اردو" : "中文",
+      ),
+      trailing: isSelected ? const Icon(Icons.check, color: Colors.green) : null,
+      onTap: () {
+        settingsService.changeLanguage(languageCode);
+
+        // Ensure GetX locale is also updated
+        Locale locale;
+        switch (languageCode) {
+          case 'ar': locale = const Locale('ar', 'SA'); break;
+          case 'en': locale = const Locale('en', 'US'); break;
+          case 'ur': locale = const Locale('ur', 'PK'); break;
+          case 'zh': locale = const Locale('zh', 'CN'); break;
+          default: locale = const Locale('en', 'US');
+        }
+        Get.updateLocale(locale);
+
+        Navigator.pop(context);
+      },
     );
   }
 
@@ -215,7 +203,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.purple.withValues(alpha: 0.1),
+                  color: Colors.purple.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -351,7 +339,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
+          color: color.withOpacity(0.1),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Icon(icon, color: color, size: 20),
@@ -426,7 +414,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
+          color: color.withOpacity(0.1),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Icon(icon, color: color, size: 20),
@@ -461,7 +449,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Colors.red.withValues(alpha: 0.1),
+                    color: Colors.red.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -601,7 +589,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.orange.withValues(alpha: 0.1),
+                color: Colors.orange.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
@@ -693,7 +681,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          border: Border.all(color: color.withValues(alpha: 0.3)),
+          border: Border.all(color: color.withOpacity(0.3)),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
@@ -838,7 +826,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Colors.red.withValues(alpha: 0.1),
+                    color: Colors.red.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(Icons.warning, color: Colors.red, size: 24),

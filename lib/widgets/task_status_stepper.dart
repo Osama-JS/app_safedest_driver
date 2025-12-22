@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../models/task.dart';
-import '../l10n/generated/app_localizations.dart';
 
 class TaskStatusStepper extends StatelessWidget {
   final Task task;
@@ -12,7 +12,7 @@ class TaskStatusStepper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final steps = _getSteps(context);
+    final steps = _getSteps();
     final currentStepIndex = _getCurrentStepIndex(steps);
 
     return Card(
@@ -31,7 +31,7 @@ class TaskStatusStepper extends StatelessWidget {
                     color: Theme.of(context)
                         .colorScheme
                         .primary
-                        .withValues(alpha: 0.1),
+                        .withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -42,9 +42,7 @@ class TaskStatusStepper extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  Localizations.localeOf(context).languageCode == 'ar'
-                      ? 'مراحل المهمة'
-                      : 'Task Stages',
+                  'task_stages'.tr,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -102,11 +100,11 @@ class TaskStatusStepper extends StatelessWidget {
       icon = _getStepIcon(step.status);
     } else {
       backgroundColor =
-          Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2);
+          Theme.of(context).colorScheme.onSurface.withOpacity(0.2);
       iconColor =
-          Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6);
+          Theme.of(context).colorScheme.onSurface.withOpacity(0.6);
       textColor =
-          Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6);
+          Theme.of(context).colorScheme.onSurface.withOpacity(0.6);
       icon = _getStepIcon(step.status);
     }
 
@@ -121,7 +119,7 @@ class TaskStatusStepper extends StatelessWidget {
             boxShadow: isActive
                 ? [
                     BoxShadow(
-                      color: backgroundColor.withValues(alpha: 0.3),
+                      color: backgroundColor.withOpacity(0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -161,7 +159,7 @@ class TaskStatusStepper extends StatelessWidget {
       decoration: BoxDecoration(
         color: isCompleted
             ? Colors.green
-            : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
+            : Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
         borderRadius: BorderRadius.circular(1),
       ),
     );
@@ -190,58 +188,38 @@ class TaskStatusStepper extends StatelessWidget {
     }
   }
 
-  List<TaskStep> _getSteps(BuildContext context) {
-    // استخدام النصوص المترجمة مباشرة حتى يتم إصلاح مشكلة توليد ملفات الترجمة
-    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
-
+  List<TaskStep> _getSteps() {
     return [
       TaskStep(
-        title: isArabic ? 'مخصصة' : 'Assigned',
-        content:
-            isArabic ? 'تم تخصيص المهمة للسائق' : 'Task assigned to driver',
+        title: 'taskStatusAssign'.tr,
         status: 'assign',
       ),
       TaskStep(
-        title: isArabic ? 'بدأت' : 'Started',
-        content:
-            isArabic ? 'بدأ السائق في تنفيذ المهمة' : 'Driver started the task',
+        title: 'taskStatusStarted'.tr,
         status: 'started',
       ),
       TaskStep(
-        title: isArabic ? 'في نقطة الاستلام' : 'At Pickup Point',
-        content: isArabic
-            ? 'وصل السائق لنقطة الاستلام'
-            : 'Driver arrived at pickup point',
+        title: 'taskStatusInPickupPoint'.tr,
         status: 'in pickup point',
       ),
       TaskStep(
-        title: isArabic ? 'جاري التحميل' : 'Loading',
-        content: isArabic ? 'يتم تحميل البضائع' : 'Loading goods',
+        title: 'taskStatusLoading'.tr,
         status: 'loading',
       ),
       TaskStep(
-        title: isArabic ? 'في الطريق' : 'On the Way',
-        content: isArabic
-            ? 'السائق في طريقه لنقطة التسليم'
-            : 'Driver on the way to delivery point',
+        title: 'taskStatusInTheWay'.tr,
         status: 'in the way',
       ),
       TaskStep(
-        title: isArabic ? 'في نقطة التسليم' : 'At Delivery Point',
-        content: isArabic
-            ? 'وصل السائق لنقطة التسليم'
-            : 'Driver arrived at delivery point',
+        title: 'taskStatusInDeliveryPoint'.tr,
         status: 'in delivery point',
       ),
       TaskStep(
-        title: isArabic ? 'جاري التفريغ' : 'Unloading',
-        content: isArabic ? 'يتم تفريغ البضائع' : 'Unloading goods',
+        title: 'taskStatusUnloading'.tr,
         status: 'unloading',
       ),
       TaskStep(
-        title: isArabic ? 'مكتملة' : 'Completed',
-        content:
-            isArabic ? 'تم إكمال المهمة بنجاح' : 'Task completed successfully',
+        title: 'taskStatusCompleted'.tr,
         status: 'completed',
       ),
     ];

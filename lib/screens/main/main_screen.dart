@@ -120,7 +120,7 @@ class _MainScreenState extends State<MainScreen> {
               activeIcon: const Icon(Icons.assignment),
               label: l10n.tasks,
               backgroundColor: _currentIndex == 1
-                  ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
+                  ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
                   : null,
             ),
             BottomNavigationBarItem(
@@ -155,7 +155,7 @@ class _MainScreenState extends State<MainScreen> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.orange.withValues(alpha: 0.1),
+                color: Colors.orange.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(

@@ -100,7 +100,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
                   color: Theme.of(context)
                       .colorScheme
                       .onSurface
-                      .withValues(alpha: 0.7),
+                      .withOpacity(0.7),
                 ),
           ),
           const SizedBox(height: 32),
@@ -132,7 +132,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
                       decoration: BoxDecoration(
                         color: Theme.of(context)
                             .primaryColor
-                            .withValues(alpha: 0.1),
+                            .withOpacity(0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(
@@ -165,7 +165,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
                                   color: Theme.of(context)
                                       .colorScheme
                                       .onSurface
-                                      .withValues(alpha: 0.6),
+                                      .withOpacity(0.6),
                                 ),
                           ),
                         ],
@@ -208,7 +208,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
             Icons.info_outline,
             size: 64,
             color:
-                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
+                Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
           ),
           const SizedBox(height: 16),
           Text(
@@ -217,7 +217,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
                   color: Theme.of(context)
                       .colorScheme
                       .onSurface
-                      .withValues(alpha: 0.7),
+                      .withOpacity(0.7),
                 ),
           ),
           const SizedBox(height: 8),
@@ -228,7 +228,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
                   color: Theme.of(context)
                       .colorScheme
                       .onSurface
-                      .withValues(alpha: 0.6),
+                      .withOpacity(0.6),
                 ),
           ),
           const SizedBox(height: 32),
@@ -278,14 +278,14 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
                     ? Theme.of(context)
                         .colorScheme
                         .surface
-                        .withValues(alpha: 0.5)
+                        .withOpacity(0.5)
                     : Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: Theme.of(context)
                       .colorScheme
                       .outline
-                      .withValues(alpha: 0.3),
+                      .withOpacity(0.3),
                 ),
               ),
               child: Text(
@@ -296,7 +296,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
                           : Theme.of(context)
                               .colorScheme
                               .onSurface
-                              .withValues(alpha: 0.5),
+                              .withOpacity(0.5),
                     ),
               ),
             ),
@@ -425,7 +425,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
       child: Container(
         padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
+          color: color.withOpacity(0.1),
           borderRadius: BorderRadius.circular(4),
         ),
         child: Icon(
@@ -449,11 +449,11 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: isDark
-            ? primaryColor.withValues(alpha: 0.1)
-            : primaryColor.withValues(alpha: 0.05),
+            ? primaryColor.withOpacity(0.1)
+            : primaryColor.withOpacity(0.05),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: primaryColor.withValues(alpha: 0.3),
+          color: primaryColor.withOpacity(0.3),
         ),
       ),
       child: Row(
@@ -483,7 +483,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
-                        .withValues(alpha: 0.7),
+                        .withOpacity(0.7),
                   ),
                 ),
               ],
@@ -520,11 +520,11 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
               color: Theme.of(context)
                   .colorScheme
                   .errorContainer
-                  .withValues(alpha: 0.3),
+                  .withOpacity(0.3),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color:
-                    Theme.of(context).colorScheme.error.withValues(alpha: 0.5),
+                    Theme.of(context).colorScheme.error.withOpacity(0.5),
               ),
             ),
             child: Row(
@@ -572,11 +572,11 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: isDark
-            ? successColor.withValues(alpha: 0.1)
-            : successColor.withValues(alpha: 0.05),
+            ? successColor.withOpacity(0.1)
+            : successColor.withOpacity(0.05),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: successColor.withValues(alpha: 0.3),
+          color: successColor.withOpacity(0.3),
         ),
       ),
       child: Row(
@@ -611,11 +611,11 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: isDark
-            ? Theme.of(context).colorScheme.surface.withValues(alpha: 0.5)
+            ? Theme.of(context).colorScheme.surface.withOpacity(0.5)
             : Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+          color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
         ),
       ),
       child: Text(
@@ -785,11 +785,11 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: isDark
-            ? Theme.of(context).colorScheme.surface.withValues(alpha: 0.3)
-            : Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
+            ? Theme.of(context).colorScheme.surface.withOpacity(0.3)
+            : Theme.of(context).colorScheme.surface.withOpacity(0.5),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
         ),
       ),
       child: Text(
@@ -798,7 +798,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
               color: Theme.of(context)
                   .colorScheme
                   .onSurface
-                  .withValues(alpha: 0.5),
+                  .withOpacity(0.5),
               fontStyle: FontStyle.italic,
             ),
       ),

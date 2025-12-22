@@ -20,12 +20,19 @@ import 'screens/main/main_screen.dart';
 import 'screens/profile/edit_profile_screen.dart';
 import 'screens/profile/change_password_screen.dart';
 import 'screens/profile/additional_data_screen.dart';
-
 import 'screens/auth/register_screen.dart';
 import 'screens/settings/settings_screen.dart';
 import 'services/registration_service.dart';
 import 'services/settings_service.dart';
 import 'services/task_ads_stats_service.dart';
+
+// GetX Imports
+import 'package:get/get.dart';
+import 'package:safedest_driver/Services/InitialService.dart';
+import 'package:safedest_driver/Languages/LanguageController.dart';
+import 'package:safedest_driver/Languages/Messages.dart';
+import 'package:safedest_driver/Globals/global.dart' as globals;
+import 'package:safedest_driver/shared_prff.dart';
 
 // Global navigation key for handling authentication errors
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -58,6 +65,10 @@ void main() async {
   final api = ApiService();
   await api.initialize();
 
+  // Initialize GetX Services
+  await Get.putAsync(() => InitialService().init());
+  Get.put(LanguageController());
+
   // ✅ تفعيل تسجيل الخروج التلقائي عند انتهاء التوكن
   ApiService.setAuthenticationErrorCallback(() async {
     debugPrint("🔴 Token invalid — logging out user...");
@@ -66,11 +77,8 @@ void main() async {
     final authService = AuthService();
     await authService.logout(); // إن كانت موجودة في كودك
 
-    // نعيد التوجيه إلى شاشة تسجيل الدخول
-    navigatorKey.currentState?.pushNamedAndRemoveUntil(
-      '/login',
-          (route) => false,
-    );
+    // نعيد التوجيه إلى شاشة تسجيل الدخول باستخدام GetX
+    Get.offAllNamed('/login');
   });
 
   runApp(const SafeDestsDriverApp());
@@ -108,20 +116,20 @@ class _SafeDestsDriverAppState extends State<SafeDestsDriverApp> {
       ],
       child: Consumer<SettingsService>(
         builder: (context, settingsService, child) {
-          return MaterialApp(
+          final LanguageController languageController = Get.find();
+
+          return GetMaterialApp(
             navigatorKey: navigatorKey,
             title: AppConfig.appName,
-            theme: AppTheme.lightTheme, // استخدام الثيم النهاري فقط
-            themeMode: ThemeMode.light, // تعطيل الوضع الليلي
-
-            // theme: AppTheme.lightTheme,
-            // darkTheme: AppTheme.darkTheme,
-            // themeMode: settingsService.themeMode,
+            theme: AppTheme.lightTheme,
+            themeMode: ThemeMode.light,
             debugShowCheckedModeBanner: false,
 
-            // Localization
-            // locale: settingsService.getLocale(),
-            locale: const Locale('ar', 'SA'),
+            // GetX Localization
+            locale: languageController.selectedLang,
+            translations: Messages(),
+
+            // Fallback to current localization logic if needed for existing widgets
             localizationsDelegates: const [
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
@@ -129,23 +137,23 @@ class _SafeDestsDriverAppState extends State<SafeDestsDriverApp> {
               GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: const [
-              Locale('ar', 'SA'), // Arabic
-              // Locale('en', 'US'), // English
+              Locale('ar', 'SA'),
+              Locale('en', 'US'),
             ],
 
-            // Routes
+            // GetPages instead of simple routes
             initialRoute: '/',
-            routes: {
-              '/': (context) => const SplashScreen(),
-              '/login': (context) => const LoginScreen(),
-              '/register': (context) => const RegisterScreen(),
-              '/forgot-password': (context) => const ForgotPasswordScreen(),
-              '/main': (context) => const MainScreen(),
-              '/edit-profile': (context) => const EditProfileScreen(),
-              '/change-password': (context) => const ChangePasswordScreen(),
-              '/additional-data': (context) => const AdditionalDataScreen(),
-              '/settings': (context) => const SettingsScreen(),
-            },
+            getPages: [
+              GetPage(name: '/', page: () => const SplashScreen()),
+              GetPage(name: '/login', page: () => const LoginScreen()),
+              GetPage(name: '/register', page: () => const RegisterScreen()),
+              GetPage(name: '/forgot-password', page: () => const ForgotPasswordScreen()),
+              GetPage(name: '/main', page: () => const MainScreen()),
+              GetPage(name: '/edit-profile', page: () => const EditProfileScreen()),
+              GetPage(name: '/change-password', page: () => const ChangePasswordScreen()),
+              GetPage(name: '/additional-data', page: () => const AdditionalDataScreen()),
+              GetPage(name: '/settings', page: () => const SettingsScreen()),
+            ],
 
             // Route generator for dynamic routes
             onGenerateRoute: (settings) {

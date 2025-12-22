@@ -1,68 +1,65 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../services/wallet_service.dart';
+import 'package:get/get.dart';
+import '../Controllers/WalletController.dart';
 
 class EarningsSummaryCard extends StatelessWidget {
   const EarningsSummaryCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<WalletService>(
-      builder: (context, walletService, child) {
-        final stats = walletService.earningsStats;
-        
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      Icons.trending_up,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 24,
+    final WalletController walletController = Get.find<WalletController>();
+
+    return Obx(() {
+      final stats = walletController.earningsStats.value;
+
+      return Card(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.trending_up,
+                    color: Theme.of(context).colorScheme.primary,
+                    size: 24,
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'earnings_summary'.tr,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
-                    const SizedBox(width: 12),
-                    Text(
-                      'ملخص الأرباح',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const Spacer(),
-                    TextButton(
-                      onPressed: () {
-                        // TODO: Navigate to detailed earnings
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('تفاصيل الأرباح قريباً')),
-                        );
-                      },
-                      child: const Text('التفاصيل'),
-                    ),
-                  ],
-                ),
-                
-                const SizedBox(height: 20),
-                
-                if (walletService.isLoading && stats == null)
-                  const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(20),
-                      child: CircularProgressIndicator(),
-                    ),
-                  )
-                else if (stats == null)
-                  _buildEmptyState(context)
-                else
-                  _buildEarningsContent(context, stats, walletService.currency),
-              ],
-            ),
+                  ),
+                  const Spacer(),
+                  // TextButton(
+                  //   onPressed: () {
+                  //     // TODO: Navigate to detailed earnings
+                  //   },
+                  //   child: Text('details'.tr),
+                  // ),
+                ],
+              ),
+
+              const SizedBox(height: 20),
+
+              if (walletController.isLoading.value && stats == null)
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(20),
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+              else if (stats == null)
+                _buildEmptyState(context)
+              else
+                _buildEarningsContent(context, stats, walletController.currency),
+            ],
           ),
-        );
-      },
-    );
+        ),
+      );
+    });
   }
 
   Widget _buildEmptyState(BuildContext context) {
@@ -77,7 +74,7 @@ class EarningsSummaryCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'لا توجد بيانات أرباح حالياً',
+            'no_earnings_data'.tr,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
             ),
@@ -105,20 +102,20 @@ class EarningsSummaryCard extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                'هذا الشهر',
+                'this_month'.tr,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               Row(
                 children: [
                   Expanded(
                     child: _buildStatItem(
                       context,
-                      'إجمالي الأرباح',
+                      'totalEarnings'.tr,
                       '${stats.stats.totalEarnings.toStringAsFixed(2)} $currency',
                       Icons.monetization_on,
                       Colors.green,
@@ -128,7 +125,7 @@ class EarningsSummaryCard extends StatelessWidget {
                   Expanded(
                     child: _buildStatItem(
                       context,
-                      'عدد المهام',
+                      'total_tasks'.tr,
                       '${stats.stats.totalTasks}',
                       Icons.assignment,
                       Colors.blue,
@@ -136,12 +133,12 @@ class EarningsSummaryCard extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               _buildStatItem(
                 context,
-                'متوسط الربح لكل مهمة',
+                'average_earning_per_task'.tr,
                 '${stats.stats.averageEarningPerTask.toStringAsFixed(2)} $currency',
                 Icons.analytics,
                 Colors.purple,
@@ -149,9 +146,9 @@ class EarningsSummaryCard extends StatelessWidget {
             ],
           ),
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // All Time Stats
         Container(
           padding: const EdgeInsets.all(16),
@@ -165,20 +162,20 @@ class EarningsSummaryCard extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                'إجمالي الفترة',
+                'all_time'.tr,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               Row(
                 children: [
                   Expanded(
                     child: _buildStatItem(
                       context,
-                      'إجمالي الأرباح',
+                      'totalEarnings'.tr,
                       '${stats.allTime.totalEarnings.toStringAsFixed(2)} $currency',
                       Icons.account_balance_wallet,
                       Colors.orange,
@@ -188,7 +185,7 @@ class EarningsSummaryCard extends StatelessWidget {
                   Expanded(
                     child: _buildStatItem(
                       context,
-                      'إجمالي المهام',
+                      'total_tasks'.tr,
                       '${stats.allTime.totalTasks}',
                       Icons.done_all,
                       Colors.teal,

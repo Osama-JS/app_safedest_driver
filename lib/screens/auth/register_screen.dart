@@ -1438,13 +1438,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+            color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
                 color: Theme.of(context)
                     .colorScheme
                     .primary
-                    .withValues(alpha: 0.3)),
+                    .withOpacity(0.3)),
           ),
           child: Column(
             children: [
@@ -1470,7 +1470,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   color: Theme.of(context)
                       .colorScheme
                       .primary
-                      .withValues(alpha: 0.8),
+                      .withOpacity(0.8),
                   fontSize: 12,
                 ),
               ),
@@ -1639,11 +1639,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+        color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
             color:
-                Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)),
+                Theme.of(context).colorScheme.primary.withOpacity(0.3)),
       ),
       child: Row(
         children: [
@@ -1675,7 +1675,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       color: Theme.of(context)
                           .colorScheme
                           .primary
-                          .withValues(alpha: 0.8),
+                          .withOpacity(0.8),
                     ),
                   ),
                 ],

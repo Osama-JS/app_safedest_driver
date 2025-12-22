@@ -106,7 +106,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 color: Theme.of(context)
                     .colorScheme
                     .onSurface
-                    .withValues(alpha: 0.7),
+                    .withOpacity(0.7),
               ),
             ),
             const SizedBox(height: 8),
@@ -116,13 +116,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 color: Theme.of(context)
                     .colorScheme
                     .primary
-                    .withValues(alpha: 0.1),
+                    .withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                     color: Theme.of(context)
                         .colorScheme
                         .primary
-                        .withValues(alpha: 0.3)),
+                        .withOpacity(0.3)),
               ),
               child: Row(
                 children: [
@@ -152,13 +152,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 color: Theme.of(context)
                     .colorScheme
                     .secondary
-                    .withValues(alpha: 0.1),
+                    .withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                     color: Theme.of(context)
                         .colorScheme
                         .secondary
-                        .withValues(alpha: 0.3)),
+                        .withOpacity(0.3)),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -285,7 +285,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withValues(alpha: 0.6),
+                            .withOpacity(0.6),
                         height: 1.5,
                       ),
                   textAlign: TextAlign.center,

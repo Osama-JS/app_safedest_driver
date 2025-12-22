@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../services/auth_service.dart';
-import '../../services/task_service.dart';
-import '../../services/location_service.dart';
-import '../../services/wallet_service.dart';
-import '../../services/notification_service.dart';
-import '../../services/task_ads_stats_service.dart';
+import 'package:get/get.dart';
+import '../../Controllers/AuthController.dart';
+import '../../Controllers/TaskController.dart';
+import '../../Controllers/LocationController.dart';
+import '../../Controllers/WalletController.dart';
+import '../../Controllers/NotificationController.dart';
+import '../../Controllers/TaskAdsController.dart';
 import '../../widgets/driver_status_card.dart';
 import '../../widgets/quick_stats_card.dart';
 import '../../widgets/recent_tasks_card.dart';
@@ -13,7 +13,6 @@ import '../../widgets/pending_task_card.dart';
 import '../../widgets/earnings_summary_card.dart';
 import '../task_ads/task_ads_screen.dart';
 import 'notifications_screen.dart';
-import '../../l10n/generated/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,6 +22,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final AuthController _authController = Get.find<AuthController>();
+  final TaskController _taskController = Get.find<TaskController>();
+  final WalletController _walletController = Get.find<WalletController>();
+  final LocationController _locationController = Get.find<LocationController>();
+  final NotificationController _notificationController = Get.find<NotificationController>();
+  final TaskAdsController _taskAdsController = Get.find<TaskAdsController>();
+
   @override
   void initState() {
     super.initState();
@@ -31,26 +37,19 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-
   Future<void> _loadData() async {
-    final taskService = Provider.of<TaskService>(context, listen: false);
-    final walletService = Provider.of<WalletService>(context, listen: false);
-    final locationService = Provider.of<LocationService>(context, listen: false);
-    final taskAdsStatsService = TaskAdsStatsService();
-
     try {
-      // Load initial data
+      debugPrint('Home data loading...');
 
-
-    await Future.wait([
-      locationService.startTracking(),
-        taskService.getTasks(page: 1, perPage: 5),
-        taskService.checkPendingTasks(),
-        walletService.getWallet(),
-        walletService.getEarningsStats(),
-        walletService.getTransactions(page: 1, perPage: 10),
-        locationService.getCurrentStatus(),
-        taskAdsStatsService.loadStats(), // Load task ads statistics
+      await Future.wait([
+        _locationController.startTracking(),
+        _taskController.fetchTasks(page: 1, perPage: 5),
+        _taskController.checkPendingTasks(),
+        _walletController.fetchWallet(),
+        _walletController.fetchEarningsStats(),
+        _walletController.fetchTransactions(page: 1, perPage: 10),
+        _locationController.fetchCurrentStatus(),
+        _taskAdsController.loadStats(),
       ]);
 
       debugPrint('Home data loaded successfully');
@@ -60,48 +59,37 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _refreshData() async {
-    final authService = Provider.of<AuthService>(context, listen: false);
-
     try {
       debugPrint('Starting data refresh...');
 
-      // Refresh driver profile data from server
-      await authService.refreshDriverData();
+      // Refresh driver profile data
+      await _authController.refreshDriverData();
 
       // Reload all data
       await _loadData();
 
       debugPrint('Data refresh completed successfully');
 
-      if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.dataRefreshSuccess),
-            backgroundColor: Colors.green,
-            duration: const Duration(seconds: 2),
-          ),
-        );
-      }
+      Get.snackbar(
+        'success'.tr,
+        'data_refresh_success'.tr,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+      );
     } catch (e) {
       debugPrint('Error refreshing data: $e');
-
-      if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.dataRefreshFailed),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 2),
-          ),
-        );
-      }
+      Get.snackbar(
+        'error'.tr,
+        'data_refresh_failed'.tr,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+      );
     }
   }
 
   Widget _buildTaskAdsSection() {
-    final l10n = AppLocalizations.of(context)!;
-
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
@@ -114,8 +102,8 @@ class _HomeScreenState extends State<HomeScreen> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.purple.withValues(alpha: 0.1),
-              Colors.blue.withValues(alpha: 0.1),
+              Colors.purple.withOpacity(0.1),
+              Colors.blue.withOpacity(0.1),
             ],
           ),
         ),
@@ -125,22 +113,14 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               InkWell(
-                borderRadius:
-                    BorderRadius.circular(12), // عشان يظهر التأثير مع الحواف
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const TaskAdsScreen(),
-                    ),
-                  );
-                },
+                borderRadius: BorderRadius.circular(12),
+                onTap: () => Get.to(() => const TaskAdsScreen()),
                 child: Row(
                   children: [
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.purple.withValues(alpha: 0.2),
+                        color: Colors.purple.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Icon(
@@ -155,21 +135,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            l10n.taskAds,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(
+                            'task_ads'.tr,
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.purple[700],
                                 ),
                           ),
                           Text(
-                            l10n.taskAdsDescription,
-                            style:
-                                Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: Colors.grey[600],
-                                    ),
+                            'task_ads_description'.tr,
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: Colors.grey[600],
+                                ),
                           ),
                         ],
                       ),
@@ -183,58 +159,41 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              Consumer<TaskAdsStatsService>(
-                builder: (context, statsService, child) {
-                  return Row(
-                    children: [
-                      Expanded(
-                        child: _buildQuickStatItem(
-                          l10n.availableAds,
-                          statsService.isLoading
-                              ? '...'
-                              : '${statsService.availableAds}',
-                          Icons.assignment_outlined,
-                          Colors.blue,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _buildQuickStatItem(
-                          l10n.myOffers,
-                          statsService.isLoading
-                              ? '...'
-                              : '${statsService.myOffers}',
-                          Icons.local_offer_outlined,
-                          Colors.orange,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _buildQuickStatItem(
-                          l10n.acceptedOffers,
-                          statsService.isLoading
-                              ? '...'
-                              : '${statsService.acceptedOffers}',
-                          Icons.check_circle_outline,
-                          Colors.green,
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
+              Obx(() => Row(
+                children: [
+                  Expanded(
+                    child: _buildQuickStatItem(
+                      'available_ads'.tr,
+                      _taskAdsController.isLoading.value ? '...' : '${_taskAdsController.availableAds.value}',
+                      Icons.assignment_outlined,
+                      Colors.blue,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _buildQuickStatItem(
+                      'my_offers'.tr,
+                      _taskAdsController.isLoading.value ? '...' : '${_taskAdsController.myOffers.value}',
+                      Icons.local_offer_outlined,
+                      Colors.orange,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _buildQuickStatItem(
+                      'accepted_offers'.tr,
+                      _taskAdsController.isLoading.value ? '...' : '${_taskAdsController.acceptedOffers.value}',
+                      Icons.check_circle_outline,
+                      Colors.green,
+                    ),
+                  ),
+                ],
+              )),
               const SizedBox(height: 16),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const TaskAdsScreen(),
-                      ),
-                    );
-                  },
+                  onPressed: () => Get.to(() => const TaskAdsScreen()),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.purple,
                     foregroundColor: Colors.white,
@@ -249,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       const Icon(Icons.search, size: 20),
                       const SizedBox(width: 8),
                       Text(
-                        l10n.browseAds,
+                        'browse_ads'.tr,
                         style: const TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 16,
@@ -271,10 +230,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
+        color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: color.withValues(alpha: 0.3),
+          color: color.withOpacity(0.3),
           width: 1,
         ),
       ),
@@ -309,7 +268,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: RefreshIndicator(
         onRefresh: _refreshData,
         child: CustomScrollView(
@@ -335,10 +294,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   // Task Ads Section
                   _buildTaskAdsSection(),
 
-                  // const SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
-                  // // Earnings Summary
-                  // const EarningsSummaryCard(),
+                  // Earnings Summary
+                  const EarningsSummaryCard(),
 
                   const SizedBox(height: 16),
 
@@ -357,102 +316,80 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildAppBar() {
-    return Consumer<AuthService>(
-      builder: (context, authService, child) {
-        return SliverAppBar(
-          expandedHeight: 120,
-          floating: true,
-          pinned: true,
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          flexibleSpace: FlexibleSpaceBar(
-            title: Consumer<AuthService>(
-              builder: (context, authService, child) {
-                final l10n = AppLocalizations.of(context)!;
-                final driver = authService.currentDriver;
-                return Text(
-                  l10n.welcomeDriver(driver?.name ?? l10n.driver),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
-                );
-              },
+    return SliverAppBar(
+      expandedHeight: 120,
+      floating: true,
+      pinned: true,
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      flexibleSpace: FlexibleSpaceBar(
+        title: Obx(() {
+          final driver = _authController.currentDriver.value;
+          return Text(
+            'welcomeDriver'.trParams({
+              'driverName': driver?.name ?? 'driver'.tr
+            }),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
             ),
-            background: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Theme.of(context).colorScheme.primary,
-                    Theme.of(context)
-                        .colorScheme
-                        .primary
-                        .withValues(alpha: 0.8),
-                  ],
-                ),
-              ),
+          );
+        }),
+        background: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Theme.of(context).colorScheme.primary,
+                Theme.of(context).colorScheme.primary.withOpacity(0.8),
+              ],
             ),
           ),
-          actions: [
-            // Notifications
-            Consumer<NotificationService>(
-              builder: (context, notificationService, child) {
-                return IconButton(
-                  icon: Stack(
-                    children: [
-                      const Icon(Icons.notifications_outlined,
-                          color: Colors.white),
-                      if (notificationService.unreadCount > 0)
-                        Positioned(
-                          right: 0,
-                          top: 0,
-                          child: Container(
-                            padding: const EdgeInsets.all(2),
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            constraints: const BoxConstraints(
-                              minWidth: 16,
-                              minHeight: 16,
-                            ),
-                            child: Text(
-                              '${notificationService.unreadCount}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const NotificationsScreen(),
+        ),
+      ),
+      actions: [
+        // Notifications
+        Obx(() => IconButton(
+          icon: Stack(
+            children: [
+              const Icon(Icons.notifications_outlined, color: Colors.white),
+              if (_notificationController.unreadCount.value > 0)
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  child: Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 16,
+                      minHeight: 16,
+                    ),
+                    child: Text(
+                      '${_notificationController.unreadCount.value}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
                       ),
-                    );
-                  },
-                );
-              },
-            ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          onPressed: () => Get.to(() => const NotificationsScreen()),
+        )),
 
-            // Settings
-            IconButton(
-              icon: const Icon(Icons.settings_outlined, color: Colors.white),
-              onPressed: () {
-                Navigator.pushNamed(context, '/settings');
-              },
-            ),
-          ],
-        );
-      },
+        // Settings
+        IconButton(
+          icon: const Icon(Icons.settings_outlined, color: Colors.white),
+          onPressed: () => Get.toNamed('/settings'),
+        ),
+      ],
     );
   }
 }

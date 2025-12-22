@@ -188,7 +188,7 @@ class _TaskAdsScreenState extends State<TaskAdsScreen>
           controller: _tabController,
           labelColor: Colors.white, // لون النص للتبويب المحدد
           unselectedLabelColor: Colors.white
-              .withValues(alpha: 0.7), // لون النص للتبويبات غير المحددة
+              .withOpacity(0.7), // لون النص للتبويبات غير المحددة
           indicatorColor: Colors.white, // لون المؤشر
           tabs: [
             Tab(text: AppLocalizations.of(context)!.availableAds),

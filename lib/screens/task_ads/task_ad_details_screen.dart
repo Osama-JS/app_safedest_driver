@@ -123,7 +123,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
                 controller: _tabController,
                 labelColor: Colors.white, // لون النص للتبويب المحدد
                 unselectedLabelColor: Colors.white
-                    .withValues(alpha: 0.7), // لون النص للتبويبات غير المحددة
+                    .withOpacity(0.7), // لون النص للتبويبات غير المحددة
                 indicatorColor: Colors.white, // لون المؤشر
                 tabs: const [
                   Tab(text: 'تفاصيل الإعلان'),
@@ -381,7 +381,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
+              color: Colors.black.withOpacity(0.1),
               blurRadius: 10,
               offset: const Offset(0, -2),
             ),
@@ -412,7 +412,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
                 foregroundColor: Colors.white,
                 elevation: 4,
                 shadowColor:
-                    Theme.of(context).primaryColor.withValues(alpha: 0.3),
+                    Theme.of(context).primaryColor.withOpacity(0.3),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
@@ -431,7 +431,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
+              color: Colors.black.withOpacity(0.1),
               blurRadius: 10,
               offset: const Offset(0, -2),
             ),
@@ -459,7 +459,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
                 backgroundColor: Colors.green,
                 foregroundColor: Colors.white,
                 elevation: 4,
-                shadowColor: Colors.green.withValues(alpha: 0.3),
+                shadowColor: Colors.green.withOpacity(0.3),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
@@ -611,7 +611,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.blue.withValues(alpha: 0.1),
+                color: Colors.blue.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(

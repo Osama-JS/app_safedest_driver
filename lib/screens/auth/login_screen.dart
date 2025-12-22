@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../l10n/generated/app_localizations.dart';
-import '../../config/app_config.dart';
-import '../../services/auth_service.dart';
+import 'package:get/get.dart';
+import '../../Controllers/AuthController.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/custom_button.dart';
-import '../../widgets/language_selector.dart';
+import '../../Controllers/SettingsController.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,6 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _loginController = TextEditingController();
   final _passwordController = TextEditingController();
+  final AuthController _authController = Get.find<AuthController>();
 
   bool _obscurePassword = true;
   bool _rememberMe = false;
@@ -32,53 +31,35 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _handleLogin() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final authService = Provider.of<AuthService>(context, listen: false);
-
     // Prevent multiple login attempts
-    if (authService.isLoading) return;
+    if (_authController.isLoading.value) return;
 
     try {
-      final response = await authService.login(
-        login: _loginController.text.trim(),
-        password: _passwordController.text,
-        deviceName: 'Flutter App',
+      final response = await _authController.login(
+        _loginController.text.trim(),
+        _passwordController.text,
       );
 
-      if (mounted) {
-        if (response.isSuccess) {
-          // Login successful, navigate to main screen
-          Navigator.of(context).pushReplacementNamed('/main');
-        } else {
-          // Add small delay to avoid Navigator conflicts
-          await Future.delayed(const Duration(milliseconds: 100));
-          if (mounted) {
-            _showErrorDialog(response.errorMessage);
-          }
-        }
+      if (response.isSuccess) {
+        // Login successful, navigate to main screen using GetX
+        Get.offAllNamed('/main');
+      } else {
+        _showErrorDialog(response.errorMessage);
       }
     } catch (e) {
-      if (mounted) {
-        // Add small delay to avoid Navigator conflicts
-        await Future.delayed(const Duration(milliseconds: 100));
-        if (mounted) {
-          _showErrorDialog(
-              AppLocalizations.of(context)!.unexpectedErrorOccurred);
-        }
-      }
+      _showErrorDialog('unexpected_error'.tr);
     }
   }
 
   void _showErrorDialog(String message) {
-    final l10n = AppLocalizations.of(context)!;
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.loginErrorTitle),
+    Get.dialog(
+      AlertDialog(
+        title: Text('login_error'.tr),
         content: Text(message),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(l10n.okButton),
+            onPressed: () => Get.back(),
+            child: Text('ok'.tr),
           ),
         ],
       ),
@@ -87,10 +68,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -103,34 +82,51 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    const LanguageSelector(),
+                    GestureDetector(
+                      onTap: () {
+                        final SettingsController settingsController = Get.find<SettingsController>();
+                        _showLanguageBottomSheet(context, settingsController);
+                      },
+                      child: Obx(() {
+                        final SettingsController settingsController = Get.find<SettingsController>();
+                        return Padding(
+                          padding: const EdgeInsets.all(0.0),
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundImage: AssetImage(
+                              'assets/flags/${settingsController.currentLanguage.value}.png',
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
                   ],
                 ),
 
                 const SizedBox(height: 40),
 
                 // Logo and Title
-                _buildHeader(l10n),
+                _buildHeader(),
 
                 const SizedBox(height: 60),
 
                 // Login Form
-                _buildLoginForm(l10n),
+                _buildLoginForm(),
 
                 const SizedBox(height: 30),
 
                 // Login Button
-                _buildLoginButton(l10n),
+                _buildLoginButton(),
 
                 const SizedBox(height: 20),
 
                 // Remember Me
-                _buildRememberMe(l10n),
+                _buildRememberMe(),
 
                 const SizedBox(height: 40),
 
                 // Footer
-                _buildFooter(l10n),
+                _buildFooter(),
               ],
             ),
           ),
@@ -139,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildHeader(AppLocalizations l10n) {
+  Widget _buildHeader() {
     return Column(
       children: [
         // App Logo
@@ -153,7 +149,6 @@ class _LoginScreenState extends State<LoginScreen> {
             'assets/icons/Icon.png',
             width: 60,
             height: 60,
-            // اختياري إذا تبغى تغيّر لون الصورة (يعمل فقط مع الصور بصيغة PNG شفافة أو SVG)
           ),
         ),
 
@@ -161,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
         // App Name
         Text(
-          AppConfig.appName,
+          'safedest_driver'.tr,
           style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).colorScheme.primary,
@@ -172,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
         // Subtitle
         Text(
-          l10n.welcomeToDriverApp,
+          'welcome_to_driver_app'.tr,
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
               ),
@@ -181,21 +176,20 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildLoginForm(AppLocalizations l10n) {
+  Widget _buildLoginForm() {
     return Column(
       children: [
         // Login Field (Email or Username)
         CustomTextField(
           controller: _loginController,
-          label: l10n.emailOrUsernameLabel,
-          hint: l10n.enterEmailOrUsernameHint,
+          label: 'email_or_username'.tr,
+          hint: 'enter_email_or_username'.tr,
           keyboardType: TextInputType.text,
           prefixIcon: Icons.email_outlined,
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return l10n.pleaseEnterEmailError;
+              return 'please_enter_email'.tr;
             }
-
             return null;
           },
         ),
@@ -205,8 +199,8 @@ class _LoginScreenState extends State<LoginScreen> {
         // Password Field
         CustomTextField(
           controller: _passwordController,
-          label: l10n.passwordFieldLabel,
-          hint: l10n.enterPasswordHint,
+          label: 'password'.tr,
+          hint: 'enter_password'.tr,
           obscureText: _obscurePassword,
           prefixIcon: Icons.lock_outlined,
           suffixIcon: IconButton(
@@ -223,10 +217,10 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return l10n.pleaseEnterPasswordError;
+              return 'please_enter_password'.tr;
             }
             if (value.length < 6) {
-              return l10n.passwordMinLengthError;
+              return 'password_min_length'.tr;
             }
             return null;
           },
@@ -235,20 +229,16 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildLoginButton(AppLocalizations l10n) {
-    return Consumer<AuthService>(
-      builder: (context, authService, child) {
-        return CustomButton(
-          text: l10n.loginButtonText,
-          onPressed: authService.isLoading ? null : _handleLogin,
-          isLoading: authService.isLoading,
+  Widget _buildLoginButton() {
+    return Obx(() => CustomButton(
+          text: 'login'.tr,
+          onPressed: _authController.isLoading.value ? null : _handleLogin,
+          isLoading: _authController.isLoading.value,
           icon: Icons.login,
-        );
-      },
-    );
+        ));
   }
 
-  Widget _buildRememberMe(AppLocalizations l10n) {
+  Widget _buildRememberMe() {
     return Row(
       children: [
         Checkbox(
@@ -259,19 +249,19 @@ class _LoginScreenState extends State<LoginScreen> {
             });
           },
         ),
-        Text(l10n.rememberMeText),
+        Text('remember_me'.tr),
         const Spacer(),
         TextButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/forgot-password');
+            Get.toNamed('/forgot-password');
           },
-          child: Text(l10n.forgotPasswordText),
+          child: Text('forgot_password'.tr),
         ),
       ],
     );
   }
 
-  Widget _buildFooter(AppLocalizations l10n) {
+  Widget _buildFooter() {
     return Column(
       children: [
         const SizedBox(height: 16),
@@ -280,13 +270,13 @@ class _LoginScreenState extends State<LoginScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(l10n.dontHaveAccountText),
+            Text('dont_have_account'.tr),
             TextButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/register');
+                Get.toNamed('/register');
               },
               child: Text(
-                l10n.createNewAccountText,
+                'create_new_account'.tr,
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
@@ -294,7 +284,8 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
 
         Text(
-          l10n.byLoggingInYouAgreeText,
+          'by_logging_in_you_agree'.tr,
+          textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
               ),
@@ -308,25 +299,79 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: () {
                 // TODO: Show terms of service
               },
-              child: Text(l10n.termsOfServiceText),
+              child: Text('terms_of_service'.tr),
             ),
-            Text(l10n.andText),
+            Text('and'.tr),
             TextButton(
               onPressed: () {
                 // TODO: Show privacy policy
               },
-              child: Text(l10n.privacyPolicyText),
+              child: Text('privacy_policy'.tr),
             ),
           ],
         ),
         const SizedBox(height: 20),
+        // Version number
         Text(
-          l10n.versionNumber(AppConfig.appVersion),
+          'V 1.0.0', // Standard version text, can be linked to AppConfig later
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
               ),
         ),
       ],
     );
+  }
+
+  void _showLanguageBottomSheet(BuildContext context, SettingsController settingsController) {
+    showModalBottomSheet(
+      backgroundColor: Theme.of(context).cardColor,
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) {
+        return Container(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildLanguageListTile(context, "ar", "AE", settingsController),
+              const SizedBox(height: 10),
+              _buildLanguageListTile(context, "en", "US", settingsController),
+              const SizedBox(height: 10),
+              _buildLanguageListTile(context, "ur", "PK", settingsController),
+              const SizedBox(height: 10),
+              _buildLanguageListTile(context, "zh", "CN", settingsController),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildLanguageListTile(BuildContext context, String languageCode, String countryCode, SettingsController settingsController) {
+    return Obx(() {
+      final isSelected = settingsController.currentLanguage.value == languageCode;
+      return ListTile(
+        leading: ClipOval(
+          child: Image.asset(
+            'assets/flags/$languageCode.png',
+            width: 32,
+            height: 32,
+            fit: BoxFit.cover,
+          ),
+        ),
+        title: Text(
+          languageCode == "ar" ? "العربية" :
+          languageCode == "en" ? "English" :
+          languageCode == "ur" ? "اردو" : "中文",
+        ),
+        trailing: isSelected ? const Icon(Icons.check, color: Colors.green) : null,
+        onTap: () {
+          settingsController.changeLanguage(languageCode);
+          Navigator.pop(context);
+        },
+      );
+    });
   }
 }
