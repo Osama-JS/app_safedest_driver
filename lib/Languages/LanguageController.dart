@@ -1,31 +1,71 @@
 import 'dart:ui';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
+import '../shared_prff.dart';
 
 class LanguageController extends GetxController {
-  Locale selectedLang = const Locale('ar', 'SA');
+  // Make selectedLang reactive but initialize it immediately
+  final Rx<Locale> _selectedLang = _getInitialLocale().obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-    _loadSavedLanguage();
-  }
+  Locale get selectedLang => _selectedLang.value;
 
-  Future<void> _loadSavedLanguage() async {
-    final prefs = await SharedPreferences.getInstance();
-    final savedLang = prefs.getString('language');
-    if (savedLang != null) {
-      selectedLang = Locale(savedLang);
-      Get.updateLocale(selectedLang);
+  // Static method to get initial locale
+  static Locale _getInitialLocale() {
+    final savedLang = Selected_Language.getLanguage();
+    debugPrint('🌍 Loading initial language: $savedLang');
+
+    if (savedLang == null || savedLang.isEmpty) {
+      debugPrint('🌍 No saved language, using default: en');
+      return const Locale('en', 'US');
     }
+
+    Locale locale;
+    switch (savedLang) {
+      case 'ar':
+        locale = const Locale('ar', 'SA');
+        break;
+      case 'en':
+        locale = const Locale('en', 'US');
+        break;
+      case 'ur':
+        locale = const Locale('ur', 'PK');
+        break;
+      case 'zh':
+        locale = const Locale('zh', 'CN');
+        break;
+      default:
+        locale = const Locale('en', 'US');
+    }
+
+    debugPrint('🌍 Initial locale set to: ${locale.languageCode}');
+    return locale;
   }
 
-  Future<void> changeLanguage(String languageCode) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('language', languageCode);
+  void changeLanguage(String languageCode) {
+    debugPrint('🌍 Changing language to: $languageCode');
 
-    Locale newLocale = Locale(languageCode);
-    selectedLang = newLocale;
+    Locale newLocale;
+    switch (languageCode) {
+      case 'ar':
+        newLocale = const Locale('ar', 'SA');
+        break;
+      case 'en':
+        newLocale = const Locale('en', 'US');
+        break;
+      case 'ur':
+        newLocale = const Locale('ur', 'PK');
+        break;
+      case 'zh':
+        newLocale = const Locale('zh', 'CN');
+        break;
+      default:
+        newLocale = const Locale('en', 'US');
+    }
+
+    Selected_Language.setLanguage(languageCode);
+    _selectedLang.value = newLocale;
     Get.updateLocale(newLocale);
+    update(); // Notify GetBuilder widgets
+    debugPrint('🌍 Language changed to: ${newLocale.languageCode}');
   }
 }

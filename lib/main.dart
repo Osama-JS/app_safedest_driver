@@ -67,7 +67,8 @@ void main() async {
 
   // Initialize GetX Services
   await Get.putAsync(() => InitialService().init());
-  Get.put(LanguageController());
+  // LanguageController is now initialized in InitialService
+
 
   // ✅ تفعيل تسجيل الخروج التلقائي عند انتهاء التوكن
   ApiService.setAuthenticationErrorCallback(() async {
@@ -125,8 +126,9 @@ class _SafeDestsDriverAppState extends State<SafeDestsDriverApp> {
             themeMode: ThemeMode.light,
             debugShowCheckedModeBanner: false,
 
-            // GetX Localization
+            // GetX Localization - use selectedLang directly like customer app
             locale: languageController.selectedLang,
+            fallbackLocale: const Locale('ar', 'SA'),
             translations: Messages(),
 
             // Fallback to current localization logic if needed for existing widgets
@@ -139,6 +141,8 @@ class _SafeDestsDriverAppState extends State<SafeDestsDriverApp> {
             supportedLocales: const [
               Locale('ar', 'SA'),
               Locale('en', 'US'),
+              Locale('ur', 'PK'),
+              Locale('zh', 'CN'),
             ],
 
             // GetPages instead of simple routes

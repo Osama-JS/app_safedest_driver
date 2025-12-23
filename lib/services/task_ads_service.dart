@@ -173,6 +173,26 @@ class TaskAdsService {
       );
     }
   }
+  /// Delete an offer
+  Future<ApiResponse<void>> deleteOffer(int offerId) async {
+    try {
+      debugPrint('Deleting offer ID: $offerId');
+
+      final response = await _apiService.post<void>(
+        '/driver/task-ads/offers/$offerId/delete',
+        fromJson: (json) => null,
+      );
+
+      debugPrint('Delete offer response: ${response.success}');
+      return response;
+    } catch (e) {
+      debugPrint('Error deleting offer: $e');
+      return ApiResponse<void>(
+        success: false,
+        message: 'Failed to delete offer: $e',
+      );
+    }
+  }
 
   /// Get driver's submitted offers
   Future<ApiResponse<MyOffersResponse>> getMyOffers({

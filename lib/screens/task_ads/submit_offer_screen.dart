@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import '../../models/task_ad.dart';
 import '../../models/task_offer.dart';
 import '../../services/task_ads_service.dart';
+import 'package:get/get.dart';
 
 class SubmitOfferScreen extends StatefulWidget {
   final TaskAd taskAd;
@@ -98,7 +99,7 @@ class _SubmitOfferScreenState extends State<SubmitOfferScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                  _isEditing ? 'تم تحديث العرض بنجاح' : 'تم تقديم العرض بنجاح'),
+                  _isEditing ? 'offer_updated_successfully'.tr : 'offer_submitted_successfully'.tr),
               backgroundColor: Colors.green,
             ),
           );
@@ -106,7 +107,7 @@ class _SubmitOfferScreenState extends State<SubmitOfferScreen> {
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(response.message ?? 'فشل في تقديم العرض'),
+               content: Text(response.message ?? 'failed_to_submit_offer'.tr),
               backgroundColor: Colors.red,
             ),
           );
@@ -120,7 +121,7 @@ class _SubmitOfferScreenState extends State<SubmitOfferScreen> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('حدث خطأ: $e'),
+             content: Text('error_occurred'.tr + ': $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -132,7 +133,7 @@ class _SubmitOfferScreenState extends State<SubmitOfferScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditing ? 'تعديل العرض' : 'تقديم عرض'),
+        title: Text(_isEditing ? 'edit_offer'.tr : 'submit_offer'.tr),
         actions: [
           if (_isLoading)
             const Center(
@@ -191,7 +192,7 @@ class _SubmitOfferScreenState extends State<SubmitOfferScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'ملخص الإعلان',
+               'ad_summary'.tr,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -202,7 +203,7 @@ class _SubmitOfferScreenState extends State<SubmitOfferScreen> {
                 const Icon(Icons.campaign, color: Colors.blue, size: 20),
                 const SizedBox(width: 8),
                 Text(
-                  'إعلان #${widget.taskAd.id}',
+                   'ad_number'.tr + '${widget.taskAd.id}',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -216,7 +217,9 @@ class _SubmitOfferScreenState extends State<SubmitOfferScreen> {
                     color: Colors.green, size: 20),
                 const SizedBox(width: 8),
                 Text(
-                  'النطاق السعري: ${widget.taskAd.lowestPrice.toStringAsFixed(2)} - ${widget.taskAd.highestPrice.toStringAsFixed(2)} ر.س',
+                   widget.taskAd.lowestPrice == 0 && widget.taskAd.highestPrice == 0
+                      ? 'price_range'.tr + ': ' + 'open_price'.tr
+                      : 'price_range'.tr + ': ${widget.taskAd.lowestPrice.toStringAsFixed(2)} - ${widget.taskAd.highestPrice.toStringAsFixed(2)} ' + 'sar'.tr,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
@@ -250,7 +253,7 @@ class _SubmitOfferScreenState extends State<SubmitOfferScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'السعر المقترح *',
+           'proposed_price'.tr + ' *',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -263,8 +266,8 @@ class _SubmitOfferScreenState extends State<SubmitOfferScreen> {
             FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
           ],
           decoration: InputDecoration(
-            hintText: 'أدخل السعر المقترح',
-            suffixText: 'ر.س',
+             hintText: 'enter_proposed_price'.tr,
+             suffixText: 'sar'.tr,
             prefixIcon: const Icon(Icons.monetization_on),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
@@ -274,24 +277,29 @@ class _SubmitOfferScreenState extends State<SubmitOfferScreen> {
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'يرجى إدخال السعر المقترح';
+               return 'please_enter_price'.tr;
             }
 
             final price = double.tryParse(value);
             if (price == null) {
-              return 'يرجى إدخال سعر صحيح';
+               return 'enter_valid_price'.tr;
             }
 
             if (price <= 0) {
-              return 'يجب أن يكون السعر أكبر من صفر';
+               return 'price_must_be_greater_than_zero'.tr;
+            }
+
+            // Skip range check if both are 0
+            if (widget.taskAd.lowestPrice == 0 && widget.taskAd.highestPrice == 0) {
+              return null;
             }
 
             if (price < widget.taskAd.lowestPrice) {
-              return 'السعر أقل من الحد الأدنى (${widget.taskAd.lowestPrice.toStringAsFixed(2)} ر.س)';
+               return 'price_below_minimum'.tr + ' (${widget.taskAd.lowestPrice.toStringAsFixed(2)} ' + 'sar'.tr + ')';
             }
 
             if (price > widget.taskAd.highestPrice) {
-              return 'السعر أعلى من الحد الأقصى (${widget.taskAd.highestPrice.toStringAsFixed(2)} ر.س)';
+               return 'price_above_maximum'.tr + ' (${widget.taskAd.highestPrice.toStringAsFixed(2)} ' + 'sar'.tr + ')';
             }
 
             return null;
@@ -299,7 +307,9 @@ class _SubmitOfferScreenState extends State<SubmitOfferScreen> {
         ),
         const SizedBox(height: 8),
         Text(
-          'النطاق المسموح: ${widget.taskAd.lowestPrice.toStringAsFixed(2)} - ${widget.taskAd.highestPrice.toStringAsFixed(2)} ر.س',
+          widget.taskAd.lowestPrice == 0 && widget.taskAd.highestPrice == 0
+              ? 'open_price_range'.tr
+              : 'allowed_range'.tr + ': ${widget.taskAd.lowestPrice.toStringAsFixed(2)} - ${widget.taskAd.highestPrice.toStringAsFixed(2)} ' + 'sar'.tr,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Colors.grey[600],
               ),
@@ -324,7 +334,7 @@ class _SubmitOfferScreenState extends State<SubmitOfferScreen> {
                 const Icon(Icons.calculate, color: Colors.blue),
                 const SizedBox(width: 8),
                 Text(
-                  'حساب صافي المستحقات',
+                   'net_earnings_calculation'.tr,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: Colors.blue[700],
@@ -334,21 +344,15 @@ class _SubmitOfferScreenState extends State<SubmitOfferScreen> {
             ),
             const SizedBox(height: 12),
             _buildCalculationRow(
-                'سعر العرض', '${price.toStringAsFixed(2)} ر.س'),
+                 'offer_price'.tr, '${price.toStringAsFixed(2)} ' + 'sar'.tr),
             _buildCalculationRow(
-              'عمولة الخدمة',
-              commission.serviceCommissionType == 'fixed'
-                  ? '- ${commission.serviceCommission.toStringAsFixed(2)} ر.س'
-                  : '- ${(price * commission.serviceCommission / 100).toStringAsFixed(2)} ر.س',
-            ),
-            _buildCalculationRow(
-              'ضريبة القيمة المضافة',
-              '- ${(price * commission.vatCommission / 100).toStringAsFixed(2)} ر.س',
+               'taxes_and_fees'.tr,
+              '- ${((commission.serviceCommissionType == 'fixed' ? commission.serviceCommission : (price * commission.serviceCommission / 100)) + (price * commission.vatCommission / 100)).toStringAsFixed(2)} ' + 'sar'.tr,
             ),
             const Divider(),
             _buildCalculationRow(
-              'صافي المستحقات',
-              '${_calculatedNet!.toStringAsFixed(2)} ر.س',
+               'net_earnings'.tr,
+               '${_calculatedNet!.toStringAsFixed(2)} ' + 'sar'.tr,
               isTotal: true,
             ),
           ],
@@ -387,7 +391,7 @@ class _SubmitOfferScreenState extends State<SubmitOfferScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'وصف العرض (اختياري)',
+           'offer_description'.tr + ' *',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -398,13 +402,19 @@ class _SubmitOfferScreenState extends State<SubmitOfferScreen> {
           maxLines: 4,
           maxLength: 500,
           decoration: InputDecoration(
-            hintText: 'أضف وصفاً لعرضك (اختياري)',
+             hintText: 'add_offer_description'.tr,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
             ),
             filled: true,
             fillColor: Colors.grey.withOpacity(0.1),
           ),
+          validator: (value) {
+            if (value == null || value.trim().isEmpty) {
+              return 'please_enter_description'.tr;
+            }
+            return null;
+          },
         ),
       ],
     );
@@ -433,7 +443,7 @@ class _SubmitOfferScreenState extends State<SubmitOfferScreen> {
                 ),
               )
             : Text(
-                _isEditing ? 'تحديث العرض' : 'تقديم العرض',
+                 _isEditing ? 'update_offer'.tr : 'submit_offer'.tr,
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,

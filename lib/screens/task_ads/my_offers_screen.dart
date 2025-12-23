@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../services/task_ads_service.dart';
 import '../../models/task_offer.dart';
 import '../../widgets/offer_card.dart';
+import 'package:get/get.dart';
+import '../../Controllers/TaskAdsController.dart';
 import 'task_ad_details_screen.dart';
 
 class MyOffersScreen extends StatefulWidget {
@@ -15,6 +17,7 @@ class MyOffersScreen extends StatefulWidget {
 
 class MyOffersScreenState extends State<MyOffersScreen> {
   final TaskAdsService _taskAdsService = TaskAdsService();
+  final TaskAdsController _taskAdsController = Get.put(TaskAdsController());
 
   List<TaskOffer> _offers = [];
   bool _isLoading = false;
@@ -68,14 +71,14 @@ class MyOffersScreenState extends State<MyOffersScreen> {
       } else {
         setState(() {
           _hasError = true;
-          _errorMessage = response.message ?? 'فشل في تحميل العروض';
+           _errorMessage = response.message ?? 'failed_to_submit_offer'.tr;
           _isLoading = false;
         });
       }
     } catch (e) {
       setState(() {
         _hasError = true;
-        _errorMessage = 'حدث خطأ غير متوقع: $e';
+         _errorMessage = 'error_occurred'.tr + ': $e';
         _isLoading = false;
       });
     }
@@ -101,8 +104,8 @@ class MyOffersScreenState extends State<MyOffersScreen> {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('لا يمكن الوصول لتفاصيل الإعلان'),
+        SnackBar(
+           content: Text('cannot_access_ad_details'.tr),
           backgroundColor: Colors.red,
         ),
       );
@@ -122,13 +125,13 @@ class MyOffersScreenState extends State<MyOffersScreen> {
 
   Widget _buildBody() {
     if (_isLoading && _offers.isEmpty) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('جاري تحميل العروض...'),
+             Text('loading_offers'.tr),
           ],
         ),
       );
@@ -142,14 +145,14 @@ class MyOffersScreenState extends State<MyOffersScreen> {
             const Icon(Icons.error_outline, size: 64, color: Colors.red),
             const SizedBox(height: 16),
             Text(
-              _errorMessage ?? 'حدث خطأ غير متوقع',
+               _errorMessage ?? 'error_occurred'.tr,
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _refreshOffers,
-              child: const Text('إعادة المحاولة'),
+               child: Text('retry'.tr),
             ),
           ],
         ),
@@ -162,19 +165,19 @@ class MyOffersScreenState extends State<MyOffersScreen> {
         child: ListView(
           children: [
             SizedBox(height: MediaQuery.of(context).size.height * 0.3),
-            const Center(
+            Center(
               child: Column(
                 children: [
                   Icon(Icons.local_offer_outlined,
                       size: 64, color: Colors.grey),
                   SizedBox(height: 16),
                   Text(
-                    'لا توجد عروض مقدمة',
+                     'no_offers_submitted'.tr,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'لم تقم بتقديم أي عروض بعد',
+                     'no_offers_submitted_yet'.tr,
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.grey),
                   ),
@@ -223,7 +226,7 @@ class MyOffersScreenState extends State<MyOffersScreen> {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                'إعلان #${offer.ad?.id ?? 'غير محدد'}',
+                                 'ad_number'.tr + '${offer.ad?.id ?? 'not_specified'.tr}',
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleMedium
@@ -233,6 +236,12 @@ class MyOffersScreenState extends State<MyOffersScreen> {
                               ),
                             ),
                             _buildStatusBadge(offer.status),
+                            if (offer.status != TaskOfferStatus.accepted)
+                              IconButton(
+                                icon: const Icon(Icons.delete_outline, color: Colors.red),
+                                onPressed: () => _confirmDeleteOffer(offer.id),
+                                 tooltip: 'delete_offer'.tr,
+                              ),
                           ],
                         ),
 
@@ -251,7 +260,7 @@ class MyOffersScreenState extends State<MyOffersScreen> {
                                   color: Colors.green),
                               const SizedBox(width: 8),
                               Text(
-                                'السعر المقترح: ${offer.price.toStringAsFixed(2)} ر.س',
+                                 'proposed_price'.tr + ': ${offer.price.toStringAsFixed(2)} ' + 'sar'.tr,
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyLarge
@@ -268,7 +277,7 @@ class MyOffersScreenState extends State<MyOffersScreen> {
                         if (offer.description.isNotEmpty) ...[
                           const SizedBox(height: 8),
                           Text(
-                            'الوصف: ${offer.description}',
+                             'offer_description'.tr + ': ${offer.description}',
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ],
@@ -282,7 +291,7 @@ class MyOffersScreenState extends State<MyOffersScreen> {
                                 size: 14, color: Colors.grey[600]),
                             const SizedBox(width: 4),
                             Text(
-                              'تم التقديم: ${_formatDateTime(offer.createdAt)}',
+                               'submitted_at'.tr + ': ${_formatDateTime(offer.createdAt)}',
                               style: Theme.of(context)
                                   .textTheme
                                   .bodySmall
@@ -312,17 +321,17 @@ class MyOffersScreenState extends State<MyOffersScreen> {
     switch (status) {
       case TaskOfferStatus.pending:
         statusColor = Colors.orange;
-        statusText = 'في الانتظار';
+         statusText = 'offer_pending'.tr;
         statusIcon = Icons.schedule;
         break;
       case TaskOfferStatus.accepted:
         statusColor = Colors.green;
-        statusText = 'مقبول';
+         statusText = 'offer_accepted_status'.tr;
         statusIcon = Icons.check_circle;
         break;
       case TaskOfferStatus.rejected:
         statusColor = Colors.red;
-        statusText = 'مرفوض';
+         statusText = 'offer_rejected'.tr;
         statusIcon = Icons.cancel;
         break;
     }
@@ -363,4 +372,60 @@ class MyOffersScreenState extends State<MyOffersScreen> {
   String _formatDateTime(DateTime dateTime) {
     return '${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
+
+   void _confirmDeleteOffer(int offerId) {
+     showDialog(
+       context: context,
+       builder: (context) => AlertDialog(
+         title: Text('delete_offer'.tr),
+         content: Text('confirm_delete_offer'.tr),
+         actions: [
+           TextButton(
+             onPressed: () => Navigator.pop(context),
+             child: Text('cancel'.tr),
+           ),
+           ElevatedButton(
+             onPressed: () {
+               Navigator.pop(context);
+               _deleteOffer(offerId);
+             },
+             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+             child: Text('delete'.tr, style: const TextStyle(color: Colors.white)),
+           ),
+         ],
+       ),
+     );
+   }
+
+   Future<void> _deleteOffer(int offerId) async {
+     // Show loading indicator
+     showDialog(
+       context: context,
+       barrierDismissible: false,
+       builder: (context) => const Center(child: CircularProgressIndicator()),
+     );
+
+     final response = await _taskAdsController.deleteOffer(offerId);
+
+     if (mounted) {
+       Navigator.pop(context); // Close loading dialog
+
+       if (response.success) {
+         ScaffoldMessenger.of(context).showSnackBar(
+           SnackBar(
+             content: Text('offer_deleted_successfully'.tr),
+             backgroundColor: Colors.green,
+           ),
+         );
+         _refreshOffers();
+       } else {
+         ScaffoldMessenger.of(context).showSnackBar(
+           SnackBar(
+             content: Text(response.message ?? 'failed_to_delete_offer'.tr),
+             backgroundColor: Colors.red,
+           ),
+         );
+       }
+     }
+   }
 }

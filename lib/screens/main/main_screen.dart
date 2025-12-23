@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import '../../services/auth_service.dart';
+import '../../Controllers/AuthController.dart';
 import '../../services/notification_service.dart';
 import '../../l10n/generated/app_localizations.dart';
 import 'home_screen.dart';
@@ -34,11 +35,12 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<void> _initializeAndCheckAuth() async {
-    final authService = Provider.of<AuthService>(context, listen: false);
+    final authController = Get.find<AuthController>();
 
-    // Wait for auth service to be fully initialized
-    while (authService.isLoading) {
-      await Future.delayed(const Duration(milliseconds: 100));
+    // Wait for auth controller to be fully initialized if needed
+    // In GetX, onInit usually runs immediately, but we can check isLoading
+    if (authController.isLoading.value) {
+      await Future.delayed(const Duration(milliseconds: 500));
     }
 
     if (mounted) {
@@ -47,15 +49,17 @@ class _MainScreenState extends State<MainScreen> {
       });
 
       // Check authentication status
-      debugPrint('MainScreen: Checking auth status');
+      debugPrint('MainScreen: Checking auth status via AuthController');
       debugPrint(
-          'MainScreen: Is authenticated: ${authService.isAuthenticated}');
+          'MainScreen: Is authenticated: ${authController.isAuthenticated.value}');
       debugPrint(
-          'MainScreen: Current driver: ${authService.currentDriver?.name}');
+          'MainScreen: Current driver: ${authController.currentDriver.value?.name}');
 
-      if (!authService.isAuthenticated || authService.currentDriver == null) {
+      // Use Obx or simple check since we are in initState logic
+      if (!authController.isAuthenticated.value || authController.currentDriver.value == null) {
         debugPrint('MainScreen: Not authenticated, navigating to login');
-        Navigator.of(context).pushReplacementNamed('/login');
+        // Use Get.offAllNamed to clear stack and go to login
+        Get.offAllNamed('/login');
       } else {
         debugPrint('MainScreen: Authenticated, staying on main screen');
       }

@@ -4,7 +4,7 @@ import '../../models/task_ad.dart';
 import '../../models/task_offer.dart';
 import '../../widgets/offer_card.dart';
 import 'submit_offer_screen.dart';
-import '../../l10n/generated/app_localizations.dart';
+import 'package:get/get.dart';
 
 class TaskAdDetailsScreen extends StatefulWidget {
   final int adId;
@@ -75,14 +75,14 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
       } else {
         setState(() {
           _hasError = true;
-          _errorMessage = adResponse.message ?? 'فشل في تحميل تفاصيل الإعلان';
+           _errorMessage = adResponse.message ?? 'loading_details'.tr;
           _isLoading = false;
         });
       }
     } catch (e) {
       setState(() {
         _hasError = true;
-        _errorMessage = 'حدث خطأ غير متوقع: $e';
+         _errorMessage = 'error_occurred'.tr + ': $e';
         _isLoading = false;
       });
     }
@@ -110,12 +110,12 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('إعلان #${widget.adId}'),
+         title: Text('ad_number'.tr + '${widget.adId}'),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _refreshData,
-            tooltip: 'تحديث',
+             tooltip: 'refresh'.tr,
           ),
         ],
         bottom: _taskAd != null
@@ -125,10 +125,10 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
                 unselectedLabelColor: Colors.white
                     .withOpacity(0.7), // لون النص للتبويبات غير المحددة
                 indicatorColor: Colors.white, // لون المؤشر
-                tabs: const [
-                  Tab(text: 'تفاصيل الإعلان'),
-                  Tab(text: 'العروض المقدمة'),
-                ],
+                 tabs: [
+                   Tab(text: 'ad_details_tab'.tr),
+                   Tab(text: 'offers_tab'.tr),
+                 ],
               )
             : null,
       ),
@@ -139,16 +139,16 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
 
   Widget _buildBody() {
     if (_isLoading) {
-      return const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 16),
-            Text('جاري تحميل التفاصيل...'),
-          ],
-        ),
-      );
+       return Center(
+         child: Column(
+           mainAxisAlignment: MainAxisAlignment.center,
+           children: [
+             CircularProgressIndicator(),
+             SizedBox(height: 16),
+             Text('loading_details'.tr),
+           ],
+         ),
+       );
     }
 
     if (_hasError) {
@@ -159,14 +159,14 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
             const Icon(Icons.error_outline, size: 64, color: Colors.red),
             const SizedBox(height: 16),
             Text(
-              _errorMessage ?? 'حدث خطأ غير متوقع',
+               _errorMessage ?? 'error_occurred'.tr,
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _refreshData,
-              child: const Text('إعادة المحاولة'),
+               child: Text('retry'.tr),
             ),
           ],
         ),
@@ -174,8 +174,8 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
     }
 
     if (_taskAd == null) {
-      return const Center(
-        child: Text('لا توجد بيانات للعرض'),
+      return Center(
+         child: Text('no_data_to_display'.tr),
       );
     }
 
@@ -212,9 +212,6 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
             // Task details
             if (_taskAd!.task != null) _buildTaskDetailsCard(),
 
-            // Commission info
-            if (_taskAd!.commission != null) _buildCommissionCard(),
-
             // My offer status
             if (_taskAd!.myOffer != null) _buildMyOfferCard(),
           ],
@@ -225,25 +222,25 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
 
   Widget _buildOffersTab() {
     if (!_taskAd!.canViewDetails) {
-      return const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.lock_outline, size: 64, color: Colors.grey),
-            SizedBox(height: 16),
-            Text(
-              'لا يمكنك عرض العروض المقدمة',
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'يجب تقديم عرض أولاً لعرض العروض الأخرى',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey),
-            ),
-          ],
-        ),
-      );
+       return Center(
+         child: Column(
+           mainAxisAlignment: MainAxisAlignment.center,
+           children: [
+             Icon(Icons.lock_outline, size: 64, color: Colors.grey),
+             SizedBox(height: 16),
+             Text(
+               'cannot_view_offers'.tr,
+               style: TextStyle(fontSize: 16),
+             ),
+             SizedBox(height: 8),
+             Text(
+               'must_submit_offer_first'.tr,
+               textAlign: TextAlign.center,
+               style: TextStyle(color: Colors.grey),
+             ),
+           ],
+         ),
+       );
     }
 
     if (_offers.isEmpty) {
@@ -252,25 +249,25 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
         child: ListView(
           children: [
             SizedBox(height: MediaQuery.of(context).size.height * 0.3),
-            const Center(
-              child: Column(
-                children: [
-                  Icon(Icons.local_offer_outlined,
-                      size: 64, color: Colors.grey),
-                  SizedBox(height: 16),
-                  Text(
-                    'لا توجد عروض مقدمة',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'لم يتم تقديم أي عروض لهذا الإعلان بعد',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ],
-              ),
-            ),
+             Center(
+               child: Column(
+                 children: [
+                   Icon(Icons.local_offer_outlined,
+                       size: 64, color: Colors.grey),
+                   SizedBox(height: 16),
+                   Text(
+                     'no_offers_submitted'.tr,
+                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                   ),
+                   SizedBox(height: 8),
+                   Text(
+                     'no_offers_for_ad'.tr,
+                     textAlign: TextAlign.center,
+                     style: TextStyle(color: Colors.grey),
+                   ),
+                 ],
+               ),
+             ),
           ],
         ),
       );
@@ -302,7 +299,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
               children: [
                 Expanded(
                   child: Text(
-                    'إعلان #${_taskAd!.id}',
+                     'ad_number'.tr + '${_taskAd!.id}',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -332,7 +329,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
                 Icon(Icons.schedule, size: 16, color: Colors.grey[600]),
                 const SizedBox(width: 8),
                 Text(
-                  'تاريخ الإنشاء: ${_formatDate(_taskAd!.createdAt)}',
+                   'created_date'.tr + ': ${_formatDate(_taskAd!.createdAt)}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Colors.grey[600],
                       ),
@@ -345,7 +342,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
                 Icon(Icons.local_offer, size: 16, color: Colors.grey[600]),
                 const SizedBox(width: 8),
                 Text(
-                  'عدد العروض: ${_taskAd!.offersCount}',
+                   'offers_count'.tr + ': ${_taskAd!.offersCount}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Colors.grey[600],
                       ),
@@ -355,7 +352,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
                   Icon(Icons.check_circle, size: 16, color: Colors.green[600]),
                   const SizedBox(width: 4),
                   Text(
-                    'تم قبول عرض',
+                     'offer_accepted'.tr,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Colors.green[600],
                         ),
@@ -387,41 +384,57 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
             ),
           ],
         ),
-        padding: const EdgeInsets.all(16),
-        child: SafeArea(
-          child: SizedBox(
-            width: double.infinity,
-            height: 56,
-            child: ElevatedButton.icon(
-              onPressed: _navigateToSubmitOffer,
-              icon: Icon(
-                _taskAd!.myOffer != null
-                    ? Icons.edit_outlined
-                    : Icons.add_circle_outline,
-                size: 24,
-              ),
-              label: Text(
-                _taskAd!.myOffer != null ? 'تعديل العرض' : 'تقديم عرض',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).primaryColor,
-                foregroundColor: Colors.white,
-                elevation: 4,
-                shadowColor:
-                    Theme.of(context).primaryColor.withOpacity(0.3),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-              ),
-            ),
-          ),
-        ),
+         padding: const EdgeInsets.all(16),
+         child: SafeArea(
+           child: Row(
+             children: [
+               Expanded(
+                 child: ElevatedButton.icon(
+                   onPressed: _navigateToSubmitOffer,
+                   icon: Icon(
+                     _taskAd!.myOffer != null
+                         ? Icons.edit_outlined
+                         : Icons.add_circle_outline,
+                     size: 24,
+                   ),
+                   label: Text(
+                     _taskAd!.myOffer != null ? 'edit_offer'.tr : 'submit_offer'.tr,
+                     style: const TextStyle(
+                       fontSize: 16,
+                       fontWeight: FontWeight.w600,
+                     ),
+                   ),
+                   style: ElevatedButton.styleFrom(
+                     backgroundColor: Theme.of(context).primaryColor,
+                     foregroundColor: Colors.white,
+                     elevation: 4,
+                     shadowColor:
+                         Theme.of(context).primaryColor.withOpacity(0.3),
+                     shape: RoundedRectangleBorder(
+                       borderRadius: BorderRadius.circular(16),
+                     ),
+                     padding:
+                         const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                   ),
+                 ),
+               ),
+               if (_taskAd!.myOffer != null && _taskAd!.myOffer!.status == TaskOfferStatus.pending) ...[
+                 const SizedBox(width: 12),
+                 IconButton(
+                   onPressed: _showDeleteOfferDialog,
+                   icon: const Icon(Icons.delete_outline),
+                   color: Colors.red,
+                   iconSize: 28,
+                   tooltip: 'delete_offer'.tr,
+                   style: IconButton.styleFrom(
+                     backgroundColor: Colors.red.withOpacity(0.1),
+                     padding: const EdgeInsets.all(12),
+                   ),
+                 ),
+               ],
+             ],
+           ),
+         ),
       );
     }
 
@@ -448,8 +461,8 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
                 Icons.check_circle_outline,
                 size: 24,
               ),
-              label: const Text(
-                'قبول المهمة',
+               label: Text(
+                 'accept_task'.tr,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -478,23 +491,23 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
   void _showAcceptTaskDialog() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('قبول المهمة'),
-        content: const Text('هل أنت متأكد من رغبتك في قبول هذه المهمة؟'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('إلغاء'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _acceptTask();
-            },
-            child: const Text('قبول'),
-          ),
-        ],
-      ),
+       builder: (context) => AlertDialog(
+         title: Text('accept_task'.tr),
+         content: Text('confirm_accept_task'.tr),
+         actions: [
+           TextButton(
+             onPressed: () => Navigator.pop(context),
+             child: Text('cancel'.tr),
+           ),
+           ElevatedButton(
+             onPressed: () {
+               Navigator.pop(context);
+               _acceptTask();
+             },
+             child: Text('accept_task'.tr),
+           ),
+         ],
+       ),
     );
   }
 
@@ -518,8 +531,8 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
 
         if (response.success) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('تم قبول المهمة بنجاح'),
+             SnackBar(
+               content: Text('task_accepted_successfully'.tr),
               backgroundColor: Colors.green,
             ),
           );
@@ -527,7 +540,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(response.message ?? 'فشل في قبول المهمة'),
+               content: Text(response.message ?? 'failed_to_accept_task'.tr),
               backgroundColor: Colors.red,
             ),
           );
@@ -538,7 +551,78 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
         Navigator.pop(context); // Close loading
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('حدث خطأ: $e'),
+             content: Text('error_occurred'.tr + ': $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  void _showDeleteOfferDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('delete_offer'.tr),
+        content: Text('confirm_delete_offer'.tr),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('cancel'.tr),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _deleteOffer();
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: Text('delete'.tr, style: const TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _deleteOffer() async {
+    if (_taskAd?.myOffer == null) return;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+
+    try {
+      final response = await _taskAdsService.deleteOffer(_taskAd!.myOffer!.id);
+
+      if (mounted) {
+        Navigator.pop(context); // Close loading
+
+        if (response.success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('offer_deleted_successfully'.tr),
+              backgroundColor: Colors.green,
+            ),
+          );
+          _refreshData(); // Refresh data to reflect the deleted offer
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(response.message ?? 'failed_to_delete_offer'.tr),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        Navigator.pop(context); // Close loading
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('error_occurred'.tr + ': $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -560,9 +644,9 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
   String _getStatusText() {
     switch (_taskAd!.status.toLowerCase()) {
       case 'running':
-        return 'جاري';
+         return 'status_running'.tr;
       case 'closed':
-        return 'مغلق';
+         return 'status_closed'.tr;
       default:
         return _taskAd!.status;
     }
@@ -577,7 +661,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'وصف المهمة',
+               'task_description'.tr,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -602,7 +686,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'نطاق الأسعار',
+               'price_range'.tr,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -619,27 +703,35 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
                   const Icon(Icons.monetization_on, color: Colors.blue),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'من ${_taskAd!.lowestPrice.toStringAsFixed(2)} ر.س',
-                          style:
-                              Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.blue[700],
-                                  ),
-                        ),
-                        Text(
-                          'إلى ${_taskAd!.highestPrice.toStringAsFixed(2)} ر.س',
-                          style:
-                              Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.blue[700],
-                                  ),
-                        ),
-                      ],
-                    ),
+                     child: _taskAd!.lowestPrice == 0 && _taskAd!.highestPrice == 0
+                       ? Text(
+                           'open_price'.tr,
+                           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                 fontWeight: FontWeight.w600,
+                                 color: Colors.blue[700],
+                               ),
+                         )
+                       : Column(
+                           crossAxisAlignment: CrossAxisAlignment.start,
+                           children: [
+                             Text(
+                               'from'.tr + ' ${_taskAd!.lowestPrice.toStringAsFixed(2)} ' + 'sar'.tr,
+                               style:
+                                   Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                         fontWeight: FontWeight.w600,
+                                         color: Colors.blue[700],
+                                       ),
+                             ),
+                             Text(
+                               'to'.tr + ' ${_taskAd!.highestPrice.toStringAsFixed(2)} ' + 'sar'.tr,
+                               style:
+                                   Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                         fontWeight: FontWeight.w600,
+                                         color: Colors.blue[700],
+                                       ),
+                             ),
+                           ],
+                         ),
                   ),
                 ],
               ),
@@ -661,7 +753,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'تفاصيل المهمة',
+               'task_details'.tr,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -672,7 +764,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
             if (task.vehicleSize != null)
               _buildDetailRow(
                 Icons.local_shipping,
-                'حجم المركبة',
+                 'vehicle_size'.tr,
                 task.vehicleSize!,
                 Colors.purple,
               ),
@@ -681,7 +773,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
             if (task.pickup != null) ...[
               const SizedBox(height: 12),
               _buildAddressDetail(
-                'نقطة الاستلام',
+                 'pickup_point'.tr,
                 task.pickup!,
                 Colors.green,
               ),
@@ -691,7 +783,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
             if (task.delivery != null) ...[
               const SizedBox(height: 12),
               _buildAddressDetail(
-                'نقطة التسليم',
+                 'delivery_point'.tr,
                 task.delivery!,
                 Colors.red,
               ),
@@ -782,57 +874,6 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
     );
   }
 
-  Widget _buildCommissionCard() {
-    final commission = _taskAd!.commission!;
-
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'معلومات العمولة والضرائب',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 12),
-            _buildCommissionRow(
-              'عمولة الخدمة',
-              commission.serviceCommissionType == 'fixed'
-                  ? '${commission.serviceCommission.toStringAsFixed(2)} ر.س'
-                  : '${commission.serviceCommission.toStringAsFixed(1)}%',
-            ),
-            const SizedBox(height: 8),
-            _buildCommissionRow(
-              'ضريبة القيمة المضافة',
-              '${commission.vatCommission.toStringAsFixed(1)}%',
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCommissionRow(String label, String value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-        Text(
-          value,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-        ),
-      ],
-    );
-  }
 
   Widget _buildMyOfferCard() {
     final offer = _taskAd!.myOffer!;
@@ -845,17 +886,17 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
     switch (status) {
       case TaskOfferStatus.pending:
         statusColor = Colors.orange;
-        statusText = 'في الانتظار';
+         statusText = 'offer_pending'.tr;
         statusIcon = Icons.schedule;
         break;
       case TaskOfferStatus.accepted:
         statusColor = Colors.green;
-        statusText = 'مقبول';
+         statusText = 'offer_accepted_status'.tr;
         statusIcon = Icons.check_circle;
         break;
       case TaskOfferStatus.rejected:
         statusColor = Colors.red;
-        statusText = 'مرفوض';
+         statusText = 'offer_rejected'.tr;
         statusIcon = Icons.cancel;
         break;
     }
@@ -872,7 +913,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
                 Icon(statusIcon, color: statusColor),
                 const SizedBox(width: 8),
                 Text(
-                  'عرضي',
+                   'my_offer'.tr,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -898,7 +939,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
             ),
             const SizedBox(height: 12),
             Text(
-              'السعر المقترح: ${offer.price.toStringAsFixed(2)} ر.س',
+               'proposed_price'.tr + ': ${offer.price.toStringAsFixed(2)} ' + 'sar'.tr,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: Colors.blue[700],
@@ -907,7 +948,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
             if (offer.description.isNotEmpty) ...[
               const SizedBox(height: 8),
               Text(
-                'الوصف: ${offer.description}',
+                 'offer_description'.tr + ': ${offer.description}',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../models/task_ad.dart';
 import '../models/task_offer.dart';
 import '../services/task_ads_service.dart';
@@ -67,7 +68,7 @@ class TaskAdCard extends StatelessWidget {
       children: [
         Expanded(
           child: Text(
-            'إعلان #${taskAd.id}',
+            'ad_number'.tr + '${taskAd.id}',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -115,7 +116,7 @@ class TaskAdCard extends StatelessWidget {
           _buildAddressRow(
             context,
             Icons.location_on,
-            'الاستلام',
+            'pickup_point'.tr,
             task.pickup!.address,
             Colors.green,
           ),
@@ -125,7 +126,7 @@ class TaskAdCard extends StatelessWidget {
           _buildAddressRow(
             context,
             Icons.location_on,
-            'التسليم',
+            'delivery_point'.tr,
             task.delivery!.address,
             Colors.red,
           ),
@@ -184,7 +185,7 @@ class TaskAdCard extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              'نطاق الأسعار: ${taskAd.lowestPrice.toStringAsFixed(0)} - ${taskAd.highestPrice.toStringAsFixed(0)} ر.س',
+              'price_range'.tr + ': ${taskAd.lowestPrice.toStringAsFixed(0)} - ${taskAd.highestPrice.toStringAsFixed(0)} ' + 'sar'.tr,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: Colors.blue[700],
@@ -202,7 +203,7 @@ class TaskAdCard extends StatelessWidget {
         Icon(Icons.local_offer, size: 16, color: Colors.orange[700]),
         const SizedBox(width: 8),
         Text(
-          'عدد العروض: ${taskAd.offersCount}',
+          'offers_count'.tr + ': ${taskAd.offersCount}',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Colors.orange[700],
                 fontWeight: FontWeight.w500,
@@ -213,7 +214,7 @@ class TaskAdCard extends StatelessWidget {
           Icon(Icons.check_circle, size: 16, color: Colors.green[700]),
           const SizedBox(width: 4),
           Text(
-            'تم قبول عرض',
+            'offer_accepted'.tr,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: Colors.green[700],
                   fontWeight: FontWeight.w500,
@@ -235,17 +236,17 @@ class TaskAdCard extends StatelessWidget {
     switch (status) {
       case TaskOfferStatus.pending:
         statusColor = Colors.orange;
-        statusText = 'عرضي في الانتظار';
+        statusText = 'offer_pending'.tr;
         statusIcon = Icons.schedule;
         break;
       case TaskOfferStatus.accepted:
         statusColor = Colors.green;
-        statusText = 'تم قبول عرضي';
+        statusText = 'offer_accepted_status'.tr;
         statusIcon = Icons.check_circle;
         break;
       case TaskOfferStatus.rejected:
         statusColor = Colors.red;
-        statusText = 'تم رفض عرضي';
+        statusText = 'offer_rejected'.tr;
         statusIcon = Icons.cancel;
         break;
     }
@@ -274,7 +275,7 @@ class TaskAdCard extends StatelessWidget {
                       ),
                 ),
                 Text(
-                  'سعر العرض: ${offer.price.toStringAsFixed(2)} ر.س',
+                  'offer_price'.tr + ': ${offer.price.toStringAsFixed(2)} ' + 'sar'.tr,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Colors.grey[600],
                       ),
@@ -293,7 +294,7 @@ class TaskAdCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '🎉 تم قبول عرضك!',
+                    'offer_congratulations'.tr,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Colors.green[700],
                           fontWeight: FontWeight.bold,
@@ -301,7 +302,7 @@ class TaskAdCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'اضغط لقبول المهمة والبدء',
+                    'tap_to_accept_task'.tr,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Colors.grey[600],
                           fontSize: 11,
@@ -325,8 +326,8 @@ class TaskAdCard extends StatelessWidget {
               child: ElevatedButton.icon(
                 onPressed: () => _showConfirmTaskDialog(context),
                 icon: const Icon(Icons.check_circle, size: 18),
-                label: const Text(
-                  'قبول المهمة',
+                label: Text(
+                  'accept_task'.tr,
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                 ),
                 style: ElevatedButton.styleFrom(
@@ -357,8 +358,8 @@ class TaskAdCard extends StatelessWidget {
           child: OutlinedButton.icon(
             onPressed: onTap,
             icon: const Icon(Icons.visibility, size: 18),
-            label: const Text(
-              'عرض التفاصيل',
+            label: Text(
+              'view_details'.tr,
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             ),
             style: OutlinedButton.styleFrom(
@@ -381,8 +382,8 @@ class TaskAdCard extends StatelessWidget {
                   child: ElevatedButton.icon(
                     onPressed: onTap,
                     icon: const Icon(Icons.add, size: 18),
-                    label: const Text(
-                      'تقديم عرض',
+                    label: Text(
+                      'submit_offer'.tr,
                       style:
                           TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                     ),
@@ -403,8 +404,8 @@ class TaskAdCard extends StatelessWidget {
                   child: ElevatedButton.icon(
                     onPressed: () => _showAcceptTaskDialog(context),
                     icon: const Icon(Icons.check, size: 18),
-                    label: const Text(
-                      'قبول المهمة',
+                    label: Text(
+                      'accept_task'.tr,
                       style:
                           TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                     ),
@@ -431,19 +432,19 @@ class TaskAdCard extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('قبول المهمة'),
-        content: const Text('هل أنت متأكد من رغبتك في قبول هذه المهمة؟'),
+        title: Text('accept_task'.tr),
+        content: Text('confirm_accept_task'.tr),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('إلغاء'),
+            child: Text('cancel'.tr),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
               _acceptTask(context);
             },
-            child: const Text('قبول'),
+            child: Text('accept_task'.tr),
           ),
         ],
       ),
@@ -454,13 +455,12 @@ class TaskAdCard extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('قبول المهمة'),
-        content: const Text(
-            'تم قبول عرضك لهذه المهمة!\n\nهل تريد قبول المهمة والبدء في تنفيذها؟\n\nبعد القبول ستصبح المهمة مسندة إليك رسمياً وستظهر في قائمة مهامك الحالية.'),
+        title: Text('accept_task'.tr),
+        content: Text('confirm_task_dialog_message'.tr),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('إلغاء'),
+            child: Text('cancel'.tr),
           ),
           ElevatedButton(
             onPressed: () {
@@ -471,7 +471,7 @@ class TaskAdCard extends StatelessWidget {
               backgroundColor: Colors.green,
               foregroundColor: Colors.white,
             ),
-            child: const Text('قبول المهمة'),
+            child: Text('accept_task'.tr),
           ),
         ],
       ),
@@ -501,9 +501,8 @@ class TaskAdCard extends StatelessWidget {
 
         if (response.success) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                  'تم قبول المهمة بنجاح! ستجدها الآن في قائمة مهامك الحالية'),
+            SnackBar(
+              content: Text('task_assigned_successfully'.tr),
               backgroundColor: Colors.green,
               duration: Duration(seconds: 4),
             ),
@@ -511,7 +510,7 @@ class TaskAdCard extends StatelessWidget {
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(response.message ?? 'فشل في قبول المهمة'),
+              content: Text(response.message ?? 'failed_to_accept_task'.tr),
               backgroundColor: Colors.red,
             ),
           );
@@ -522,7 +521,7 @@ class TaskAdCard extends StatelessWidget {
         Navigator.pop(context); // Close loading
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('حدث خطأ: $e'),
+            content: Text('error_occurred'.tr + ': $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -552,15 +551,15 @@ class TaskAdCard extends StatelessWidget {
 
         if (response.success) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('تم قبول المهمة بنجاح'),
+            SnackBar(
+              content: Text('task_accepted_successfully'.tr),
               backgroundColor: Colors.green,
             ),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(response.message ?? 'فشل في قبول المهمة'),
+              content: Text(response.message ?? 'failed_to_accept_task'.tr),
               backgroundColor: Colors.red,
             ),
           );
@@ -571,7 +570,7 @@ class TaskAdCard extends StatelessWidget {
         Navigator.pop(context); // Close loading
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('حدث خطأ: $e'),
+            content: Text('error_occurred'.tr + ': $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -593,9 +592,9 @@ class TaskAdCard extends StatelessWidget {
   String _getStatusText() {
     switch (taskAd.status.toLowerCase()) {
       case 'running':
-        return 'جاري';
+        return 'status_running'.tr;
       case 'closed':
-        return 'مغلق';
+        return 'status_closed'.tr;
       default:
         return taskAd.status;
     }

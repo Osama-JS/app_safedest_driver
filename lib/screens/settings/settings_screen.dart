@@ -3,11 +3,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../services/settings_service.dart';
-import '../../services/api_service.dart';
-import '../../services/auth_service.dart';
 import '../../widgets/custom_button.dart';
-import '../../l10n/generated/app_localizations.dart';
-import '../auth/login_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -17,17 +13,11 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool _isLoading = false;
-
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    if (l10n == null) {
-      return const SizedBox.shrink();
-    }
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.settings),
+        title: Text('settings'.tr),
         elevation: 0,
       ),
       body: Consumer<SettingsService>(
@@ -35,26 +25,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              // App Settings Section
-              // _buildSectionHeader(l10n.appSettings),
-              // const SizedBox(height: 16),
-              //
               // Language Setting
               _buildLanguageCard(settingsService),
               const SizedBox(height: 16),
-              //
-              // // Theme Setting
-              // _buildThemeCard(settingsService),
-              // const SizedBox(height: 32),
 
               // About Section
-              _buildSectionHeader(l10n.about),
+              _buildSectionHeader('about'.tr),
               const SizedBox(height: 16),
 
               _buildAboutCard(),
               const SizedBox(height: 32),
 
-               _buildAccountCard(),
+              _buildAccountCard(),
               const SizedBox(height: 32),
 
               // Reset Settings
@@ -77,10 +59,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildLanguageCard(SettingsService settingsService) {
-    final l10n = AppLocalizations.of(context);
-    if (l10n == null) {
-      return const SizedBox.shrink();
-    }
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -99,13 +77,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
         ),
         title: Text(
-          l10n.language,
+          'language'.tr,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
         ),
         subtitle: Text(
-          l10n.chooseLanguage,
+          'chooseLanguage'.tr,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Colors.grey[600],
               ),
@@ -186,147 +164,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildThemeCard(SettingsService settingsService) {
-    final l10n = AppLocalizations.of(context);
-    if (l10n == null) {
-      // Fallback or error handling
-      return const SizedBox.shrink();
-    }
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.purple.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  settingsService.isDarkMode
-                      ? Icons.dark_mode
-                      : Icons.light_mode,
-                  color: Colors.purple[600],
-                  size: 24,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10n.theme,
-                      style:
-                          Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      l10n.chooseTheme,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.grey[600],
-                          ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-
-          // Theme Options
-          Column(
-            children: [
-              _buildThemeOption(
-                settingsService,
-                l10n.lightMode,
-                false,
-                Icons.light_mode,
-              ),
-              const SizedBox(height: 8),
-              _buildThemeOption(
-                settingsService,
-                l10n.darkMode,
-                true,
-                Icons.dark_mode,
-              ),
-              const SizedBox(height: 8),
-              _buildThemeOption(
-                settingsService,
-                l10n.systemMode,
-                null,
-                Icons.auto_mode,
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildThemeOption(
-    SettingsService settingsService,
-    String title,
-    bool? isDark,
-    IconData icon,
-  ) {
-    final isSelected = settingsService.themeMode ==
-        (isDark == null
-            ? ThemeMode.system
-            : isDark
-                ? ThemeMode.dark
-                : ThemeMode.light);
-
-    return InkWell(
-      onTap: () => settingsService.changeThemeMode(isDark == null
-          ? ThemeMode.system
-          : isDark
-              ? ThemeMode.dark
-              : ThemeMode.light),
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: isSelected ? Colors.grey[300]!  : Colors.transparent  ,
-          ),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              color: Theme.of(context).textTheme.bodyMedium?.color  ,
-              size: 20,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                title,
-                style: TextStyle(
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                  color: isSelected ? Theme.of(context).textTheme.bodyMedium?.color : null,
-                ),
-              ),
-            ),
-            if (isSelected)
-              Icon(
-                Icons.check_circle,
-                color: Theme.of(context).textTheme.bodyMedium?.color,
-                size: 20,
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildAccountTile(
     String title,
     String subtitle,
@@ -357,42 +194,37 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildAboutCard() {
-    final l10n = AppLocalizations.of(context);
-    if (l10n == null) {
-      // Fallback or error handling
-      return const SizedBox.shrink();
-    }
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Column(
         children: [
           _buildAboutTile(
-            l10n.version,
+            'version'.tr,
             '1.0.0',
             Icons.info_outline,
             Colors.blue,
           ),
           const Divider(height: 1),
           _buildAboutTile(
-            l10n.termsOfService,
-            l10n.termsOfServiceDesc,
+            'termsOfService'.tr,
+            'termsOfServiceDesc'.tr,
             Icons.description,
             Colors.green,
             () => _openTermsOfService(),
           ),
           const Divider(height: 1),
           _buildAboutTile(
-            l10n.privacyPolicy,
-            l10n.privacyPolicyDesc,
+            'privacyPolicy'.tr,
+            'privacyPolicyDesc'.tr,
             Icons.privacy_tip,
             Colors.purple,
             () => _openPrivacyPolicy(),
           ),
           const Divider(height: 1),
           _buildAboutTile(
-            l10n.helpSupport,
-            l10n.helpSupportDesc,
+            'helpSupport'.tr,
+            'helpSupportDesc'.tr,
             Icons.support_agent,
             Colors.orange,
             () => _showSupportDialog(),
@@ -432,11 +264,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildResetCard(SettingsService settingsService) {
-    final l10n = AppLocalizations.of(context);
-    if (l10n == null) {
-      // Fallback or error handling
-      return const SizedBox.shrink();
-    }
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -464,7 +291,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        l10n.resetSettings,
+                        'resetSettings'.tr,
                         style:
                             Theme.of(context).textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w600,
@@ -472,7 +299,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        l10n.resetSettingsDesc,
+                        'resetSettingsDesc'.tr,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Colors.grey[600],
                             ),
@@ -484,7 +311,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             const SizedBox(height: 16),
             CustomButton(
-              text: l10n.reset,
+              text: 'reset'.tr,
               onPressed: () => _showResetDialog(settingsService),
               backgroundColor: Colors.red,
               textColor: Colors.white,
@@ -499,14 +326,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context).resetSettings),
-        content: Text(
-          AppLocalizations.of(context).resetConfirmMessage,
-        ),
+        title: Text('resetSettings'.tr),
+        content: Text('resetConfirmMessage'.tr),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(AppLocalizations.of(context).cancel),
+            child: Text('cancel'.tr),
           ),
           ElevatedButton(
             onPressed: () {
@@ -514,15 +339,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
               settingsService.resetToDefaults();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content:
-                      Text(AppLocalizations.of(context).resetConfirmMessage),
+                  content: Text('resetConfirmMessage'.tr),
                   backgroundColor: Colors.green,
                 ),
               );
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: Text(AppLocalizations.of(context).reset,
-                style: TextStyle(color: Colors.white)),
+            child: Text('reset'.tr, style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -579,7 +402,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   // عرض حوار المساعدة والدعم
   void _showSupportDialog() {
-    final l10n = AppLocalizations.of(context);
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -600,7 +422,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             const SizedBox(width: 12),
             Text(
-              l10n.supportContact,
+              'supportContact'.tr,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ],
@@ -612,7 +434,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             // البريد الإلكتروني
             _buildContactItem(
               icon: Icons.email,
-              label: l10n.contactEmail,
+              label: 'contactEmail'.tr,
               value: 'info@safedest.com',
               onTap: () => _launchEmail('info@safedest.com'),
               color: Colors.blue,
@@ -622,7 +444,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             // الموقع الإلكتروني
             _buildContactItem(
               icon: Icons.language,
-              label: l10n.contactWebsite,
+              label: 'contactWebsite'.tr,
               value: 'www.safedest.com',
               onTap: () => _launchWebsite('https://www.safedest.com'),
               color: Colors.green,
@@ -631,7 +453,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
             // أرقام الهاتف
             Text(
-              l10n.contactUs,
+              'contactUs'.tr,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
@@ -660,7 +482,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(l10n.closeDialog),
+            child: Text('closeDialog'.tr),
           ),
         ],
       ),
@@ -789,237 +611,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   // بناء بطاقة إعدادات الحساب
   Widget _buildAccountCard() {
-    final l10n = AppLocalizations.of(context);
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Column(
         children: [
           _buildAccountTile(
-            l10n.deleteAccount,
-            l10n.deleteAccountDescription,
+            'deleteAccount'.tr,
+            'deleteAccountDescription'.tr,
             Icons.delete_forever,
             Colors.red,
-            _showDeleteAccountDialog,
+            () {
+              // TODO: Implement delete account logic
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Feature coming soon')),
+              );
+            },
           ),
         ],
       ),
     );
-  }
-
-  // عرض حوار حذف الحساب
-  void _showDeleteAccountDialog() {
-    final l10n = AppLocalizations.of(context);
-    final passwordController = TextEditingController();
-    final confirmationController = TextEditingController();
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setDialogState) {
-          return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            title: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Icon(Icons.warning, color: Colors.red, size: 24),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    l10n.deleteAccountWarning,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.red),
-                  ),
-                ),
-              ],
-            ),
-            content: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l10n.deleteAccountMessage,
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    l10n.enterPasswordToDelete,
-                    style: const TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 8),
-                  TextField(
-                    controller: passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      hintText: l10n.password,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      prefixIcon: const Icon(Icons.lock),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    l10n.typeDeleteConfirmation,
-                    style: const TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 8),
-                  TextField(
-                    controller: confirmationController,
-                    decoration: InputDecoration(
-                      hintText: 'DELETE_MY_ACCOUNT',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      prefixIcon: const Icon(Icons.edit),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed:
-                    _isLoading ? null : () => Navigator.of(context).pop(),
-                child: Text(l10n.cancel),
-              ),
-              ElevatedButton(
-                onPressed: _isLoading
-                    ? null
-                    : () => _deleteAccount(
-                          context,
-                          passwordController.text,
-                          confirmationController.text,
-                          setDialogState,
-                        ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
-                ),
-                child: _isLoading
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
-                        ),
-                      )
-                    : Text(l10n.confirmDelete),
-              ),
-            ],
-          );
-        },
-      ),
-    );
-  }
-
-  // تنفيذ حذف الحساب
-  Future<void> _deleteAccount(
-      BuildContext dialogContext,
-      String password,
-      String confirmation,
-      StateSetter setDialogState,
-      ) async {
-    final l10n = AppLocalizations.of(context);
-
-    // التحقق من صحة البيانات
-    if (password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('يرجى إدخال كلمة المرور')),
-      );
-      return;
-    }
-
-    if (confirmation != 'DELETE_MY_ACCOUNT') {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('يرجى كتابة "DELETE_MY_ACCOUNT" بالضبط')),
-      );
-      return;
-    }
-
-    setDialogState(() {});
-    if (mounted) setState(() => _isLoading = true);
-
-    try {
-      final apiService = ApiService();
-      final response = await apiService.deleteAccount(
-        password: password,
-        confirmation: confirmation,
-      );
-
-      debugPrint('🔍 Full response structure:');
-      debugPrint('  - isSuccess: ${response.isSuccess}');
-      debugPrint('  - statusCode: ${response.statusCode}');
-      debugPrint('  - message: ${response.message}');
-      debugPrint('  - data: ${response.data}');
-
-      final bool isSuccess = response.statusCode == 200;
-
-      if (isSuccess) {
-        // ✅ 1. إغلاق الحوار فوراً
-        Navigator.of(dialogContext, rootNavigator: true).pop();
-
-        // ✅ 2. إظهار رسالة النجاح
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.accountDeletedSuccessfully),
-            backgroundColor: Colors.green,
-            duration: const Duration(seconds: 2),
-          ),
-        );
-
-        // ✅ 3. تسجيل الخروج مع تنظيف كامل
-        final authService = AuthService();
-        await authService.forceLogout();
-
-        // ✅ 4. الانتقال لشاشة تسجيل الدخول بعد تأخير بسيط
-        Future.delayed(const Duration(milliseconds: 500), () {
-          Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => LoginScreen()),
-                (route) => false,
-          );
-        });
-
-      } else {
-        // معالجة الأخطاء
-        setDialogState(() {});
-        if (mounted) setState(() => _isLoading = false);
-
-        String errorMessage = l10n.failedToDeleteAccount;
-        if (response.message?.contains('Invalid password') == true) {
-          errorMessage = l10n.invalidPasswordForDelete;
-        } else if (response.message?.contains('active tasks') == true) {
-          errorMessage = l10n.cannotDeleteAccountWithActiveTasks;
-        } else if (response.message != null) {
-          errorMessage = response.message!;
-        }
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(errorMessage),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } catch (e) {
-      setDialogState(() {});
-      if (mounted) setState(() => _isLoading = false);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('${l10n.failedToDeleteAccount}: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
   }
 }

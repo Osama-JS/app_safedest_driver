@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get/get.dart';
+import '../Languages/LanguageController.dart';
 
 class SettingsService extends ChangeNotifier {
   static const String _languageKey = 'app_language';
@@ -9,7 +11,7 @@ class SettingsService extends ChangeNotifier {
   static const String _systemNotificationsKey = 'system_notifications';
 
   // Default values
-  String _currentLanguage = 'ar';
+  String _currentLanguage = 'en';
   ThemeMode _themeMode = ThemeMode.light;
   bool _taskNotificationsEnabled = true;
   bool _walletNotificationsEnabled = true;
@@ -28,7 +30,7 @@ class SettingsService extends ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
 
-      _currentLanguage = prefs.getString(_languageKey) ?? 'ar';
+      _currentLanguage = prefs.getString(_languageKey) ?? 'en';
 
       final themeModeIndex =
           prefs.getInt(_themeModeKey) ?? ThemeMode.system.index;
@@ -56,6 +58,15 @@ class SettingsService extends ChangeNotifier {
 
       _currentLanguage = languageCode;
       notifyListeners();
+
+      // Sync with GetX LanguageController
+      try {
+        if (Get.isRegistered<LanguageController>()) {
+          Get.find<LanguageController>().changeLanguage(languageCode);
+        }
+      } catch (e) {
+        debugPrint('Error syncing with LanguageController: $e');
+      }
 
       debugPrint('Language changed to: $languageCode');
     } catch (e) {
@@ -144,7 +155,7 @@ class SettingsService extends ChangeNotifier {
       await prefs.remove(_systemNotificationsKey);
 
       // Reset to defaults
-      _currentLanguage = 'ar';
+      _currentLanguage = 'en';
       _themeMode = ThemeMode.light;
       _taskNotificationsEnabled = true;
       _walletNotificationsEnabled = true;
@@ -170,7 +181,7 @@ class SettingsService extends ChangeNotifier {
       case 'zh':
         return const Locale('zh', 'CN');
       default:
-        return const Locale('ar', 'SA');
+        return const Locale('en', 'US');
     }
   }
 

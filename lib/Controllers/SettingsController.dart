@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../shared_prff.dart';
+import '../Languages/LanguageController.dart';
 
 class SettingsController extends GetxController {
   // Reactive state
@@ -33,27 +34,12 @@ class SettingsController extends GetxController {
   Future<void> changeLanguage(String langCode) async {
     if (currentLanguage.value == langCode) return;
 
-    await Selected_Language.setLanguage(langCode);
-    currentLanguage.value = langCode;
+    // Use LanguageController for consistency
+    final languageController = Get.find<LanguageController>();
+    languageController.changeLanguage(langCode);
 
-    Locale locale;
-    switch (langCode) {
-      case 'ar':
-        locale = const Locale('ar', 'SA');
-        break;
-      case 'en':
-        locale = const Locale('en', 'US');
-        break;
-      case 'ur':
-        locale = const Locale('ur', 'PK');
-        break;
-      case 'zh':
-        locale = const Locale('zh', 'CN');
-        break;
-      default:
-        locale = const Locale('en', 'US');
-    }
-    Get.updateLocale(locale);
+    // Update current language value
+    currentLanguage.value = langCode;
   }
 
   // Change theme
@@ -73,5 +59,5 @@ class SettingsController extends GetxController {
   }
 
   // Check if RTL
-  bool get isRTL => currentLanguage.value == 'ar';
+  bool get isRTL => currentLanguage.value == 'ar' || currentLanguage.value == 'ur';
 }

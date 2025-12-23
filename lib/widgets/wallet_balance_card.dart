@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import '../services/wallet_service.dart';
-import '../l10n/generated/app_localizations.dart';
 
 class WalletBalanceCard extends StatelessWidget {
   const WalletBalanceCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    if (l10n == null) {
-      // Fallback or error handling
-      return const SizedBox.shrink();
-    }
     return Consumer<WalletService>(
       builder: (context, walletService, child) {
         final wallet = walletService.wallet;
@@ -44,7 +39,7 @@ class WalletBalanceCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 12),
                     Text(
-                      l10n.walletBalance,
+                      'walletBalance'.tr,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -63,7 +58,7 @@ class WalletBalanceCard extends StatelessWidget {
 
                 // Main Balance
                 Text(
-                  '${wallet?.balance.toStringAsFixed(2) ?? '0.00'} ${wallet?.currency ?? 'ر.س'}',
+                  '${wallet?.balance.toStringAsFixed(2) ?? '0.00'} ${wallet?.currency ?? 'sar'.tr}',
                   style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -73,7 +68,7 @@ class WalletBalanceCard extends StatelessWidget {
                 const SizedBox(height: 8),
 
                 Text(
-                  l10n.availableBalance,
+                  'availableBalance'.tr,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Colors.white.withOpacity(0.8),
                       ),
@@ -87,7 +82,7 @@ class WalletBalanceCard extends StatelessWidget {
                     Expanded(
                       child: _buildBalanceInfo(
                         context,
-                        l10n.withdrawals,
+                        'withdrawals'.tr,
                         '${wallet?.pendingAmount.toStringAsFixed(2) ?? '0.00'}',
                         Icons.trending_up,
                       ),
@@ -100,7 +95,7 @@ class WalletBalanceCard extends StatelessWidget {
                     Expanded(
                       child: _buildBalanceInfo(
                         context,
-                        l10n.income,
+                        'income'.tr,
                         '${wallet?.totalEarnings.toStringAsFixed(2) ?? '0.00'}',
                         Icons.trending_down,
                       ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../l10n/generated/app_localizations.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import '../services/wallet_service.dart';
 import '../models/wallet.dart';
@@ -41,8 +41,6 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-
     return Consumer<WalletService>(
       builder: (context, walletService, child) {
         return Card(
@@ -58,7 +56,7 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
                   ),
                   const SizedBox(width: 12),
                   Text(
-                    l10n.earningsStatistics,
+                    'earningsStatistics'.tr,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -90,21 +88,19 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
   }
 
   Widget _buildPeriodSelector(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-
     return Row(
       children: [
         _buildPeriodChip(
-            context, l10n.today, _selectedPeriod == EarningsPeriod.today),
+            context, 'today'.tr, _selectedPeriod == EarningsPeriod.today),
         const SizedBox(width: 8),
         _buildPeriodChip(
-            context, l10n.week, _selectedPeriod == EarningsPeriod.week),
+            context, 'week'.tr, _selectedPeriod == EarningsPeriod.week),
         const SizedBox(width: 8),
         _buildPeriodChip(
-            context, l10n.month, _selectedPeriod == EarningsPeriod.month),
+            context, 'month'.tr, _selectedPeriod == EarningsPeriod.month),
         const SizedBox(width: 8),
         _buildPeriodChip(
-            context, l10n.year, _selectedPeriod == EarningsPeriod.year),
+            context, 'year'.tr, _selectedPeriod == EarningsPeriod.year),
       ],
     );
   }
@@ -116,13 +112,12 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
       onSelected: (selected) {
         if (selected) {
           EarningsPeriod newPeriod;
-          final l10n = AppLocalizations.of(context);
 
-          if (label == l10n.today) {
+          if (label == 'today'.tr) {
             newPeriod = EarningsPeriod.today;
-          } else if (label == l10n.week) {
+          } else if (label == 'week'.tr) {
             newPeriod = EarningsPeriod.week;
-          } else if (label == l10n.month) {
+          } else if (label == 'month'.tr) {
             newPeriod = EarningsPeriod.month;
           } else {
             newPeriod = EarningsPeriod.year;
@@ -190,11 +185,6 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
   }
 
   Widget _buildEmptyChart(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    if (l10n == null) {
-      // Fallback or error handling
-      return const SizedBox.shrink();
-    }
     return Container(
       height: 200,
       decoration: BoxDecoration(
@@ -216,7 +206,7 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
             ),
             const SizedBox(height: 12),
             Text(
-              l10n.noEarningsData,
+              'no_earnings_data'.tr,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: Theme.of(context)
                         .colorScheme
@@ -226,7 +216,7 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
             ),
             const SizedBox(height: 8),
             Text(
-              'ابدأ في قبول المهام لرؤية إحصائيات أرباحك',
+              'startAcceptingTasksForEarnings'.tr,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Theme.of(context)
@@ -364,7 +354,7 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
               if (index >= 0 && index < dailyEarnings.length) {
                 final earning = dailyEarnings[index];
                 return LineTooltipItem(
-                  '${earning.amount.toStringAsFixed(2)} ر.س\n${earning.shortDayName}',
+                  '${earning.amount.toStringAsFixed(2)} ${'sar'.tr}\n${earning.shortDayName}',
                   TextStyle(
                     color: Theme.of(context).colorScheme.onSurface,
                     fontWeight: FontWeight.bold,
@@ -381,7 +371,6 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
 
   Widget _buildQuickStats(BuildContext context, WalletService walletService) {
     final earningsStats = walletService.earningsStats;
-    final l10n = AppLocalizations.of(context);
 
     if (earningsStats == null || earningsStats.stats.totalEarnings == 0.0) {
       return _buildEmptyStats(context);
@@ -394,8 +383,8 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
         Expanded(
           child: _buildStatCard(
             context,
-            l10n.highestEarning,
-            '${stats.highestDayEarning.toStringAsFixed(2)} ر.س',
+            'highestEarning'.tr,
+            '${stats.highestDayEarning.toStringAsFixed(2)} ${'sar'.tr}',
             Icons.trending_up,
             Colors.green,
           ),
@@ -404,8 +393,8 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
         Expanded(
           child: _buildStatCard(
             context,
-            l10n.averagePerTask,
-            '${stats.averageEarningPerTask.toStringAsFixed(2)} ر.س',
+            'averagePerTask'.tr,
+            '${stats.averageEarningPerTask.toStringAsFixed(2)} ${'sar'.tr}',
             Icons.task_alt,
             Colors.blue,
           ),
@@ -414,8 +403,8 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
         Expanded(
           child: _buildStatCard(
             context,
-            l10n.totalEarnings,
-            '${stats.totalEarnings.toStringAsFixed(2)} ر.س',
+            'totalEarnings'.tr,
+            '${stats.totalEarnings.toStringAsFixed(2)} ${'sar'.tr}',
             Icons.account_balance_wallet,
             Colors.orange,
           ),
@@ -441,7 +430,7 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
           ),
           const SizedBox(width: 8),
           Text(
-            'لا توجد أرباح في هذه الفترة',
+            'noEarningsInPeriod'.tr,
             style: TextStyle(
               color: Colors.grey[600],
               fontSize: 14,

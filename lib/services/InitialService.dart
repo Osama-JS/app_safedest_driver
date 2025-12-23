@@ -6,6 +6,7 @@ import 'package:safedest_driver/config/app_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:safedest_driver/Controllers/AuthController.dart';
 import 'package:safedest_driver/Controllers/SettingsController.dart';
+import 'package:safedest_driver/Languages/LanguageController.dart';
 
 import 'package:safedest_driver/Controllers/TaskController.dart';
 import 'package:safedest_driver/Controllers/WalletController.dart';
@@ -27,6 +28,9 @@ class InitialService extends GetxService {
     // Initialize ApiService
     final api = ApiService();
     await api.initialize();
+
+    // IMPORTANT: Register LanguageController FIRST before SettingsController
+    Get.put(LanguageController());
 
     // Register Core Controllers
     Get.put(SettingsController());

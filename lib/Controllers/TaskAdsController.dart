@@ -3,8 +3,11 @@ import 'package:get/get.dart';
 import '../services/api_service.dart';
 import '../models/api_response.dart';
 
+import '../services/task_ads_service.dart';
+
 class TaskAdsController extends GetxController {
   final ApiService _apiService = ApiService();
+  final TaskAdsService _taskAdsService = TaskAdsService();
 
   // Reactive state
   final RxInt availableAds = 0.obs;
@@ -84,6 +87,32 @@ class TaskAdsController extends GetxController {
   void decrementMyOffers() {
     if (myOffers.value > 0) {
       myOffers.value--;
+    }
+  }
+
+  /// Delete an offer
+  Future<ApiResponse<void>> deleteOffer(int offerId) async {
+    isLoading.value = true;
+    error.value = null;
+
+    try {
+      final response = await _taskAdsService.deleteOffer(offerId);
+
+      if (response.success) {
+        decrementMyOffers();
+        return response;
+      } else {
+        error.value = response.message ?? 'Failed to delete offer';
+        return response;
+      }
+    } catch (e) {
+      error.value = 'Exception deleting offer: $e';
+      return ApiResponse<void>(
+        success: false,
+        message: 'Exception deleting offer: $e',
+      );
+    } finally {
+      isLoading.value = false;
     }
   }
 

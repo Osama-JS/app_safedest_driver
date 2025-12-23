@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import '../services/wallet_service.dart';
 import '../models/wallet.dart';
 import 'error_state_widget.dart';
-import '../l10n/generated/app_localizations.dart';
 import '../screens/wallet/advanced_transactions_screen.dart';
 
 class TransactionListCard extends StatelessWidget {
@@ -14,11 +14,6 @@ class TransactionListCard extends StatelessWidget {
     return Consumer<WalletService>(
       builder: (context, walletService, child) {
         final recentTransactions = walletService.recentTransactionsShort;
-        final l10n = AppLocalizations.of(context);
-        if (l10n == null) {
-          // Fallback or error handling
-          return const SizedBox.shrink();
-        }
         return Card(
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -34,7 +29,7 @@ class TransactionListCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 12),
                     Text(
-                      l10n.recentTransactions,
+                      'recentTransactions'.tr,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -49,7 +44,7 @@ class TransactionListCard extends StatelessWidget {
                           ),
                         );
                       },
-                      child: Text(l10n.viewAll),
+                      child: Text('view_all'.tr),
                     ),
                   ],
                 ),
@@ -65,9 +60,9 @@ class TransactionListCard extends StatelessWidget {
                   onRetry: () async {
                     await walletService.getTransactions(refresh: true);
                   },
-                  emptyMessage: l10n.noTransactions,
-                  emptyDescription: l10n.noTransactionsRecorded,
-                  loadingMessage: l10n.loadingTransactions,
+                  emptyMessage: 'noTransactions'.tr,
+                  emptyDescription: 'noTransactionsRecorded'.tr,
+                  loadingMessage: 'loadingTransactions'.tr,
                   builder: (transactions) => Column(
                     children: transactions
                         .map((transaction) => _buildTransactionItem(
@@ -84,11 +79,6 @@ class TransactionListCard extends StatelessWidget {
   }
 
   Widget _buildEmptyState(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    if (l10n == null) {
-      // Fallback or error handling
-      return const SizedBox.shrink();
-    }
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -100,7 +90,7 @@ class TransactionListCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            l10n.noTransactionsCurrently,
+            'noTransactionsCurrently'.tr,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color:
                       Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
@@ -228,10 +218,15 @@ class TransactionListCard extends StatelessWidget {
   String _getTransactionTypeText(String type) {
     switch (type.toLowerCase()) {
       case 'credit':
-        return 'إيداع';
+        return 'deposit'.tr;
       case 'debit':
-        return 'سحب';
-
+        return 'withdrawal'.tr;
+      case 'commission':
+        return 'commission'.tr;
+      case 'deposit':
+        return 'deposit'.tr;
+      case 'withdrawal':
+        return 'withdrawal'.tr;
       default:
         return type;
     }
@@ -253,11 +248,11 @@ class TransactionListCard extends StatelessWidget {
   String _getStatusText(String status) {
     switch (status.toLowerCase()) {
       case 'completed':
-        return 'مكتمل';
+        return 'taskStatusCompleted'.tr; // changed assuming taskStatusCompleted exists, or use completed
       case 'pending':
-        return 'معلق';
+        return 'pending'.tr;
       case 'failed':
-        return 'فاشل';
+        return 'failed'.tr;
       default:
         return status;
     }
@@ -268,13 +263,13 @@ class TransactionListCard extends StatelessWidget {
     final difference = now.difference(date);
 
     if (difference.inDays > 0) {
-      return '${difference.inDays} يوم';
+      return '${difference.inDays} ${'day'.tr}';
     } else if (difference.inHours > 0) {
-      return '${difference.inHours} ساعة';
+      return '${difference.inHours} ${'hour'.tr}';
     } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes} دقيقة';
+      return '${difference.inMinutes} ${'minute'.tr}';
     } else {
-      return 'الآن';
+      return 'now'.tr;
     }
   }
 }

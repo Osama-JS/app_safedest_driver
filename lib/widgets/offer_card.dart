@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/task_offer.dart';
 import '../models/task_ad.dart';
+import 'package:get/get.dart';
 
 class OfferCard extends StatelessWidget {
   final TaskOffer offer;
@@ -57,17 +58,17 @@ class OfferCard extends StatelessWidget {
     switch (status) {
       case TaskOfferStatus.pending:
         statusColor = Colors.orange;
-        statusText = 'في الانتظار';
+        statusText = 'offer_pending'.tr;
         statusIcon = Icons.schedule;
         break;
       case TaskOfferStatus.accepted:
         statusColor = Colors.green;
-        statusText = 'مقبول';
+        statusText = 'offer_accepted_status'.tr;
         statusIcon = Icons.check_circle;
         break;
       case TaskOfferStatus.rejected:
         statusColor = Colors.red;
-        statusText = 'مرفوض';
+        statusText = 'offer_rejected'.tr;
         statusIcon = Icons.cancel;
         break;
     }
@@ -90,7 +91,7 @@ class OfferCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    offer.isMyOffer ? 'عرضي' : (offer.driverName ?? 'سائق'),
+                    offer.isMyOffer ? 'my_offer'.tr : (offer.driverName ?? 'driver'.tr),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: offer.isMyOffer
                               ? FontWeight.bold
@@ -162,7 +163,7 @@ class OfferCard extends StatelessWidget {
               const Icon(Icons.monetization_on, color: Colors.green, size: 20),
               const SizedBox(width: 8),
               Text(
-                'السعر المقترح: ${offer.price.toStringAsFixed(2)} ر.س',
+                'proposed_price'.tr + ': ${offer.price.toStringAsFixed(2)} ' + 'sar'.tr,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Colors.green[700],
@@ -186,7 +187,7 @@ class OfferCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'وصف العرض:',
+                  'offer_description'.tr + ':',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: Colors.grey[700],
@@ -227,7 +228,7 @@ class OfferCard extends StatelessWidget {
               const Icon(Icons.calculate, color: Colors.blue, size: 16),
               const SizedBox(width: 8),
               Text(
-                'حساب صافي المستحقات:',
+                'net_earnings_calculation'.tr + ':',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Colors.blue[700],
@@ -238,26 +239,19 @@ class OfferCard extends StatelessWidget {
           const SizedBox(height: 8),
           _buildCalculationRow(
             context,
-            'سعر العرض',
-            '${offer.price.toStringAsFixed(2)} ر.س',
+            'offer_price'.tr,
+            '${offer.price.toStringAsFixed(2)} ' + 'sar'.tr,
           ),
           _buildCalculationRow(
             context,
-            'عمولة الخدمة',
-            commission.serviceCommissionType == 'fixed'
-                ? '- ${commission.serviceCommission.toStringAsFixed(2)} ر.س'
-                : '- ${(offer.price * commission.serviceCommission / 100).toStringAsFixed(2)} ر.س',
-          ),
-          _buildCalculationRow(
-            context,
-            'ضريبة القيمة المضافة',
-            '- ${(offer.price * commission.vatCommission / 100).toStringAsFixed(2)} ر.س',
+            'taxes_and_fees'.tr,
+            '- ${((commission.serviceCommissionType == 'fixed' ? commission.serviceCommission : (offer.price * commission.serviceCommission / 100)) + (offer.price * commission.vatCommission / 100)).toStringAsFixed(2)} ' + 'sar'.tr,
           ),
           const Divider(height: 16),
           _buildCalculationRow(
             context,
-            'صافي المستحقات',
-            '${netEarnings.toStringAsFixed(2)} ر.س',
+            'net_earnings'.tr,
+            '${netEarnings.toStringAsFixed(2)} ' + 'sar'.tr,
             isTotal: true,
           ),
         ],
@@ -300,7 +294,7 @@ class OfferCard extends StatelessWidget {
         Icon(Icons.access_time, size: 14, color: Colors.grey[600]),
         const SizedBox(width: 4),
         Text(
-          'تم التقديم: ${_formatDateTime(offer.createdAt)}',
+          'submitted_at'.tr + ': ${_formatDateTime(offer.createdAt)}',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Colors.grey[600],
               ),
@@ -310,7 +304,7 @@ class OfferCard extends StatelessWidget {
           Icon(Icons.edit, size: 14, color: Colors.grey[600]),
           const SizedBox(width: 4),
           Text(
-            'آخر تحديث: ${_formatDateTime(offer.updatedAt)}',
+            'last_update'.tr + ': ${_formatDateTime(offer.updatedAt)}',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: Colors.grey[600],
                 ),
