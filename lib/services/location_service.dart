@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import '../config/app_config.dart';
 import '../models/api_response.dart';
+import 'package:get/get.dart';
 import 'api_service.dart';
 
 class LocationService extends ChangeNotifier {
@@ -246,12 +247,31 @@ class LocationService extends ChangeNotifier {
     final hasPermission = await _requestLocationPermission();
     if (!hasPermission) return false;
 
-    const settings = LocationSettings(
-      accuracy: LocationAccuracy.high,
-      distanceFilter: 10,
-    );
+    // Use Android-specific settings for foreground service notification
+    late final LocationSettings locationSettings;
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      locationSettings = AndroidSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 10,
+        foregroundNotificationConfig: ForegroundNotificationConfig(
+          notificationTitle: 'bg_location_title'.tr,
+          notificationText: 'bg_location_body'.tr,
+          notificationIcon: const AndroidResource(name: 'ic_launcher'), // Use default app icon
+          setOngoing: true, // Persistent notification
+          enableWakeLock: true,
+        ),
+      );
+    } else {
+      locationSettings = AppleSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 10,
+        pauseLocationUpdatesAutomatically: false,
+        showBackgroundLocationIndicator: true,
+      );
+    }
+
     _startLocationUpdateTimer();
-    _positionStream = Geolocator.getPositionStream(locationSettings: settings).listen(
+    _positionStream = Geolocator.getPositionStream(locationSettings: locationSettings).listen(
           (Position position) {
         _currentPosition = position;
         notifyListeners();

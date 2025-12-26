@@ -66,16 +66,20 @@ class LocationController extends GetxController {
   Future<bool> requestPermission() async {
     LocationPermission permission = await Geolocator.checkPermission();
 
-    if (permission == LocationPermission.denied || permission == LocationPermission.unableToDetermine) {
-      // Show disclosure dialog before requesting permission
-      final bool userAccepted = await _showDisclosureDialog();
-      if (!userAccepted) return false;
-
-      permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.whileInUse || permission == LocationPermission.always) {
+      return true;
     }
 
+    // Always show disclosure dialog if not granted yet
+    final bool userAccepted = await _showDisclosureDialog();
+    if (!userAccepted) return false;
+
+    // Attempt to request permission
+    permission = await Geolocator.requestPermission();
+
     if (permission == LocationPermission.deniedForever) {
-      // Handle permanently denied
+      // System blocked the dialog, guide user to settings
+      _showSettingsDialog();
       return false;
     }
 
@@ -119,11 +123,31 @@ class LocationController extends GetxController {
     bool hasPermission = await requestPermission();
     if (!hasPermission) return false;
 
-    _positionStream = Geolocator.getPositionStream(
-      locationSettings: const LocationSettings(
+    // Use Android-specific settings for foreground service notification
+    late final LocationSettings locationSettings;
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      locationSettings = AndroidSettings(
         accuracy: LocationAccuracy.high,
         distanceFilter: 10,
-      ),
+        foregroundNotificationConfig: ForegroundNotificationConfig(
+          notificationTitle: 'bg_location_title'.tr,
+          notificationText: 'bg_location_body'.tr,
+          notificationIcon: const AndroidResource(name: 'ic_launcher'),
+          setOngoing: true,
+          enableWakeLock: true,
+        ),
+      );
+    } else {
+      locationSettings = AppleSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 10,
+        pauseLocationUpdatesAutomatically: false,
+        showBackgroundLocationIndicator: true,
+      );
+    }
+
+    _positionStream = Geolocator.getPositionStream(
+      locationSettings: locationSettings,
     ).listen(
       (Position position) {
         currentPosition.value = position;
@@ -205,5 +229,20 @@ class LocationController extends GetxController {
   void _stopLocationUpdateTimer() {
     _locationUpdateTimer?.cancel();
     _locationUpdateTimer = null;
+  }
+
+  void _showSettingsDialog() {
+    Get.defaultDialog(
+      title: 'locationPermissionDenied'.tr,
+      middleText: 'locationPermissionPermanentlyDenied'.tr,
+      textConfirm: 'settings'.tr,
+      textCancel: 'cancel'.tr,
+      confirmTextColor: Colors.white,
+      buttonColor: Colors.blue,
+      onConfirm: () {
+        Geolocator.openAppSettings();
+        Get.back();
+      },
+    );
   }
 }

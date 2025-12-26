@@ -4,6 +4,8 @@ class Messages extends Translations {
   @override
   Map<String, Map<String, String>> get keys => {
     'en': {
+      'bg_location_title': 'Location Tracking Active',
+      'bg_location_body': 'App is securely updating your location to provide you with nearby tasks.',
       'appName': 'SafeDests - Driver',
       'home': 'Home',
       'tasks': 'Tasks',
@@ -358,6 +360,8 @@ class Messages extends Translations {
       'delete': 'Delete',
     },
     'ar': {
+      'bg_location_title': 'تتبع الموقع نشط',
+      'bg_location_body': 'التطبيق يقوم بتحديث موقعك بأمان لتزويدك بالمهام القريبة منك.',
       'appName': 'سيف ديستس - السائق',
       'home': 'الرئيسية',
       'tasks': 'المهام',

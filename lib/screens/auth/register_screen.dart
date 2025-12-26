@@ -532,7 +532,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         // Phone number with country code
         PhoneInputField(
           controller: _phoneController,
-          label: AppLocalizations.of(context)!.phoneNumber,
+          label: "${AppLocalizations.of(context)!.phoneNumber} (Optional)",
           selectedCountryCode: _selectedPhoneCode,
           countryCodes: _registrationData?.phoneCodes ?? [],
           onCountryCodeChanged: (value) {
@@ -542,9 +542,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           },
           prefixIcon: Icons.phone,
           validator: (value) {
-            if (value == null || value.isEmpty) {
-              return AppLocalizations.of(context)!.phoneRequired;
-            }
+            // Phone is now optional to comply with Apple policies
             return null;
           },
         ),
