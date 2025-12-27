@@ -763,14 +763,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     // التحقق من صحة البيانات
     if (password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('يرجى إدخال كلمة المرور')),
+        SnackBar(content: Text('please_enter_password'.tr)),
       );
       return;
     }
 
     if (confirmation != 'DELETE_MY_ACCOUNT') {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('يرجى كتابة "DELETE_MY_ACCOUNT" بالضبط')),
+        SnackBar(content: Text('delete_account_confirmation_error'.tr)),
       );
       return;
     }
@@ -800,7 +800,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         // ✅ 2. إظهار رسالة النجاح
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("offer_deleted_successfully".tr),
+            content: Text("account_deleted_successfully".tr),
             backgroundColor: Colors.green,
             duration: const Duration(seconds: 2),
           ),
@@ -823,11 +823,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
         setDialogState(() {});
         if (mounted) setState(() => _isLoading = false);
 
-        String errorMessage = "l10n.failedToDeleteAccount";
+        String errorMessage = "failed_to_delete_account".tr;
         if (response.message?.contains('Invalid password') == true) {
-          errorMessage = "l10n.invalidPasswordForDelete";
+          errorMessage = "invalid_password_for_delete".tr;
         } else if (response.message?.contains('active tasks') == true) {
-          errorMessage = "l10n.cannotDeleteAccountWithActiveTasks";
+          errorMessage = "cannot_delete_account_active_tasks".tr;
         } else if (response.message != null) {
           errorMessage = response.message!;
         }
@@ -845,7 +845,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('${"l10n.failedToDeleteAccount"}: $e'),
+          content: Text('${"failed_to_delete_account".tr}: $e'),
           backgroundColor: Colors.red,
         ),
       );
