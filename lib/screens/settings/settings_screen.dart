@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../services/api_service.dart';
+import '../../services/auth_service.dart';
 import '../../services/settings_service.dart';
 import '../../widgets/custom_button.dart';
+import '../auth/login_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -13,6 +16,9 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+
+  bool _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -621,15 +627,228 @@ class _SettingsScreenState extends State<SettingsScreen> {
             'deleteAccountDescription'.tr,
             Icons.delete_forever,
             Colors.red,
-            () {
-              // TODO: Implement delete account logic
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Feature coming soon')),
-              );
-            },
+            _showDeleteAccountDialog,
+            // () {
+            //   // TODO: Implement delete account logic
+            //   ScaffoldMessenger.of(context).showSnackBar(
+            //     SnackBar(content: Text('Feature coming soon')),
+            //   );
+            // },
           ),
         ],
       ),
     );
+  }
+
+  void _showDeleteAccountDialog() {
+    final passwordController = TextEditingController();
+    final confirmationController = TextEditingController();
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) {
+          return AlertDialog(
+            shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            title: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withAlpha(25),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.warning, color: Colors.red, size: 24),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    "deleteAccount".tr,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.red),
+                  ),
+                ),
+              ],
+            ),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "deleteAccountDescription".tr,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    "please_enter_password".tr,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: passwordController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      hintText: "password".tr,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      prefixIcon: const Icon(Icons.lock),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    "please_enter_confirmation".tr,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: confirmationController,
+                    decoration: InputDecoration(
+                      hintText: 'DELETE_MY_ACCOUNT',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      prefixIcon: const Icon(Icons.edit),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed:
+                _isLoading ? null : () => Navigator.of(context).pop(),
+                child: Text("cancel".tr),
+              ),
+              ElevatedButton(
+                onPressed: _isLoading
+                    ? null
+                    : () => _deleteAccount(
+                  context,
+                  passwordController.text,
+                  confirmationController.text,
+                  setDialogState,
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                ),
+                child: _isLoading
+                    ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor:
+                    AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                )
+                    : Text("confirm".tr),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  // تنفيذ حذف الحساب
+  Future<void> _deleteAccount(
+      BuildContext dialogContext,
+      String password,
+      String confirmation,
+      StateSetter setDialogState,
+      ) async {
+    // التحقق من صحة البيانات
+    if (password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('يرجى إدخال كلمة المرور')),
+      );
+      return;
+    }
+
+    if (confirmation != 'DELETE_MY_ACCOUNT') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('يرجى كتابة "DELETE_MY_ACCOUNT" بالضبط')),
+      );
+      return;
+    }
+
+    setDialogState(() {});
+    if (mounted) setState(() => _isLoading = true);
+
+    try {
+      final apiService = ApiService();
+      final response = await apiService.deleteAccount(
+        password: password,
+        confirmation: confirmation,
+      );
+
+      debugPrint('🔍 Full response structure:');
+      debugPrint('  - isSuccess: ${response.isSuccess}');
+      debugPrint('  - statusCode: ${response.statusCode}');
+      debugPrint('  - message: ${response.message}');
+      debugPrint('  - data: ${response.data}');
+
+      final bool isSuccess = response.statusCode == 200;
+
+      if (isSuccess) {
+        // ✅ 1. إغلاق الحوار فوراً
+        Navigator.of(dialogContext, rootNavigator: true).pop();
+
+        // ✅ 2. إظهار رسالة النجاح
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("offer_deleted_successfully".tr),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+
+        // ✅ 3. تسجيل الخروج مع تنظيف كامل
+        final authService = AuthService();
+        await authService.forceLogout();
+
+        // ✅ 4. الانتقال لشاشة تسجيل الدخول بعد تأخير بسيط
+        Future.delayed(const Duration(milliseconds: 500), () {
+          Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => LoginScreen()),
+                (route) => false,
+          );
+        });
+
+      } else {
+        // معالجة الأخطاء
+        setDialogState(() {});
+        if (mounted) setState(() => _isLoading = false);
+
+        String errorMessage = "l10n.failedToDeleteAccount";
+        if (response.message?.contains('Invalid password') == true) {
+          errorMessage = "l10n.invalidPasswordForDelete";
+        } else if (response.message?.contains('active tasks') == true) {
+          errorMessage = "l10n.cannotDeleteAccountWithActiveTasks";
+        } else if (response.message != null) {
+          errorMessage = response.message!;
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      setDialogState(() {});
+      if (mounted) setState(() => _isLoading = false);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('${"l10n.failedToDeleteAccount"}: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }
