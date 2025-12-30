@@ -130,8 +130,6 @@ class Messages extends Translations {
       'sending_location': 'Sending location...',
       'success': 'Success',
       'location_sent': 'Location sent successfully',
-      'locationDisclosureTitle': 'Location Access Required',
-      'locationDisclosureMessage': 'SafeDest Driver collects location data to enable tracking your trips and calculating distances even when the app is closed or not in use.',
       'accept': 'Accept',
       'deny': 'Deny',
       'settings': 'Settings',
@@ -364,6 +362,17 @@ class Messages extends Translations {
       'failed_to_delete_account': 'Failed to delete account',
       'invalid_password_for_delete': 'Invalid password',
       'cannot_delete_account_active_tasks': 'Cannot delete account with active tasks',
+      "locationDisclosureTitle": "Allow Background Location Access",
+      "locationDisclosureMessage": "This app requires access to your location in the background to track trips and calculate distances even when the app is closed or not in use.",
+      "permission_required": "Permission Required",
+      "location_permission_denied": "The app cannot function without background location permission",
+
+      "disclosure_required": "You must accept the disclosure screen to enable online mode.",
+      "location_permission_required": "Background location permission (Allow all the time) is required to enable tracking.",
+      "location_service_disabled": "Location service is disabled. Please turn on GPS and try again.",
+      "server_error_try_again": "Unable to activate status due to a server issue. Please try again."
+
+
     },
     'ar': {
       'bg_location_title': 'تتبع الموقع نشط',
@@ -373,8 +382,6 @@ class Messages extends Translations {
       'tasks': 'المهام',
       'wallet': 'المحفظة',
       'profile': 'الملف الشخصي',
-      'locationDisclosureTitle': 'مطلوب الوصول إلى الموقع',
-      'locationDisclosureMessage': 'يجمع تطبيق سيف ديستس للسائق بيانات الموقع لتمكين تتبع رحلاتك وحساب المسافات حتى عندما يكون التطبيق مغلقًا أو غير مستخدم.',
       'accept': 'موافق',
       'deny': 'رفض',
       'settings': 'الإعدادات',
@@ -724,6 +731,18 @@ class Messages extends Translations {
       'failed_to_delete_account': 'فشل حذف الحساب',
       'invalid_password_for_delete': 'كلمة المرور غير صحيحة',
       'cannot_delete_account_active_tasks': 'لا يمكن حذف الحساب لوجود مهام نشطة',
+
+      "locationDisclosureTitle": "السماح بالوصول إلى الموقع في الخلفية",
+      "locationDisclosureMessage": "يحتاج هذا التطبيق إلى الوصول إلى موقعك الجغرافي في الخلفية (Background Location) لتتبع الرحلات وحساب المسافات حتى عندما لا يكون التطبيق مغلقًا أو غير مستخدم.",
+      "permission_required": "الإذن مطلوب",
+      "location_permission_denied": "لا يمكن متابعة عمل التطبيق بدون إذن الموقع في الخلفية",
+
+      "disclosure_required": "يجب قبول شاشة التوضيح لتفعيل وضع أونلاين.",
+      "location_permission_required": "يلزم منح صلاحية الموقع في الخلفية (Allow all the time) لتفعيل التتبع.",
+      "location_service_disabled": "خدمة الموقع مغلقة. يرجى تشغيل GPS والمحاولة مرة أخرى.",
+      "server_error_try_again": "تعذر تفعيل الحالة بسبب مشكلة بالخادم. حاول مرة أخرى."
+
+
     },
     'zh': {
       'appName': 'SafeDests - 司机',
@@ -850,8 +869,6 @@ class Messages extends Translations {
       'sending_location': '正在发送位置...',
       'success': '成功',
       'location_sent': '位置发送成功',
-      'locationDisclosureTitle': '需要位置权限',
-      'locationDisclosureMessage': 'SafeDest Driver 收集位置数据以启用行程跟踪和距离计算，即使应用已关闭或未使用也是如此。',
       'accept': '接受',
       'deny': '拒绝',
       'settings': '设置',
@@ -1083,6 +1100,17 @@ class Messages extends Translations {
       'failed_to_delete_account': '删除账户失败',
       'invalid_password_for_delete': '密码无效',
       'cannot_delete_account_active_tasks': '无法删除有活动任务的账户',
+
+      "locationDisclosureTitle": "允许后台位置访问",
+      "locationDisclosureMessage": "此应用需要在后台访问您的位置，以便跟踪行程并计算距离，即使应用关闭或未使用。",
+      "permission_required": "需要权限",
+      "location_permission_denied": "没有后台位置权限，应用无法正常工作",
+
+      "disclosure_required": "必须接受免责声明屏幕以启用在线模式。",
+      "location_permission_required": "启用跟踪需要后台位置权限（始终允许）。",
+      "location_service_disabled": "位置服务已关闭。请打开 GPS 并重试。",
+      "server_error_try_again": "由于服务器问题，无法激活状态。请重试。"
+
     },
     'ur': {
       'appName': 'SafeDests - ڈرائیور',
@@ -1209,8 +1237,6 @@ class Messages extends Translations {
       'sending_location': 'مقام بھیجا جا رہا ہے...',
       'success': 'کامیابی',
       'location_sent': 'مقام کامیابی سے بھیجا گیا',
-      'locationDisclosureTitle': 'مقام تک رسائی ضروری ہے',
-      'locationDisclosureMessage': 'SafeDest Driver آپ کے ٹرپس کو ٹریک کرنے اور فاصلے کا حساب لگانے کے لیے مقام کا ڈیٹا اکٹھا کرتا ہے، یہاں تک کہ جب ایپ بند ہو یا استعمال میں نہ ہو۔',
       'accept': 'قبول کریں',
       'deny': 'انکار کریں',
       'settings': 'ترتیبات',
@@ -1442,6 +1468,18 @@ class Messages extends Translations {
       'failed_to_delete_account': 'اکاؤنٹ حذف کرنے میں ناکامی',
       'invalid_password_for_delete': 'غلط پاس ورڈ',
       'cannot_delete_account_active_tasks': 'فعال ٹاسک والے اکاؤنٹ کو حذف نہیں کیا جا سکتا',
+
+      "locationDisclosureTitle": "پس منظر میں مقام تک رسائی کی اجازت دیں",
+      "locationDisclosureMessage": "اس ایپ کو پس منظر میں آپ کے مقام تک رسائی کی ضرورت ہے تاکہ سفر کا پتہ لگایا جا سکے اور فاصلے کا حساب لگایا جا سکے، چاہے ایپ بند ہو یا استعمال نہ ہو رہی ہو۔",
+      "permission_required": "اجازت درکار ہے",
+      "location_permission_denied": "پس منظر میں مقام کی اجازت کے بغیر ایپ کام نہیں کر سکتی",
+
+      "disclosure_required": "آن لائن موڈ کو فعال کرنے کے لیے ڈسکلوزر اسکرین قبول کرنا ضروری ہے۔",
+      "location_permission_required": "ٹریکننگ کو فعال کرنے کے لیے پس منظر میں مقام کی اجازت (Allow all the time) درکار ہے۔",
+      "location_service_disabled": "مقام کی سروس بند ہے۔ براہ کرم GPS آن کریں اور دوبارہ کوشش کریں۔",
+      "server_error_try_again": "سرور کے مسئلے کی وجہ سے حیثیت کو فعال نہیں کیا جا سکا۔ دوبارہ کوشش کریں۔"
+
+
     },
   };
 }

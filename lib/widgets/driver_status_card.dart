@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../Controllers/AuthController.dart';
 import '../Controllers/LocationController.dart';
 
-class DriverStatusCard extends StatelessWidget {
+class DriverStatusCard extends StatefulWidget {
   const DriverStatusCard({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final AuthController authController = Get.find<AuthController>();
-    final LocationController locationController = Get.find<LocationController>();
+  State<DriverStatusCard> createState() => _DriverStatusCardState();
+}
 
+class _DriverStatusCardState extends State<DriverStatusCard> {
+  final AuthController authController = Get.find<AuthController>();
+  final LocationController locationController = Get.find<LocationController>();
+
+  final RxBool _isChangingStatus = false.obs;
+
+  @override
+  Widget build(BuildContext context) {
     return Obx(() {
       final driver = authController.currentDriver.value;
+      final isOnline = locationController.isOnline.value;
 
       return Card(
         elevation: 4,
@@ -32,12 +41,11 @@ class DriverStatusCard extends StatelessWidget {
                   Text(
                     'driver_status'.tr,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
-
               const SizedBox(height: 20),
 
               // Online/Offline Status
@@ -47,47 +55,49 @@ class DriverStatusCard extends StatelessWidget {
                     width: 12,
                     height: 12,
                     decoration: BoxDecoration(
-                      color: locationController.isOnline.value
-                          ? Colors.green
-                          : Colors.grey,
+                      color: isOnline ? Colors.green : Colors.grey,
                       shape: BoxShape.circle,
                     ),
                   ),
                   const SizedBox(width: 12),
                   Text(
-                    locationController.isOnline.value
-                        ? 'online'.tr
-                        : 'offline'.tr,
+                    isOnline ? 'online'.tr : 'offline'.tr,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: locationController.isOnline.value
-                              ? Colors.green
-                              : Colors.grey,
-                        ),
+                      fontWeight: FontWeight.w600,
+                      color: isOnline ? Colors.green : Colors.grey,
+                    ),
                   ),
                   const Spacer(),
-                  Switch(
-                    value: locationController.isOnline.value,
-                    onChanged: (value) async {
-                      if (value) {
-                        await locationController.goOnline();
-                      } else {
-                        await locationController.goOffline();
-                      }
-                    },
-                  ),
+
+                  Obx(() {
+                    final busy = _isChangingStatus.value;
+                    return Row(
+                      children: [
+                        if (busy)
+                          const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                        if (busy) const SizedBox(width: 10),
+                        Switch(
+                          value: isOnline,
+                          onChanged: busy ? null : (value) => _onToggle(value),
+                        ),
+                      ],
+                    );
+                  }),
                 ],
               ),
 
               const SizedBox(height: 16),
 
               // Location Test Button
-              if (locationController.isOnline.value)
-                Container(
+              if (isOnline)
+                SizedBox(
                   width: double.infinity,
-                  margin: const EdgeInsets.only(bottom: 16),
                   child: ElevatedButton.icon(
-                    onPressed: () => _sendLocationManually(context, locationController),
+                    onPressed: () => _sendLocationManually(context),
                     icon: const Icon(Icons.gps_fixed, size: 18),
                     label: Text('update_location'.tr),
                     style: ElevatedButton.styleFrom(
@@ -101,6 +111,8 @@ class DriverStatusCard extends StatelessWidget {
                   ),
                 ),
 
+              const SizedBox(height: 16),
+
               // Available/Busy Status
               Row(
                 children: [
@@ -113,9 +125,9 @@ class DriverStatusCard extends StatelessWidget {
                   Text(
                     driver?.free == true ? 'available'.tr : 'busy'.tr,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: driver?.free == true ? Colors.green : Colors.orange,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      color: driver?.free == true ? Colors.green : Colors.orange,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                   const Spacer(),
                   Container(
@@ -127,9 +139,9 @@ class DriverStatusCard extends StatelessWidget {
                     child: Text(
                       'system_controlled'.tr,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.grey[600],
-                            fontSize: 10,
-                          ),
+                        color: Colors.grey[600],
+                        fontSize: 10,
+                      ),
                     ),
                   ),
                 ],
@@ -138,7 +150,6 @@ class DriverStatusCard extends StatelessWidget {
               if (driver != null) ...[
                 const Divider(height: 32),
 
-                // Driver Info
                 Row(
                   children: [
                     Expanded(
@@ -192,7 +203,61 @@ class DriverStatusCard extends StatelessWidget {
     });
   }
 
-  Future<void> _sendLocationManually(BuildContext context, LocationController locationController) async {
+  Future<void> _onToggle(bool value) async {
+    _isChangingStatus.value = true;
+
+    try {
+      if (value) {
+        final result = await locationController.tryGoOnline();
+
+        switch (result) {
+          case GoOnlineResult.success:
+          // الحالة ستصبح Online تلقائياً لأن isOnline سيتغير داخل الكنترولر
+            break;
+
+          case GoOnlineResult.disclosureDenied:
+            Get.snackbar(
+              'info'.tr,
+              'disclosure_required'.tr,
+              snackPosition: SnackPosition.BOTTOM,
+            );
+            break;
+
+          case GoOnlineResult.permissionDenied:
+            Get.snackbar(
+              'info'.tr,
+              'location_permission_required'.tr,
+              snackPosition: SnackPosition.BOTTOM,
+            );
+            break;
+
+          case GoOnlineResult.serviceDisabled:
+            Get.snackbar(
+              'info'.tr,
+              'location_service_disabled'.tr,
+              snackPosition: SnackPosition.BOTTOM,
+            );
+            break;
+
+          case GoOnlineResult.serverError:
+            Get.snackbar(
+              'error'.tr,
+              'server_error_try_again'.tr,
+              snackPosition: SnackPosition.BOTTOM,
+            );
+            break;
+        }
+      } else {
+        await locationController.goOffline();
+      }
+    } catch (e) {
+      Get.snackbar('error'.tr, e.toString(), snackPosition: SnackPosition.BOTTOM);
+    } finally {
+      _isChangingStatus.value = false;
+    }
+  }
+
+  Future<void> _sendLocationManually(BuildContext context) async {
     Get.dialog(
       AlertDialog(
         content: Row(
@@ -208,7 +273,7 @@ class DriverStatusCard extends StatelessWidget {
 
     try {
       final response = await locationController.sendLocationManually();
-      Get.back(); // Close dialog
+      Get.back();
 
       if (response.isSuccess && response.data != null) {
         Get.snackbar(
@@ -232,7 +297,7 @@ class DriverStatusCard extends StatelessWidget {
         );
       }
     } catch (e) {
-      Get.back(); // Close dialog
+      Get.back();
       Get.snackbar('error'.tr, e.toString(), backgroundColor: Colors.red, colorText: Colors.white);
     }
   }
@@ -245,10 +310,10 @@ class DriverStatusCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildDetailRow('latitude'.tr, '${data['latitude']?.toStringAsFixed(6)}'),
-            _buildDetailRow('longitude'.tr, '${data['longitude']?.toStringAsFixed(6)}'),
-            _buildDetailRow('accuracy'.tr, '${data['accuracy']?.toStringAsFixed(2)} m'),
-            _buildDetailRow('time'.tr, '${data['timestamp']}'),
+            _buildDetailRow('latitude'.tr, '${(data['latitude'] as num?)?.toStringAsFixed(6) ?? '-'}'),
+            _buildDetailRow('longitude'.tr, '${(data['longitude'] as num?)?.toStringAsFixed(6) ?? '-'}'),
+            _buildDetailRow('accuracy'.tr, '${(data['accuracy'] as num?)?.toStringAsFixed(2) ?? '-'} m'),
+            _buildDetailRow('time'.tr, '${data['timestamp'] ?? '-'}'),
           ],
         ),
         actions: [
@@ -288,13 +353,16 @@ class DriverStatusCard extends StatelessWidget {
             Text(
               label,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                  ),
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+              ),
             ),
           ],
         ),
         const SizedBox(height: 4),
-        Text(value, style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
+        Text(
+          value,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+        ),
       ],
     );
   }

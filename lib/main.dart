@@ -3,6 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:provider/provider.dart';
 import 'package:safedest_driver/services/api_service.dart';
+import 'package:safedest_driver/shared_prff.dart';
+import 'Controllers/LocationController.dart';
 import 'firebase_options.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/generated/app_localizations.dart';
@@ -32,14 +34,14 @@ import 'package:safedest_driver/Services/InitialService.dart';
 import 'package:safedest_driver/Languages/LanguageController.dart';
 import 'package:safedest_driver/Languages/Messages.dart';
 import 'package:safedest_driver/Globals/global.dart' as globals;
-import 'package:safedest_driver/shared_prff.dart';
+// import 'package:safedest_driver/shared_prff.dart';
 
 // Global navigation key for handling authentication errors
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await Bool_pref.init();
   // Initialize Firebase with proper error handling
   try {
     debugPrint('🔥 Initializing Firebase...');

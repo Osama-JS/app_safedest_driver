@@ -1,13 +1,26 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:geolocator/geolocator.dart';
+
 import '../Helpers/LocationHelper.dart';
 import '../models/api_response.dart';
+import '../screens/settings/location_disclosure_screen.dart';
+import '../shared_prff.dart';
+
+
+enum GoOnlineResult {
+  success,
+  disclosureDenied,
+  permissionDenied,
+  serviceDisabled,
+  serverError,
+}
 
 class LocationController extends GetxController {
   final LocationHelper _locationHelper = LocationHelper();
+
+
 
   // Reactive state
   final Rxn<Position> currentPosition = Rxn<Position>();
@@ -18,10 +31,17 @@ class LocationController extends GetxController {
   StreamSubscription<Position>? _positionStream;
   Timer? _locationUpdateTimer;
 
+  // Disclosure accepted?
+  final RxBool hasAcceptedDisclosure = false.obs;
+
+  static const String _disclosureKey = 'location_disclosure_accepted';
+
   @override
   void onInit() {
     super.onInit();
-    // getCurrentStatus();
+
+    // IMPORTANT: no "!" here to avoid crash on first launch
+    hasAcceptedDisclosure.value = Bool_pref.getBool(_disclosureKey) ?? false;
   }
 
   @override
@@ -30,101 +50,71 @@ class LocationController extends GetxController {
     super.onClose();
   }
 
-  // Sync with user data
-  void syncWithDriverData({required bool online, required bool free}) {
-    isOnline.value = online;
-    isFree.value = free;
+  /// Navigates to LocationDisclosureScreen (full screen), no dialogs.
+  /// Returns true only if user accepted.
+  Future<bool> ensureDisclosureAccepted() async {
+    if (hasAcceptedDisclosure.value) return true;
 
-    if (online) {
-      startTracking();
-    } else {
-      stopTracking();
-    }
-  }
+    final accepted = await Get.to<bool>(() => const LocationDisclosureScreen());
 
-  // Get current status from server
-  Future<void> fetchCurrentStatus() async {
-    try {
-      final response = await _locationHelper.getCurrentStatus();
-      if (response.isSuccess && response.data != null) {
-        final data = response.data!;
-        if (data['status'] != null) {
-          isOnline.value = data['status']['online'] ?? false;
-          isFree.value = data['status']['free'] ?? true;
-        }
-
-        if (isOnline.value) {
-          startTracking();
-        }
-      }
-    } catch (e) {
-      debugPrint('Error fetching location status: $e');
-    }
-  }
-
-  // Request permission
-  Future<bool> requestPermission() async {
-    LocationPermission permission = await Geolocator.checkPermission();
-
-    if (permission == LocationPermission.whileInUse || permission == LocationPermission.always) {
+    if (accepted == true) {
+      await Bool_pref.setBool(_disclosureKey, true);
+      hasAcceptedDisclosure.value = true;
       return true;
     }
+    return false;
+  }
 
-    // Always show disclosure dialog if not granted yet
-    final bool userAccepted = await _showDisclosureDialog();
-    if (!userAccepted) return false;
+  /// Requests location permissions from OS.
+  /// For background tracking you typically need "always".
+  Future<bool> requestBackgroundPermission() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    debugPrint('permission(before): $permission');
 
-    // Attempt to request permission
-    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      debugPrint('permission(after request1): $permission');
+    }
 
     if (permission == LocationPermission.deniedForever) {
-      // System blocked the dialog, guide user to settings
-      _showSettingsDialog();
+      await Geolocator.openAppSettings();
       return false;
     }
 
-    return permission == LocationPermission.whileInUse || permission == LocationPermission.always;
+    // كثير من الأجهزة تعطي whileInUse فقط
+    if (permission == LocationPermission.whileInUse) {
+      permission = await Geolocator.requestPermission();
+      debugPrint('permission(after request2): $permission');
+    }
+
+    if (permission == LocationPermission.always) return true;
+
+    // إن لم يصل always، غالبًا يحتاج Settings
+    await Geolocator.openAppSettings();
+    permission = await Geolocator.checkPermission();
+    debugPrint('permission(after settings): $permission');
+
+    return permission == LocationPermission.always;
   }
 
-  Future<bool> _showDisclosureDialog() async {
-    final result = await Get.dialog<bool>(
-      AlertDialog(
-        title: Text('locationDisclosureTitle'.tr, style: const TextStyle(fontWeight: FontWeight.bold)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Icon(Icons.location_on, size: 48, color: Colors.blue),
-            const SizedBox(height: 16),
-            Text('locationDisclosureMessage'.tr),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(result: false),
-            child: Text('deny'.tr, style: const TextStyle(color: Colors.grey)),
-          ),
-          ElevatedButton(
-            onPressed: () => Get.back(result: true),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white),
-            child: Text('accept'.tr),
-          ),
-        ],
-      ),
-      barrierDismissible: false,
-    );
-    return result ?? false;
-  }
-
-  // Start tracking
-  Future<bool> startTracking() async {
+  /// Start tracking (does NOT navigate by default).
+  /// Use promptDisclosure=true ONLY from UI actions.
+  Future<bool> startTracking({bool promptDisclosure = false}) async {
     if (isTracking.value) return true;
 
-    bool hasPermission = await requestPermission();
-    if (!hasPermission) return false;
+    // Block if disclosure not accepted
+    if (!hasAcceptedDisclosure.value) {
+      if (!promptDisclosure) return false;
 
-    // Use Android-specific settings for foreground service notification
+      final okDisclosure = await ensureDisclosureAccepted();
+      if (!okDisclosure) return false;
+    }
+
+    final okPerm = await requestBackgroundPermission();
+    if (!okPerm) return false;
+
     late final LocationSettings locationSettings;
+
     if (defaultTargetPlatform == TargetPlatform.android) {
       locationSettings = AndroidSettings(
         accuracy: LocationAccuracy.high,
@@ -146,14 +136,16 @@ class LocationController extends GetxController {
       );
     }
 
+    _positionStream?.cancel();
     _positionStream = Geolocator.getPositionStream(
       locationSettings: locationSettings,
     ).listen(
-      (Position position) {
+          (position) {
         currentPosition.value = position;
-        debugPrint('📍 Live position: ${position.latitude}, ${position.longitude}');
       },
-      onError: (e) => debugPrint('Location stream error: $e'),
+      onError: (e) {
+        debugPrint('Location stream error: $e');
+      },
     );
 
     _startLocationUpdateTimer();
@@ -161,38 +153,124 @@ class LocationController extends GetxController {
     return true;
   }
 
-  // Stop tracking
   void stopTracking() {
     _positionStream?.cancel();
+    _positionStream = null;
     _stopLocationUpdateTimer();
     isTracking.value = false;
   }
 
-  // Go Online
+  Future<GoOnlineResult> tryGoOnline() async {
+    // 1) disclosure
+    final okDisclosure = await ensureDisclosureAccepted();
+    if (!okDisclosure) return GoOnlineResult.disclosureDenied;
+
+    // 2) GPS service
+    final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) return GoOnlineResult.serviceDisabled;
+
+    // 3) permissions
+    final okPerm = await requestBackgroundPermission();
+    if (!okPerm) return GoOnlineResult.permissionDenied;
+
+    // 4) server
+    final res = await _locationHelper.updateDriverStatus(online: true);
+    if (!res.isSuccess) {
+      isOnline.value = false;
+      return GoOnlineResult.serverError;
+    }
+
+    // 5) start tracking
+    isOnline.value = true;
+    final started = await startTracking(promptDisclosure: false);
+    if (!started) {
+      isOnline.value = false;
+      return GoOnlineResult.permissionDenied;
+    }
+
+    return GoOnlineResult.success;
+  }
+
   Future<ApiResponse<void>> goOnline() async {
     final res = await _locationHelper.updateDriverStatus(online: true);
+
     if (res.isSuccess) {
       isOnline.value = true;
-      await startTracking();
+
+      // disclosure + permission already handled in tryGoOnline()
+      // but if goOnline() called elsewhere, do not navigate:
+      await startTracking(promptDisclosure: false);
     }
+
     return res;
   }
 
-  // Go Offline
   Future<ApiResponse<void>> goOffline() async {
     final res = await _locationHelper.updateDriverStatus(online: false);
+
     if (res.isSuccess) {
       isOnline.value = false;
       stopTracking();
     }
+
     return res;
   }
 
-  // Manual update
+  /// Sync from user data (do not navigate from here).
+  /// If online but disclosure not accepted, we prevent tracking and keep offline locally.
+  void syncWithDriverData({required bool online, required bool free}) {
+    isFree.value = free;
+
+    if (online) {
+      if (!hasAcceptedDisclosure.value) {
+        // Prevent background start until user explicitly accepts.
+        isOnline.value = false;
+        stopTracking();
+        return;
+      }
+
+      isOnline.value = true;
+      startTracking(promptDisclosure: false);
+    } else {
+      isOnline.value = false;
+      stopTracking();
+    }
+  }
+
+  /// Fetch current status from server (do not navigate).
+  Future<void> fetchCurrentStatus() async {
+    try {
+      final response = await _locationHelper.getCurrentStatus();
+
+      if (response.isSuccess && response.data != null) {
+        final data = response.data!;
+        final status = data['status'];
+
+        if (status != null) {
+          final online = status['online'] ?? false;
+          final free = status['free'] ?? true;
+
+          // Apply safely without navigation
+          syncWithDriverData(online: online, free: free);
+        }
+      }
+    } catch (e) {
+      debugPrint('Error fetching location status: $e');
+    }
+  }
+
+  /// Manual one-shot update (keeps your logic, but no disclosure navigation here)
   Future<ApiResponse<Map<String, dynamic>>> sendLocationManually() async {
     try {
-      bool hasPermission = await requestPermission();
-      if (!hasPermission) return ApiResponse(success: false, message: 'الصلاحية مطلوبة');
+      final okDisclosure = hasAcceptedDisclosure.value;
+      if (!okDisclosure) {
+        return ApiResponse(success: false, message: 'يجب قبول شاشة التوضيح أولاً');
+      }
+
+      final okPerm = await requestBackgroundPermission();
+      if (!okPerm) {
+        return ApiResponse(success: false, message: 'الصلاحية مطلوبة');
+      }
 
       final pos = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
@@ -210,7 +288,7 @@ class LocationController extends GetxController {
           'longitude': pos.longitude,
           'accuracy': pos.accuracy,
           'timestamp': DateTime.now().toIso8601String(),
-        }
+        },
       );
     } catch (e) {
       return ApiResponse(success: false, message: e.toString());
@@ -219,9 +297,14 @@ class LocationController extends GetxController {
 
   void _startLocationUpdateTimer() {
     _stopLocationUpdateTimer();
+
     _locationUpdateTimer = Timer.periodic(const Duration(minutes: 3), (timer) async {
       if (isOnline.value && currentPosition.value != null) {
-        await _locationHelper.updateLocation(currentPosition.value!);
+        try {
+          await _locationHelper.updateLocation(currentPosition.value!);
+        } catch (e) {
+          debugPrint('Timer updateLocation error: $e');
+        }
       }
     });
   }
@@ -229,20 +312,5 @@ class LocationController extends GetxController {
   void _stopLocationUpdateTimer() {
     _locationUpdateTimer?.cancel();
     _locationUpdateTimer = null;
-  }
-
-  void _showSettingsDialog() {
-    Get.defaultDialog(
-      title: 'locationPermissionDenied'.tr,
-      middleText: 'locationPermissionPermanentlyDenied'.tr,
-      textConfirm: 'settings'.tr,
-      textCancel: 'cancel'.tr,
-      confirmTextColor: Colors.white,
-      buttonColor: Colors.blue,
-      onConfirm: () {
-        Geolocator.openAppSettings();
-        Get.back();
-      },
-    );
   }
 }
