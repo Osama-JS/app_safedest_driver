@@ -16,8 +16,9 @@ class WalletController extends GetxController {
 
   // Added getters requested by user
   double get currentBalance => wallet.value?.balance ?? 0.0;
-  String get currency => wallet.value?.currency ?? 'KWD';
-  double get totalEarnings => earningsStats.value?.totalEarnings ?? 0.0;
+  String get currency => wallet.value?.currency ?? 'SAR';
+  double get totalEarnings => wallet.value?.totalEarnings ?? 0.0;
+  double get pendingAmount => wallet.value?.pendingAmount ?? 0.0;
 
   @override
   void onInit() {

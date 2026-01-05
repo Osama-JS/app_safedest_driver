@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
-import '../services/wallet_service.dart';
+import '../Controllers/WalletController.dart';
 import '../models/wallet.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -15,6 +14,7 @@ class EarningsChartCard extends StatefulWidget {
 class _EarningsChartCardState extends State<EarningsChartCard> {
   EarningsPeriod _selectedPeriod = EarningsPeriod.month;
   bool _isLoading = false;
+  final WalletController _walletController = Get.find<WalletController>();
 
   @override
   void initState() {
@@ -29,8 +29,7 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
       _isLoading = true;
     });
 
-    final walletService = Provider.of<WalletService>(context, listen: false);
-    await walletService.getEarningsStats(period: _selectedPeriod);
+    await _walletController.fetchEarningsStats(period: _selectedPeriod.value);
 
     if (mounted) {
       setState(() {
@@ -41,50 +40,48 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<WalletService>(
-      builder: (context, walletService, child) {
-        return Card(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(
-                    Icons.bar_chart,
-                    color: Theme.of(context).colorScheme.primary,
-                    size: 24,
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    'earningsStatistics'.tr,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                ],
-              ),
+    return Obx(() {
+      return Card(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.bar_chart,
+                  color: Theme.of(context).colorScheme.primary,
+                  size: 24,
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  'earningsStatistics'.tr,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ],
+            ),
 
-              const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-              // Period Selector
-              _buildPeriodSelector(context),
+            // Period Selector
+            _buildPeriodSelector(context),
 
-              const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-              // Chart or Loading
-              _isLoading
-                  ? _buildLoadingChart(context)
-                  : _buildEarningsChart(context, walletService),
+            // Chart or Loading
+            _isLoading
+                ? _buildLoadingChart(context)
+                : _buildEarningsChart(context, _walletController),
 
-              const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-              // Quick Stats
-              _buildQuickStats(context, walletService),
-            ],
-          ),
-        );
-      },
-    );
+            // Quick Stats
+            _buildQuickStats(context, _walletController),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildPeriodSelector(BuildContext context) {
@@ -157,8 +154,8 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
   }
 
   Widget _buildEarningsChart(
-      BuildContext context, WalletService walletService) {
-    final earningsStats = walletService.earningsStats;
+      BuildContext context, WalletController walletController) {
+    final earningsStats = walletController.earningsStats.value;
 
     if (earningsStats == null ||
         earningsStats.stats.dailyEarnings.isEmpty ||
@@ -369,8 +366,8 @@ class _EarningsChartCardState extends State<EarningsChartCard> {
     );
   }
 
-  Widget _buildQuickStats(BuildContext context, WalletService walletService) {
-    final earningsStats = walletService.earningsStats;
+  Widget _buildQuickStats(BuildContext context, WalletController walletController) {
+    final earningsStats = walletController.earningsStats.value;
 
     if (earningsStats == null || earningsStats.stats.totalEarnings == 0.0) {
       return _buildEmptyStats(context);

@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
       debugPrint('Home data loading...');
 
       await Future.wait([
-        _locationController.startTracking(),
+        if (_locationController.isOnline.value) _locationController.startTracking(),
         _taskController.fetchTasks(page: 1, perPage: 5),
         _taskController.checkPendingTasks(),
         _walletController.fetchWallet(),

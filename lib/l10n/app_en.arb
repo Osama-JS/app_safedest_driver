@@ -411,6 +411,11 @@
     "description": "Offline status"
   },
 
+  "notSpecified": "Not Specified",
+  "@notSpecified": {
+    "description": "Not specified status"
+  },
+
   "accountInfo": "Account Information",
   "@accountInfo": {
     "description": "Account information title"

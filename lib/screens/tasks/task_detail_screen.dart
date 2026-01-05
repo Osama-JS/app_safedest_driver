@@ -5,6 +5,9 @@ import '../../models/task.dart';
 import '../../Controllers/TaskController.dart';
 import '../../widgets/task_status_stepper.dart';
 import '../../widgets/task_history_sheet.dart';
+import '../../config/app_config.dart';
+import '../../services/mapbox_service.dart';
+import '../../Controllers/LocationController.dart';
 
 class TaskDetailScreen extends StatefulWidget {
   final Task task;
@@ -21,7 +24,12 @@ class TaskDetailScreen extends StatefulWidget {
 class _TaskDetailScreenState extends State<TaskDetailScreen> {
   final TaskController _taskController = Get.find<TaskController>();
   final Rxn<Task> _currentTask = Rxn<Task>();
-  final RxBool _isLoading = true.obs;
+  final RxBool _isLoading = false.obs;
+  final LocationController _locationController = Get.find<LocationController>();
+
+  final Rxn<double> _distancePickupToDelivery = Rxn<double>();
+  final Rxn<double> _distanceDriverToPickup = Rxn<double>();
+  final Rxn<double> _distanceDriverToDelivery = Rxn<double>();
 
   @override
   void initState() {
@@ -36,6 +44,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
       final response = await _taskController.getTaskDetails(widget.task.id);
       if (response.isSuccess && response.data != null) {
         _currentTask.value = response.data;
+        _calculateDistances();
       }
     } catch (e) {
       Get.snackbar(
@@ -252,6 +261,14 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                     if (task.additionalData != null &&
                         task.additionalData!.isNotEmpty)
                       _buildAdditionalDataCard(),
+
+                    if (task.conditions != null && task.conditions!.isNotEmpty) ...[
+                      const SizedBox(height: 16),
+                      _buildConditionsCard(),
+                    ],
+
+                    const SizedBox(height: 16),
+                    _buildDistancesCard(),
 
                     const SizedBox(height: 32),
                   ],
@@ -658,47 +675,717 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
 
   Widget _buildAdditionalDataCard() {
     final task = _currentTask.value!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  Icons.info_outline,
+                  color: Theme.of(context).primaryColor,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'additionalData'.tr,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 8),
+        ...task.additionalData!.entries.map((entry) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: _buildDataField(entry.key, entry.value),
+          );
+        }),
+      ],
+    );
+  }
+
+  Widget _buildDataField(String key, dynamic value) {
+    if (value == null) return const SizedBox.shrink();
+
+    // Handle different data types
+    if (value is Map<String, dynamic>) {
+      return _buildComplexField(key, value);
+    } else {
+      return _buildSimpleField(key, value.toString());
+    }
+  }
+
+  Widget _buildSimpleField(String key, String value) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'additionalData'.tr,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
+              _getFieldLabel(key),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).primaryColor,
                   ),
             ),
-            const SizedBox(height: 16),
-            ...task.additionalData!.entries.map((entry) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          entry.key,
-                          style: const TextStyle(fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        flex: 3,
-                        child: Text(
-                          entry.value?.toString() ?? '',
-                          style: TextStyle(color: Colors.grey[700]),
-                        ),
-                      ),
-                    ],
-                  ),
-                )),
+            const SizedBox(height: 8),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: isDark
+                    ? Theme.of(context).colorScheme.surface.withOpacity(0.5)
+                    : Theme.of(context).colorScheme.surface,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                ),
+              ),
+              child: Text(
+                value.isNotEmpty ? value : 'not_specified'.tr,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: value.isNotEmpty
+                          ? Theme.of(context).colorScheme.onSurface
+                          : Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.5),
+                    ),
+              ),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildComplexField(String key, Map<String, dynamic> fieldData) {
+    final label = fieldData['label'] ?? _getFieldLabel(key);
+    final value = fieldData['value'];
+    final type = fieldData['type'] ?? 'text';
+    final expiration = fieldData['expiration'];
+    final text = fieldData['text'];
+
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Field label with type indicator
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    label,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                  ),
+                ),
+                _buildTypeIndicator(type),
+              ],
+            ),
+            const SizedBox(height: 12),
+
+            // Handle different field types
+            if (type == 'file' || type == 'image') ...[
+              _buildFileField(value, type, label),
+            ] else if (type == 'file_expiration_date') ...[
+              _buildFileWithExpirationField(value, expiration, label),
+            ] else if (type == 'file_with_text') ...[
+              _buildFileWithTextField(value, text, label),
+            ] else if (type == 'date') ...[
+              _buildDateField(value),
+            ] else if (type == 'number') ...[
+              _buildNumberField(value),
+            ] else if (type == 'email') ...[
+              _buildEmailField(value),
+            ] else if (type == 'phone') ...[
+              _buildPhoneField(value),
+            ] else if (type == 'url') ...[
+              _buildUrlField(value),
+            ] else ...[
+              _buildTextValue(value),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTypeIndicator(String type) {
+    IconData icon;
+    Color color;
+    String tooltip;
+
+    switch (type) {
+      case 'file':
+        icon = Icons.attach_file;
+        color = Colors.blue;
+        tooltip = 'file_type_file'.tr;
+        break;
+      case 'image':
+        icon = Icons.image;
+        color = Colors.green;
+        tooltip = 'file_type_image'.tr;
+        break;
+      case 'date':
+        icon = Icons.calendar_today;
+        color = Colors.orange;
+        tooltip = 'file_type_date'.tr;
+        break;
+      case 'number':
+        icon = Icons.numbers;
+        color = Colors.purple;
+        tooltip = 'file_type_number'.tr;
+        break;
+      case 'email':
+        icon = Icons.email;
+        color = Colors.red;
+        tooltip = 'email'.tr;
+        break;
+      case 'phone':
+        icon = Icons.phone;
+        color = Colors.teal;
+        tooltip = 'phone'.tr;
+        break;
+      case 'url':
+        icon = Icons.link;
+        color = Colors.indigo;
+        tooltip = 'file_type_url'.tr;
+        break;
+      case 'file_expiration_date':
+        icon = Icons.schedule;
+        color = Colors.amber;
+        tooltip = 'file_type_file_expiration'.tr;
+        break;
+      case 'file_with_text':
+        icon = Icons.description;
+        color = Colors.cyan;
+        tooltip = 'file_type_file_text'.tr;
+        break;
+      default:
+        icon = Icons.text_fields;
+        color = Colors.grey;
+        tooltip = 'file_type_text'.tr;
+    }
+
+    return Tooltip(
+      message: tooltip,
+      child: Container(
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Icon(
+          icon,
+          size: 16,
+          color: color,
+        ),
+      ),
+    );
+  }
+
+  bool _isImage(String path) {
+    if (path.isEmpty) return false;
+    final extension = path.split('.').last.toLowerCase();
+    return ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic'].contains(extension);
+  }
+
+  void _showImageDialog(String imageUrl, String label) {
+    Get.dialog(
+      Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.all(10),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  onPressed: () => Get.back(),
+                  icon: const Icon(Icons.close, color: Colors.white, size: 30),
+                ),
+              ],
+            ),
+            Container(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.7,
+                maxWidth: MediaQuery.of(context).size.width * 0.9,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.network(
+                  imageUrl,
+                  fit: BoxFit.contain,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return const Center(
+                      child: CircularProgressIndicator(color: Colors.white),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    color: Colors.white,
+                    padding: const EdgeInsets.all(20),
+                    child: const Icon(Icons.broken_image, size: 50, color: Colors.red),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                label,
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFileField(dynamic value, String type, String label) {
+    if (value == null || value.toString().isEmpty) {
+      return _buildEmptyValue();
+    }
+
+    final imageUrl = AppConfig.getStorageUrl(value.toString());
+    final isImageFile = type == 'image' || _isImage(imageUrl);
+    final primaryColor = Theme.of(context).primaryColor;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (isImageFile)
+          GestureDetector(
+            onTap: () => _showImageDialog(imageUrl, label),
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              width: double.infinity,
+              height: 200,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: primaryColor.withOpacity(0.3)),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.network(
+                  imageUrl,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return const Center(child: CircularProgressIndicator());
+                  },
+                  errorBuilder: (context, error, stackTrace) => Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.broken_image, color: Colors.red),
+                        const SizedBox(height: 8),
+                        Text('errorLoadingImage'.tr, style: const TextStyle(fontSize: 12)),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+        // Only show file details if NOT an image
+        if (!isImageFile)
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: isDark
+                  ? primaryColor.withOpacity(0.1)
+                  : primaryColor.withOpacity(0.05),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: primaryColor.withOpacity(0.3),
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.attach_file,
+                  color: primaryColor,
+                  size: 24,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'attached_file'.tr,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        value.toString().split('/').last,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.7),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  onPressed: () async {
+                    final url = Uri.parse(imageUrl);
+                    if (await canLaunchUrl(url)) {
+                      await launchUrl(url, mode: LaunchMode.externalApplication);
+                    } else {
+                      Get.snackbar('error'.tr, 'errorOpeningAttachment'.trParams({'error': ''}));
+                    }
+                  },
+                  icon: Icon(
+                    Icons.open_in_new,
+                    color: primaryColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildFileWithExpirationField(dynamic value, dynamic expiration, String label) {
+    return Column(
+      children: [
+        if (value != null) _buildFileField(value, 'file', label),
+        if (value != null && expiration != null) const SizedBox(height: 12),
+        if (expiration != null) ...[
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Theme.of(context)
+                  .colorScheme
+                  .errorContainer
+                  .withOpacity(0.3),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color:
+                    Theme.of(context).colorScheme.error.withOpacity(0.5),
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.schedule,
+                  color: Theme.of(context).colorScheme.error,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'expiration_date_label'.trParams({'date': expiration.toString()}),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(context).colorScheme.onErrorContainer,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildFileWithTextField(dynamic value, dynamic text, String label) {
+    return Column(
+      children: [
+        if (value != null) _buildFileField(value, 'file', label),
+        if (value != null && text != null) const SizedBox(height: 12),
+        if (text != null) _buildTextValue(text),
+      ],
+    );
+  }
+
+  Widget _buildDateField(dynamic value) {
+    if (value == null || value.toString().isEmpty) {
+      return _buildEmptyValue();
+    }
+
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final successColor = Theme.of(context).colorScheme.primary;
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: isDark
+            ? successColor.withOpacity(0.1)
+            : successColor.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: successColor.withOpacity(0.3),
+        ),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.calendar_today,
+            color: successColor,
+            size: 20,
+          ),
+          const SizedBox(width: 12),
+          Text(
+            value.toString(),
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTextValue(dynamic value) {
+    if (value == null || value.toString().isEmpty) {
+      return _buildEmptyValue();
+    }
+
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: isDark
+            ? Theme.of(context).colorScheme.surface.withOpacity(0.5)
+            : Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+        ),
+      ),
+      child: Text(
+        value.toString(),
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+      ),
+    );
+  }
+
+  Widget _buildNumberField(dynamic value) {
+    if (value == null || value.toString().isEmpty) {
+      return _buildEmptyValue();
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.purple[50],
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.purple[200]!),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.numbers,
+            color: Colors.purple[600],
+            size: 20,
+          ),
+          const SizedBox(width: 12),
+          Text(
+            value.toString(),
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              color: Colors.purple[800],
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmailField(dynamic value) {
+    if (value == null || value.toString().isEmpty) {
+      return _buildEmptyValue();
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.red[50],
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.red[200]!),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.email,
+            color: Colors.red[600],
+            size: 20,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              value.toString(),
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Colors.red[800],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPhoneField(dynamic value) {
+    if (value == null || value.toString().isEmpty) {
+      return _buildEmptyValue();
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.teal[50],
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.teal[200]!),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.phone,
+            color: Colors.teal[600],
+            size: 20,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              value.toString(),
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Colors.teal[800],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUrlField(dynamic value) {
+    if (value == null || value.toString().isEmpty) {
+      return _buildEmptyValue();
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.indigo[50],
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.indigo[200]!),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.link,
+            color: Colors.indigo[600],
+            size: 20,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              value.toString(),
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Colors.indigo[800],
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
+          IconButton(
+            onPressed: () async {
+              final url = Uri.parse(value.toString());
+              if (await canLaunchUrl(url)) {
+                await launchUrl(url, mode: LaunchMode.externalApplication);
+              }
+            },
+            icon: Icon(
+              Icons.open_in_new,
+              color: Colors.indigo[600],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyValue() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: isDark
+            ? Theme.of(context).colorScheme.surface.withOpacity(0.3)
+            : Theme.of(context).colorScheme.surface.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+        ),
+      ),
+      child: Text(
+        'not_specified'.tr,
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withOpacity(0.5),
+            ),
+      ),
+    );
+  }
+
+  String _getFieldLabel(String key) {
+    return key;
   }
 
   Widget _buildActionButtons() {
@@ -846,5 +1533,147 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         colorText: Colors.white,
       );
     }
+  }
+
+  Future<void> _calculateDistances() async {
+    final task = _currentTask.value;
+    if (task == null) return;
+
+    // 1. Pickup to Delivery
+    if (task.pickupPoint != null && task.deliveryPoint != null) {
+      final distance = await MapboxService.getDrivingDistance(
+        task.pickupPoint!.latitude,
+        task.pickupPoint!.longitude,
+        task.deliveryPoint!.latitude,
+        task.deliveryPoint!.longitude,
+      );
+      _distancePickupToDelivery.value = distance;
+    }
+
+    // 2. Driver to Pickup
+    final currentPos = _locationController.currentPosition.value;
+    if (currentPos != null && task.pickupPoint != null) {
+      final distance = await MapboxService.getDrivingDistance(
+        currentPos.latitude,
+        currentPos.longitude,
+        task.pickupPoint!.latitude,
+        task.pickupPoint!.longitude,
+      );
+      _distanceDriverToPickup.value = distance;
+    }
+
+    // 3. Driver to Delivery
+    if (currentPos != null && task.deliveryPoint != null) {
+      final distance = await MapboxService.getDrivingDistance(
+        currentPos.latitude,
+        currentPos.longitude,
+        task.deliveryPoint!.latitude,
+        task.deliveryPoint!.longitude,
+      );
+      _distanceDriverToDelivery.value = distance;
+    }
+  }
+
+  Widget _buildConditionsCard() {
+    return Card(
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.gavel, color: Theme.of(context).primaryColor),
+                const SizedBox(width: 12),
+                Text(
+                  'conditions'.tr,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              _currentTask.value?.conditions ?? '',
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDistancesCard() {
+    return Card(
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.straighten, color: Theme.of(context).primaryColor),
+                const SizedBox(width: 12),
+                Text(
+                  'distances'.tr,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            _buildDistanceRow(
+              'distancePickupToDelivery'.tr,
+              _distancePickupToDelivery.value,
+            ),
+            const Divider(),
+            _buildDistanceRow(
+              'distanceDriverToPickup'.tr,
+              _distanceDriverToPickup.value,
+            ),
+            const Divider(),
+            _buildDistanceRow(
+              'distanceDriverToDelivery'.tr,
+              _distanceDriverToDelivery.value,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDistanceRow(String label, double? distance) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(fontWeight: FontWeight.w500),
+          ),
+          if (distance != null)
+            Text(
+              '${distance.toStringAsFixed(2)} ${'km'.tr}',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+              ),
+            )
+          else
+            const SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+        ],
+      ),
+    );
   }
 }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../services/wallet_service.dart';
+import '../../Controllers/WalletController.dart';
+import '../../Controllers/TaskController.dart';
 import '../../models/wallet.dart';
+import '../../screens/tasks/task_detail_screen.dart';
 import '../../utils/debug_helper.dart';
 import '../../config/app_config.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -18,8 +20,10 @@ class TransactionsScreen extends StatefulWidget {
 class _TransactionsScreenState extends State<TransactionsScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final ScrollController _scrollController = ScrollController();
+  final WalletController _walletController = Get.find<WalletController>();
+  final TaskController _taskController = Get.find<TaskController>();
   final TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
   int _currentPage = 1;
   bool _isLoadingMore = false;
@@ -53,8 +57,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
   }
 
   Future<void> _loadTransactions() async {
-    final walletService = Provider.of<WalletService>(context, listen: false);
-    await walletService.getTransactions(refresh: true);
+    await _walletController.fetchTransactions(refresh: true);
   }
 
   Future<void> _loadMoreTransactions() async {
@@ -64,11 +67,9 @@ class _TransactionsScreenState extends State<TransactionsScreen>
       _isLoadingMore = true;
     });
 
-    final walletService = Provider.of<WalletService>(context, listen: false);
     _currentPage++;
-
     try {
-      await walletService.getTransactions(page: _currentPage);
+      await _walletController.fetchTransactions(page: _currentPage);
     } catch (e) {
       DebugHelper.log('Error loading more transactions: $e',
           tag: 'TRANSACTIONS');
@@ -223,100 +224,100 @@ class _TransactionsScreenState extends State<TransactionsScreen>
   }
 
   Widget _buildTransactionsList({WalletTransactionType? type}) {
-    return Consumer<WalletService>(
-      builder: (context, walletService, child) {
-        List<WalletTransaction> transactions = walletService.transactions;
+    return Obx(() {
+      List<WalletTransaction> transactions = _walletController.transactions.toList();
+      final isLoading = _walletController.isLoading.value;
+      final errorMessage = _walletController.errorMessage.value;
 
-        if (type != null) {
-          transactions = transactions
-              .where((transaction) => transaction.type == type.value)
-              .toList();
-        }
+      if (type != null) {
+        transactions = transactions
+            .where((transaction) => transaction.type.toLowerCase() == type.value.toLowerCase())
+            .toList();
+      }
 
-        // تطبيق الفلاتر
-        transactions = _getFilteredTransactions(transactions);
+      // تطبيق الفلاتر
+      transactions = _getFilteredTransactions(transactions);
 
-        return RefreshIndicator(
-          onRefresh: _refreshTransactions,
-          child: _buildStateHandler(
-            isLoading: walletService.isLoading && transactions.isEmpty,
-            hasError: walletService.hasError,
-            errorMessage: walletService.errorMessage,
-            data: transactions,
-            onRetry: _loadTransactions,
-            emptyMessage: AppLocalizations.of(context)!.noTransactions,
-            emptyDescription: type != null
-                ? '${AppLocalizations.of(context)!.noTransactionsOfType} ${type.displayName}'
-                : AppLocalizations.of(context)!.noTransactionsFound,
-            loadingMessage: AppLocalizations.of(context)!.loadingTransactions,
-            builder: (transactions) => ListView.builder(
-              controller: _scrollController,
-              padding: const EdgeInsets.all(16),
-              itemCount: transactions.length + (_isLoadingMore ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index == transactions.length) {
-                  return const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                }
+      return RefreshIndicator(
+        onRefresh: _refreshTransactions,
+        child: _buildStateHandler(
+          isLoading: isLoading && transactions.isEmpty,
+          hasError: errorMessage.isNotEmpty,
+          errorMessage: errorMessage,
+          data: transactions,
+          onRetry: _loadTransactions,
+          emptyMessage: AppLocalizations.of(context)!.noTransactions,
+          emptyDescription: type != null
+              ? '${AppLocalizations.of(context)!.noTransactionsOfType} ${type.displayName}'
+              : AppLocalizations.of(context)!.noTransactionsFound,
+          loadingMessage: AppLocalizations.of(context)!.loadingTransactions,
+          builder: (transactions) => ListView.builder(
+            controller: _scrollController,
+            padding: const EdgeInsets.all(16),
+            itemCount: transactions.length + (_isLoadingMore ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (index == transactions.length) {
+                return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
 
-                return _buildAdvancedTransactionCard(transactions[index]);
-              },
-            ),
+              return _buildAdvancedTransactionCard(transactions[index]);
+            },
           ),
-        );
-      },
-    );
+        ),
+      );
+    });
   }
 
   Widget _buildTransactionsWithAttachments() {
-    return Consumer<WalletService>(
-      builder: (context, walletService, child) {
-        List<WalletTransaction> transactions = walletService.transactions
-            .where((transaction) =>
-                transaction.image != null && transaction.image!.isNotEmpty)
-            .toList();
+    return Obx(() {
+      List<WalletTransaction> transactions = _walletController.transactions
+          .where((transaction) =>
+              transaction.image != null && transaction.image!.isNotEmpty)
+          .toList();
+      final isLoading = _walletController.isLoading.value;
+      final errorMessage = _walletController.errorMessage.value;
 
-        // تطبيق الفلاتر
-        transactions = _getFilteredTransactions(transactions);
+      // تطبيق الفلاتر
+      transactions = _getFilteredTransactions(transactions);
 
-        return RefreshIndicator(
-          onRefresh: _refreshTransactions,
-          child: _buildStateHandler(
-            isLoading: walletService.isLoading && transactions.isEmpty,
-            hasError: walletService.hasError,
-            errorMessage: walletService.errorMessage,
-            data: transactions,
-            onRetry: _loadTransactions,
-            emptyMessage:
-                AppLocalizations.of(context)!.noTransactionsWithAttachments,
-            emptyDescription: AppLocalizations.of(context)!
-                .noTransactionsWithAttachmentsDescription,
-            loadingMessage: AppLocalizations.of(context)!.loadingTransactions,
-            builder: (transactions) => ListView.builder(
-              controller: _scrollController,
-              padding: const EdgeInsets.all(16),
-              itemCount: transactions.length + (_isLoadingMore ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index == transactions.length) {
-                  return const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                }
+      return RefreshIndicator(
+        onRefresh: _refreshTransactions,
+        child: _buildStateHandler(
+          isLoading: isLoading && transactions.isEmpty,
+          hasError: errorMessage.isNotEmpty,
+          errorMessage: errorMessage,
+          data: transactions,
+          onRetry: _loadTransactions,
+          emptyMessage:
+              AppLocalizations.of(context)!.noTransactionsWithAttachments,
+          emptyDescription: AppLocalizations.of(context)!
+              .noTransactionsWithAttachmentsDescription,
+          loadingMessage: AppLocalizations.of(context)!.loadingTransactions,
+          builder: (transactions) => ListView.builder(
+            controller: _scrollController,
+            padding: const EdgeInsets.all(16),
+            itemCount: transactions.length + (_isLoadingMore ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (index == transactions.length) {
+                return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
 
-                return _buildAdvancedTransactionCard(transactions[index]);
-              },
-            ),
+              return _buildAdvancedTransactionCard(transactions[index]);
+            },
           ),
-        );
-      },
-    );
+        ),
+      );
+    });
   }
 
   Widget _buildAdvancedTransactionCard(WalletTransaction transaction) {
@@ -481,6 +482,23 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                   ),
                 ),
               ],
+              if (transaction.taskId != null) ...[
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: () => _viewTask(transaction.taskId!),
+                    icon: const Icon(Icons.assignment_outlined, size: 18),
+                    label: Text(AppLocalizations.of(context)!.viewDetails),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ],
           ),
         ),
@@ -550,6 +568,35 @@ class _TransactionsScreenState extends State<TransactionsScreen>
     return imageExtensions.any((ext) => lowerFilename.endsWith(ext));
   }
 
+  void _viewTask(int taskId) async {
+    Get.dialog(
+      const Center(child: CircularProgressIndicator()),
+      barrierDismissible: false,
+    );
+
+    try {
+      final response = await _taskController.getTaskDetails(taskId);
+      Get.back(); // close loading
+
+      if (response.isSuccess && response.data != null) {
+        Get.to(() => TaskDetailScreen(task: response.data!));
+      } else {
+        Get.snackbar(
+          AppLocalizations.of(context)!.errorTitle,
+          response.message ?? AppLocalizations.of(context)!.taskNotFound,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+    } catch (e) {
+      Get.back();
+      Get.snackbar(
+        AppLocalizations.of(context)!.errorTitle,
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+  }
+
   void _showAdvancedTransactionDetails(WalletTransaction transaction) {
     showModalBottomSheet(
       context: context,
@@ -574,7 +621,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
           Row(
             children: [
               Text(
-                'تفاصيل المعاملة',
+                'transaction_details'.tr,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -588,7 +635,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
           ),
           const SizedBox(height: 24),
           _buildDetailRow(AppLocalizations.of(context)!.amount,
-              '${transaction.amount.toStringAsFixed(2)} ر.س'),
+              '${transaction.amount.toStringAsFixed(2)} ' + 'sar'.tr),
           _buildDetailRow(AppLocalizations.of(context)!.type,
               WalletTransactionType.fromString(transaction.type).displayName),
           _buildDetailRow(AppLocalizations.of(context)!.description,
@@ -626,6 +673,28 @@ class _TransactionsScreenState extends State<TransactionsScreen>
             ),
             const SizedBox(height: 12),
             _buildAttachmentWidget(transaction.image!),
+          ],
+          // Show button if taskId exists and is greater than 0
+          if (transaction.taskId != null && transaction.taskId! > 0) ...[
+            const SizedBox(height: 24),
+            const Divider(),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.pop(context);
+                  _viewTask(transaction.taskId!);
+                },
+                icon: const Icon(Icons.assignment_outlined),
+                label: Text(AppLocalizations.of(context)!.viewDetails),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Colors.white,
+                ),
+              ),
+            ),
           ],
           const SizedBox(height: 24),
         ],

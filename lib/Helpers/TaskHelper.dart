@@ -23,13 +23,15 @@ class TaskHelper {
       AppConfig.tasksEndpoint,
       queryParams: queryParams,
       fromJson: (data) {
-        if (data['data'] != null && data['data']['tasks'] != null) {
-          return TaskListResponse.fromJson(data['data']);
-        } else if (data['tasks'] != null) {
-          return TaskListResponse.fromJson(data);
-        } else {
-          return TaskListResponse.fromJson(data['data'] ?? data);
+        if (data is List) {
+          return TaskListResponse(
+            tasks: data.map((json) => Task.fromJson(json)).whereType<Task>().toList(),
+            currentPage: 1,
+            lastPage: 1,
+            total: data.length,
+          );
         }
+        return TaskListResponse.fromJson(data);
       },
     );
   }
@@ -116,14 +118,22 @@ class TaskHelper {
       AppConfig.taskHistoryEndpoint,
       queryParams: queryParams,
       fromJson: (data) {
-        int? parseInt(dynamic value) {
-          if (value == null) return null;
-          if (value is int) return value;
-          if (value is String) return int.tryParse(value);
-          return null;
+        if (data is List) {
+          return TaskListResponse(
+            tasks: data.map((json) => Task.fromJson(json)).whereType<Task>().toList(),
+            currentPage: 1,
+            lastPage: 1,
+            total: data.length,
+          );
         }
 
         if (data['tasks'] != null) {
+          int? parseInt(dynamic value) {
+            if (value == null) return null;
+            if (value is int) return value;
+            if (value is String) return int.tryParse(value);
+            return null;
+          }
           final pagination = data['pagination'] ?? {};
           return TaskListResponse(
             tasks: (data['tasks'] as List)
@@ -133,11 +143,11 @@ class TaskHelper {
             lastPage: parseInt(pagination['last_page']) ?? 1,
             total: parseInt(pagination['total']) ?? 0,
           );
-        } else if (data['data'] != null) {
-          return TaskListResponse.fromJson(data['data']);
-        } else {
-          return TaskListResponse.fromJson(data);
         }
+        // When using standard pagination (data contains list), 'data' passed here is already the pagination object
+        // containing 'data' (List) and 'current_page' etc.
+        // We should NOT try to unwrap data['data'] here because that would pass a List to fromJson, causing an error.
+        return TaskListResponse.fromJson(data);
       },
     );
   }

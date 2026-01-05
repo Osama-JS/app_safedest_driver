@@ -104,6 +104,7 @@ class WalletTransaction {
   final DateTime? maturityTime;
   final String? referenceId;
   final String? image; // للصور أو ملفات PDF
+  final int? taskId;
 
   WalletTransaction({
     required this.id,
@@ -115,6 +116,7 @@ class WalletTransaction {
     this.maturityTime,
     this.referenceId,
     this.image,
+    this.taskId,
   });
 
   factory WalletTransaction.fromJson(Map<String, dynamic> json) {
@@ -128,6 +130,7 @@ class WalletTransaction {
       maturityTime: _parseToDateTime(json['maturity_time']),
       referenceId: Wallet._parseToString(json['reference_id']),
       image: Wallet._parseToString(json['image']),
+      taskId: _parseToInt(json['task_id']),
     );
   }
 
@@ -162,6 +165,7 @@ class WalletTransaction {
       'created_at': createdAt.toIso8601String(),
       'maturity_time': maturityTime?.toIso8601String(),
       'reference_id': referenceId,
+      'task_id': taskId,
     };
   }
 

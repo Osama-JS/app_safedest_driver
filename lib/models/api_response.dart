@@ -27,8 +27,8 @@ class ApiResponse<T> {
     return ApiResponse<T>(
       success: json['success'] ?? false,
       message: json['message'],
-      data: json['data'] != null && fromJsonT != null
-          ? fromJsonT(json['data'])
+      data: fromJsonT != null
+          ? fromJsonT(json['data'] ?? json)
           : json['data'],
       errors: json['errors'],
       errorCode: json['error_code'],
@@ -247,6 +247,37 @@ class EarningsStatsResponse {
     return {
       'success': success,
       'stats': stats?.toJson(),
+    };
+  }
+}
+class AppStatus {
+  final bool success;
+  final String minVersion;
+  final String updateUrl;
+  final String serverTime;
+
+  AppStatus({
+    required this.success,
+    required this.minVersion,
+    required this.updateUrl,
+    required this.serverTime,
+  });
+
+  factory AppStatus.fromJson(Map<String, dynamic> json) {
+    return AppStatus(
+      success: json['success'] ?? false,
+      minVersion: json['min_version'] ?? '1.0.0',
+      updateUrl: json['update_url'] ?? '',
+      serverTime: json['server_time'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'success': success,
+      'min_version': minVersion,
+      'update_url': updateUrl,
+      'server_time': serverTime,
     };
   }
 }

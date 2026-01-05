@@ -154,6 +154,7 @@ class LocationController extends GetxController {
   }
 
   void stopTracking() {
+    debugPrint('🛑 Stopping location tracking...');
     _positionStream?.cancel();
     _positionStream = null;
     _stopLocationUpdateTimer();
@@ -222,16 +223,21 @@ class LocationController extends GetxController {
     isFree.value = free;
 
     if (online) {
+      isOnline.value = true;
       if (!hasAcceptedDisclosure.value) {
         // Prevent background start until user explicitly accepts.
+        debugPrint('⚠️ Sync: Online but disclosure NOT accepted. Stopping tracking.');
         isOnline.value = false;
         stopTracking();
         return;
       }
 
-      isOnline.value = true;
-      startTracking(promptDisclosure: false);
+      debugPrint('✅ Sync: Online. Starting tracking if not already active.');
+      if (!isTracking.value) {
+        startTracking(promptDisclosure: false);
+      }
     } else {
+      debugPrint('ℹ️ Sync: Offline. Stopping tracking.');
       isOnline.value = false;
       stopTracking();
     }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../services/auth_service.dart';
 import '../../widgets/custom_button.dart';
+import '../../config/app_config.dart';
 
 class AdditionalDataScreen extends StatefulWidget {
   const AdditionalDataScreen({super.key});
@@ -38,18 +41,25 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
         });
         debugPrint('Additional data loaded: $_additionalData');
       } else {
+        // Log real error to console
+        debugPrint('API Error loading additional data: ${response.message}');
+        debugPrint('API Error details: ${response.errors}');
+
         setState(() {
-          _errorMessage =
-              response.errorMessage ?? 'فشل في جلب البيانات الإضافية';
+           // Show user-friendly error message
+          _errorMessage = 'error_loading_additional_data'.tr;
           _isLoading = false;
         });
       }
     } catch (e) {
+      // Log Exception to console
+      debugPrint('Exception loading additional data: $e');
+
       setState(() {
-        _errorMessage = 'حدث خطأ أثناء جلب البيانات: $e';
+        // Show user-friendly error message
+        _errorMessage = 'error_loading_additional_data'.tr;
         _isLoading = false;
       });
-      debugPrint('Error loading additional data: $e');
     }
   }
 
@@ -57,7 +67,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('البيانات الإضافية'),
+        title: Text('additionalData'.tr),
         elevation: 0,
       ),
       body: _isLoading
@@ -87,25 +97,28 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            'حدث خطأ',
+            'error_occurred_title'.tr,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   color: errorColor,
                 ),
           ),
           const SizedBox(height: 8),
-          Text(
-            _errorMessage!,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withOpacity(0.7),
-                ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Text(
+              _errorMessage!,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withOpacity(0.7),
+                  ),
+            ),
           ),
           const SizedBox(height: 32),
           CustomButton(
-            text: 'إعادة المحاولة',
+            text: 'retry'.tr,
             onPressed: _loadAdditionalData,
             backgroundColor: errorColor,
           ),
@@ -147,7 +160,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'البيانات الإضافية',
+                            'additionalData'.tr,
                             style: Theme.of(context)
                                 .textTheme
                                 .titleLarge
@@ -157,7 +170,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'المعلومات التكميلية المسجلة في ملفك الشخصي',
+                            'supplementary_info_desc'.tr,
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium
@@ -191,7 +204,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
 
         // Refresh button
         CustomButton(
-          text: 'تحديث البيانات',
+          text: 'refresh_data'.tr,
           onPressed: _loadAdditionalData,
           backgroundColor: Theme.of(context).primaryColor,
         ),
@@ -212,7 +225,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            'لا توجد بيانات إضافية',
+            'no_additional_data'.tr,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   color: Theme.of(context)
                       .colorScheme
@@ -222,7 +235,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'لم يتم تسجيل أي بيانات إضافية في ملفك الشخصي',
+            'no_additional_data_desc'.tr,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context)
@@ -233,7 +246,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
           ),
           const SizedBox(height: 32),
           CustomButton(
-            text: 'العودة للملف الشخصي',
+            text: 'back_to_profile'.tr,
             onPressed: () => Navigator.pop(context),
             backgroundColor: Theme.of(context).primaryColor,
           ),
@@ -289,7 +302,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
                 ),
               ),
               child: Text(
-                value.isNotEmpty ? value : 'غير محدد',
+                value.isNotEmpty ? value : 'not_specified'.tr,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       color: value.isNotEmpty
                           ? Theme.of(context).colorScheme.onSurface
@@ -338,12 +351,13 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
             const SizedBox(height: 12),
 
             // Handle different field types
+            // Handle different field types
             if (type == 'file' || type == 'image') ...[
-              _buildFileField(value, type),
+              _buildFileField(value, type, label),
             ] else if (type == 'file_expiration_date') ...[
-              _buildFileWithExpirationField(value, expiration),
+              _buildFileWithExpirationField(value, expiration, label),
             ] else if (type == 'file_with_text') ...[
-              _buildFileWithTextField(value, text),
+              _buildFileWithTextField(value, text, label),
             ] else if (type == 'date') ...[
               _buildDateField(value),
             ] else if (type == 'number') ...[
@@ -372,52 +386,52 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
       case 'file':
         icon = Icons.attach_file;
         color = Colors.blue;
-        tooltip = 'ملف';
+        tooltip = 'file_type_file'.tr;
         break;
       case 'image':
         icon = Icons.image;
         color = Colors.green;
-        tooltip = 'صورة';
+        tooltip = 'file_type_image'.tr;
         break;
       case 'date':
         icon = Icons.calendar_today;
         color = Colors.orange;
-        tooltip = 'تاريخ';
+        tooltip = 'file_type_date'.tr;
         break;
       case 'number':
         icon = Icons.numbers;
         color = Colors.purple;
-        tooltip = 'رقم';
+        tooltip = 'file_type_number'.tr;
         break;
       case 'email':
         icon = Icons.email;
         color = Colors.red;
-        tooltip = 'بريد إلكتروني';
+        tooltip = 'email'.tr;
         break;
       case 'phone':
         icon = Icons.phone;
         color = Colors.teal;
-        tooltip = 'هاتف';
+        tooltip = 'phone'.tr;
         break;
       case 'url':
         icon = Icons.link;
         color = Colors.indigo;
-        tooltip = 'رابط';
+        tooltip = 'file_type_url'.tr;
         break;
       case 'file_expiration_date':
         icon = Icons.schedule;
         color = Colors.amber;
-        tooltip = 'ملف مع تاريخ انتهاء';
+        tooltip = 'file_type_file_expiration'.tr;
         break;
       case 'file_with_text':
         icon = Icons.description;
         color = Colors.cyan;
-        tooltip = 'ملف مع نص';
+        tooltip = 'file_type_file_text'.tr;
         break;
       default:
         icon = Icons.text_fields;
         color = Colors.grey;
-        tooltip = 'نص';
+        tooltip = 'file_type_text'.tr;
     }
 
     return Tooltip(
@@ -437,81 +451,189 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
     );
   }
 
-  Widget _buildFileField(dynamic value, String type) {
+  bool _isImage(String path) {
+    if (path.isEmpty) return false;
+    final extension = path.split('.').last.toLowerCase();
+    return ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic'].contains(extension);
+  }
+
+  void _showImageDialog(String imageUrl, String label) {
+    Get.dialog(
+      Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.all(10),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  onPressed: () => Get.back(),
+                  icon: const Icon(Icons.close, color: Colors.white, size: 30),
+                ),
+              ],
+            ),
+            Container(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.7,
+                maxWidth: MediaQuery.of(context).size.width * 0.9,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.network(
+                  imageUrl,
+                  fit: BoxFit.contain,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return const Center(
+                      child: CircularProgressIndicator(color: Colors.white),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    color: Colors.white,
+                    padding: const EdgeInsets.all(20),
+                    child: const Icon(Icons.broken_image, size: 50, color: Colors.red),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                label,
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFileField(dynamic value, String type, String label) {
     if (value == null || value.toString().isEmpty) {
       return _buildEmptyValue();
     }
 
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final imageUrl = AppConfig.getStorageUrl(value.toString());
+    final isImageFile = type == 'image' || _isImage(imageUrl);
     final primaryColor = Theme.of(context).primaryColor;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: isDark
-            ? primaryColor.withOpacity(0.1)
-            : primaryColor.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: primaryColor.withOpacity(0.3),
-        ),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            type == 'image' ? Icons.image : Icons.attach_file,
-            color: primaryColor,
-            size: 24,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  type == 'image' ? 'صورة مرفقة' : 'ملف مرفق',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Theme.of(context).colorScheme.onSurface,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (isImageFile)
+          GestureDetector(
+            onTap: () => _showImageDialog(imageUrl, label),
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              width: double.infinity,
+              height: 200,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: primaryColor.withOpacity(0.3)),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.network(
+                  imageUrl,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return const Center(child: CircularProgressIndicator());
+                  },
+                  errorBuilder: (context, error, stackTrace) => Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.broken_image, color: Colors.red),
+                        const SizedBox(height: 8),
+                        Text('errorLoadingImage'.tr, style: const TextStyle(fontSize: 12)),
+                      ],
+                    ),
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  value.toString().split('/').last,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withOpacity(0.7),
+              ),
+            ),
+          ),
+
+        // Only show file details if NOT an image
+        if (!isImageFile)
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: isDark
+                  ? primaryColor.withOpacity(0.1)
+                  : primaryColor.withOpacity(0.05),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: primaryColor.withOpacity(0.3),
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.attach_file,
+                  color: primaryColor,
+                  size: 24,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'attached_file'.tr,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        value.toString().split('/').last,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.7),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  onPressed: () async {
+                    final url = Uri.parse(imageUrl);
+                    if (await canLaunchUrl(url)) {
+                      await launchUrl(url, mode: LaunchMode.externalApplication);
+                    }
+                  },
+                  icon: Icon(
+                    Icons.open_in_new,
+                    color: primaryColor,
                   ),
                 ),
               ],
             ),
           ),
-          IconButton(
-            onPressed: () {
-              // TODO: Open file/image viewer
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('عارض الملفات قريباً'),
-                ),
-              );
-            },
-            icon: Icon(
-              Icons.open_in_new,
-              color: primaryColor,
-            ),
-          ),
-        ],
-      ),
+      ],
     );
   }
 
-  Widget _buildFileWithExpirationField(dynamic value, dynamic expiration) {
+  Widget _buildFileWithExpirationField(dynamic value, dynamic expiration, String label) {
     return Column(
       children: [
-        if (value != null) _buildFileField(value, 'file'),
+        if (value != null) _buildFileField(value, 'file', label),
         if (value != null && expiration != null) const SizedBox(height: 12),
         if (expiration != null) ...[
           Container(
@@ -536,7 +658,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'تاريخ انتهاء الصلاحية: $expiration',
+                  'expiration_date_label'.trParams({'date': expiration.toString()}),
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     color: Theme.of(context).colorScheme.onErrorContainer,
@@ -550,10 +672,10 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
     );
   }
 
-  Widget _buildFileWithTextField(dynamic value, dynamic text) {
+  Widget _buildFileWithTextField(dynamic value, dynamic text, String label) {
     return Column(
       children: [
-        if (value != null) _buildFileField(value, 'file'),
+        if (value != null) _buildFileField(value, 'file', label),
         if (value != null && text != null) const SizedBox(height: 12),
         if (text != null) _buildTextValue(text),
       ],
@@ -760,10 +882,9 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
           ),
           IconButton(
             onPressed: () {
-              // TODO: Open URL in browser
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('فتح الرابط قريباً'),
+                SnackBar(
+                  content: Text('open_url_coming_soon'.tr),
                 ),
               );
             },
@@ -793,49 +914,20 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
         ),
       ),
       child: Text(
-        'غير محدد',
+        'not_specified'.tr,
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: Theme.of(context)
                   .colorScheme
                   .onSurface
                   .withOpacity(0.5),
-              fontStyle: FontStyle.italic,
             ),
       ),
     );
   }
 
   String _getFieldLabel(String key) {
-    // Convert field key to readable Arabic label
-    switch (key.toLowerCase()) {
-      case 'license_number':
-        return 'رقم الرخصة';
-      case 'license_expiry':
-        return 'تاريخ انتهاء الرخصة';
-      case 'id_number':
-        return 'رقم الهوية';
-      case 'vehicle_registration':
-        return 'استمارة المركبة';
-      case 'insurance_policy':
-        return 'وثيقة التأمين';
-      case 'medical_certificate':
-        return 'الشهادة الطبية';
-      case 'criminal_record':
-        return 'صحيفة الحالة الجنائية';
-      case 'bank_account':
-        return 'رقم الحساب البنكي';
-      case 'emergency_contact':
-        return 'جهة الاتصال للطوارئ';
-      case 'address_proof':
-        return 'إثبات العنوان';
-      default:
-        return key
-            .replaceAll('_', ' ')
-            .split(' ')
-            .map((word) => word.isNotEmpty
-                ? word[0].toUpperCase() + word.substring(1)
-                : word)
-            .join(' ');
-    }
+    // Return key as label if no specific translation logic needed
+    // You could map keys to readable labels here if needed
+    return key;
   }
 }

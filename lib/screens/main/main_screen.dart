@@ -3,7 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import '../../Controllers/AuthController.dart';
-import '../../services/notification_service.dart';
+// import '../../services/notification_service.dart'; // Removed
+import '../../Controllers/NotificationController.dart'; // Added
 import '../../l10n/generated/app_localizations.dart';
 import 'home_screen.dart';
 import 'tasks_screen.dart';
@@ -103,8 +104,10 @@ class _MainScreenState extends State<MainScreen> {
       return const SizedBox.shrink();
     }
 
-    return Consumer<NotificationService>(
-      builder: (context, notificationService, child) {
+    // Using GetX for NotificationController updates if needed, primarily for badge
+    // which seems to be missing in the original code but good to have prepared.
+    return GetBuilder<NotificationController>(
+      builder: (controller) {
         return BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (index) {

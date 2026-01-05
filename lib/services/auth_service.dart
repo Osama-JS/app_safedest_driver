@@ -3,12 +3,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:get/get.dart'; // Add GetX import
 import '../config/app_config.dart';
 import '../models/api_response.dart';
 import '../models/driver.dart';
 import 'api_service.dart';
-import 'notification_service.dart';
+// import 'notification_service.dart'; // Removed
 import 'location_service.dart';
+import '../Controllers/NotificationController.dart'; // Add Controller import
+import '../shared_prff.dart';
 
 class AuthService extends ChangeNotifier {
   static final AuthService _instance = AuthService._internal();
@@ -22,7 +25,7 @@ class AuthService extends ChangeNotifier {
 
   final ApiService _apiService = ApiService();
   final _storage = const FlutterSecureStorage();
-  final NotificationService _notificationService = NotificationService();
+  // final NotificationService _notificationService = NotificationService(); // Removed
   final LocationService _locationService = LocationService();
 
   Driver? _currentDriver;
@@ -34,10 +37,49 @@ class AuthService extends ChangeNotifier {
   bool get isAuthenticated => _isAuthenticated;
   bool get isLoading => _isLoading;
 
-  // Check API connectivity
+  // Check API connectivity and get app status
+  Future<ApiResponse<AppStatus>> getAppStatus() async {
+    try {
+      final response = await _apiService.get<AppStatus>(
+        '/driver/health',
+        fromJson: (data) => AppStatus.fromJson(data),
+        requiresAuth: false,
+      );
+
+      // Fix: Handle case where API returns "1" (int) instead of JSON Map
+      // This causes a parse error in ApiService, so we check for that error message
+      if (!response.success &&
+          response.message != null &&
+          (response.message!.contains("type 'int' is not a subtype") ||
+           response.message!.contains("type 'int' is not a subtype of type 'Map<String, dynamic>'"))) {
+        debugPrint('API status: Received "1" or int, treating as online/success');
+        return ApiResponse<AppStatus>(
+          success: true,
+          data: AppStatus(
+            success: true,
+            minVersion: '1.0.0',
+            updateUrl: '',
+            serverTime: DateTime.now().toIso8601String(),
+          ),
+          message: 'Connected',
+        );
+      }
+
+      return response;
+    } catch (e) {
+      debugPrint('API status check error: $e');
+      return ApiResponse<AppStatus>(
+        success: false,
+        message: e.toString(),
+      );
+    }
+  }
+
+  // Check API connectivity (kept for backward compatibility if needed)
   Future<bool> checkApiConnectivity() async {
     try {
-      return await _apiService.checkConnectivity();
+      final response = await getAppStatus();
+      return response.isSuccess;
     } catch (e) {
       debugPrint('API connectivity check error: $e');
       return false;
@@ -101,6 +143,14 @@ class AuthService extends ChangeNotifier {
     }
   }
 
+  // Sync state with storage manually
+  Future<void> syncWithStorage() async {
+    await _apiService.initialize();
+    _isAuthenticated = _apiService.isAuthenticated;
+    await _loadDriverData();
+    notifyListeners();
+  }
+
   // Login
   Future<ApiResponse<LoginResponse>> login({
     required String login,
@@ -112,16 +162,19 @@ class AuthService extends ChangeNotifier {
     _setLoading(true);
 
     try {
-      // Initialize NotificationService to get FCM token
-      debugPrint(
-          'AuthService: Initializing NotificationService for FCM token...');
-      await _notificationService.initialize();
+      // Get NotificationController
+      NotificationController? notificationController;
+      try {
+        notificationController = Get.find<NotificationController>();
+      } catch (e) {
+        debugPrint('AuthService: NotificationController not found: $e');
+      }
 
-      // Get FCM token from NotificationService if not provided
-      String? finalFcmToken = fcmToken ?? _notificationService.fcmToken;
+      // Get FCM token from NotificationController if not provided
+      String? finalFcmToken = fcmToken ?? notificationController?.fcmToken.value;
 
       // If still null, try to get it directly with timeout
-      if (finalFcmToken == null) {
+      if (finalFcmToken == null || finalFcmToken.isEmpty) {
         debugPrint(
             'AuthService: FCM token is null, trying to get it directly...');
         try {
@@ -181,21 +234,10 @@ class AuthService extends ChangeNotifier {
               debugPrint('Current driver: ${_currentDriver?.name}');
               debugPrint('Is authenticated: $_isAuthenticated');
 
-              // Update FCM token after successful login if we have one
-              if (finalFcmToken != null) {
-                try {
-                  final fcmResponse =
-                      await _notificationService.updateFcmToken(finalFcmToken);
-                  if (fcmResponse.isSuccess) {
-                    debugPrint('FCM token updated successfully after login');
-                  } else {
-                    debugPrint(
-                        'Failed to update FCM token: ${fcmResponse.errorMessage}');
-                  }
-                } catch (e) {
-                  debugPrint('Error updating FCM token: $e');
-                }
-              }
+              // Update FCM token handled via API call in login, but we ensure controller knows it
+               if (finalFcmToken != null && notificationController != null) {
+                 notificationController.fcmToken.value = finalFcmToken;
+               }
 
               notifyListeners();
             } catch (e) {
@@ -324,6 +366,7 @@ class AuthService extends ChangeNotifier {
   // Update driver data
   Future<void> updateDriverData(Driver driver) async {
     _currentDriver = driver;
+    _isAuthenticated = true; // If we're updating driver data, we're likely authenticated
     await _saveDriverData(driver);
     notifyListeners();
   }
@@ -336,13 +379,13 @@ class AuthService extends ChangeNotifier {
 
   Future<void> _loadDriverData() async {
     try {
-      final driverJson = await _storage.read(key: AppConfig.driverDataKey);
+      final driverJson = User_pref.getUser();
       if (driverJson != null && driverJson.isNotEmpty) {
         final driverData = json.decode(driverJson);
         if (driverData != null && driverData is Map<String, dynamic>) {
           _currentDriver = Driver.fromJson(driverData);
           debugPrint(
-              'Driver data loaded successfully: ${_currentDriver?.name}');
+              'Driver data loaded successfully from SharedPreferences: ${_currentDriver?.name}');
 
           // Sync LocationService with driver data
           if (_currentDriver != null) {
@@ -356,7 +399,7 @@ class AuthService extends ChangeNotifier {
           _currentDriver = null;
         }
       } else {
-        debugPrint('No driver data found in storage');
+        debugPrint('No driver data found in SharedPreferences');
         _currentDriver = null;
       }
     } catch (e) {
@@ -368,15 +411,14 @@ class AuthService extends ChangeNotifier {
   Future<void> _saveDriverData(Driver driver) async {
     try {
       final driverJson = json.encode(driver.toJson());
+
+      // Save to SharedPreferences (Main)
+      await User_pref.setUser(driverJson);
+
+      // Also save to SecureStorage for fallback/consistency if needed by other legacy parts
       await _storage.write(key: AppConfig.driverDataKey, value: driverJson);
 
-      // Verify data was saved
-      final savedData = await _storage.read(key: AppConfig.driverDataKey);
-      if (savedData != null && savedData.isNotEmpty) {
-        debugPrint('Driver data verified in storage');
-      } else {
-        throw Exception('Failed to verify saved driver data');
-      }
+      debugPrint('Driver data saved to both SharedPreferences and SecureStorage');
     } catch (e) {
       debugPrint('Error saving driver data: $e');
       rethrow; // Re-throw to handle in login method
@@ -386,6 +428,7 @@ class AuthService extends ChangeNotifier {
   Future<void> _clearAuthData() async {
     try {
       await _apiService.clearAuthToken();
+      await User_pref.removeUser();
       await _storage.delete(key: AppConfig.driverDataKey);
 
       _currentDriver = null;

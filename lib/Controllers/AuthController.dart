@@ -8,6 +8,7 @@ import '../models/api_response.dart';
 import '../shared_prff.dart';
 import '../Globals/global.dart' as globals;
 import '../services/api_service.dart';
+import '../services/auth_service.dart';
 
 class AuthController extends GetxController {
   final UserHelper _userHelper = UserHelper();
@@ -82,6 +83,9 @@ class AuthController extends GetxController {
           _currentDriver.value = loginData.driver;
           _isAuthenticated.value = true;
 
+          // Sync with Provider-based AuthService
+          await AuthService().syncWithStorage();
+
           // Update globals
           globals.token = loginData.token;
           globals.user = loginData.driver!.toJson();
@@ -105,6 +109,10 @@ class AuthController extends GetxController {
     } finally {
       // Clear data regardless of API success
       await _clearAuthData();
+
+      // Sync with Provider-based AuthService
+      await AuthService().forceLogout();
+
       _isLoading.value = false;
       Get.offAllNamed('/login');
     }
@@ -129,6 +137,7 @@ class AuthController extends GetxController {
   // Force Logout (e.g. on 401)
   void forceLogout() {
     _clearAuthData();
+    AuthService().forceLogout();
     Get.offAllNamed('/login');
   }
 

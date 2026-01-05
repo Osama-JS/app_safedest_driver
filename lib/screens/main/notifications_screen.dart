@@ -76,14 +76,34 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
 
-    if (difference.inDays > 0) {
-      return 'days_ago'.trParams({'days': difference.inDays.toString()});
-    } else if (difference.inHours > 0) {
-      return 'hours_ago'.trParams({'hours': difference.inHours.toString()});
-    } else if (difference.inMinutes > 0) {
-      return 'minutes_ago'.trParams({'minutes': difference.inMinutes.toString()});
-    } else {
+    if (difference.inMinutes < 1) {
       return 'now'.tr;
+    } else if (difference.inMinutes < 60) {
+      return 'minutes_ago'.trParams({'minutes': difference.inMinutes.toString()});
+    } else if (difference.inHours < 24) {
+      return 'hours_ago'.trParams({'hours': difference.inHours.toString()});
+    } else if (difference.inDays < 7) {
+      return 'days_ago'.trParams({'days': difference.inDays.toString()});
+    } else {
+      return DateFormat('dd/MM/yyyy HH:mm').format(dateTime);
+    }
+  }
+
+  Future<void> _handleNotificationClick(AppNotification notification) async {
+    // 1. Mark as read immediately on server & update UI reactively
+    if (!notification.isRead) {
+      _notificationController.markAsRead(notification.id);
+    }
+
+    // 2. Decide if we show dialog or just navigate
+    final type = NotificationTypeExtension.fromString(notification.type);
+
+    if (type == NotificationType.general || type == NotificationType.systemAnnouncement || type == NotificationType.marketing) {
+       // Show details for informational notifications
+      await _showNotificationDetails(notification);
+    } else {
+      // For actionable notifications (tasks, wallet), use smart navigation
+      _notificationController.handleNotificationTap(notification);
     }
   }
 
@@ -94,7 +114,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           children: [
             _buildNotificationIcon(
               NotificationTypeExtension.fromString(notification.type),
-              !notification.isRead,
+              false, // Show as read in dialog since we just clicked it
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -146,10 +166,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         ],
       ),
     );
-
-    if (!notification.isRead) {
-      await _notificationController.markAsRead(notification.id);
-    }
   }
 
   @override
@@ -252,7 +268,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             : BorderSide.none,
       ),
       child: InkWell(
-        onTap: () => _showNotificationDetails(notification),
+        onTap: () => _handleNotificationClick(notification),
         borderRadius: BorderRadius.circular(12),
         child: Container(
           padding: const EdgeInsets.all(16),
@@ -319,7 +335,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          _formatDateTime(notification.createdAt),
+                          _formatNotificationTime(notification.createdAt),
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey[500],
@@ -420,23 +436,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       case NotificationType.general:
       default:
         return Colors.grey;
-    }
-  }
-
-  String _formatDateTime(DateTime dateTime) {
-    final now = DateTime.now();
-    final difference = now.difference(dateTime);
-
-    if (difference.inMinutes < 1) {
-      return 'now'.tr;
-    } else if (difference.inMinutes < 60) {
-      return 'minutes_ago'.trParams({'minutes': difference.inMinutes.toString()});
-    } else if (difference.inHours < 24) {
-      return 'hours_ago'.trParams({'hours': difference.inHours.toString()});
-    } else if (difference.inDays < 7) {
-      return 'days_ago'.trParams({'days': difference.inDays.toString()});
-    } else {
-      return DateFormat('dd/MM/yyyy HH:mm').format(dateTime);
     }
   }
 }

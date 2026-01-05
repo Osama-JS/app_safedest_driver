@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../config/app_config.dart';
 import '../models/api_response.dart';
+import '../shared_prff.dart';
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();
@@ -28,25 +29,24 @@ class ApiService {
 
   // Initialize service
   Future<void> initialize() async {
-    _authToken = await _storage.read(key: AppConfig.tokenKey);
+    _authToken = Token_pref.getToken();
   }
 
   // Set auth token
   Future<void> setAuthToken(String token) async {
     _authToken = token;
+    await Token_pref.setToken(token);
+
+    // Also save to SecureStorage for fallback/consistency
     await _storage.write(key: AppConfig.tokenKey, value: token);
 
-    // Verify token was saved
-    final savedToken = await _storage.read(key: AppConfig.tokenKey);
-    if (savedToken != token) {
-      throw Exception('Failed to save auth token');
-    }
-    debugPrint('Auth token saved and verified in storage');
+    debugPrint('Auth token saved to both SharedPreferences and SecureStorage');
   }
 
   // Clear auth token
   Future<void> clearAuthToken() async {
     _authToken = null;
+    await Token_pref.removeToken();
     await _storage.delete(key: AppConfig.tokenKey);
   }
 

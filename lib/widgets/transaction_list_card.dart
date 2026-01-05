@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
-import '../services/wallet_service.dart';
+import '../Controllers/WalletController.dart';
 import '../models/wallet.dart';
 import 'error_state_widget.dart';
 import '../screens/wallet/advanced_transactions_screen.dart';
@@ -11,71 +10,67 @@ class TransactionListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<WalletService>(
-      builder: (context, walletService, child) {
-        final recentTransactions = walletService.recentTransactionsShort;
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      Icons.receipt_long,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 24,
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      'recentTransactions'.tr,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                    const Spacer(),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const TransactionsScreen(),
-                          ),
-                        );
-                      },
-                      child: Text('view_all'.tr),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
+    final walletController = Get.find<WalletController>();
 
-                // Use StateHandlerWidget for better error handling
-                StateHandlerWidget<WalletTransaction>(
-                  isLoading:
-                      walletService.isLoading && recentTransactions.isEmpty,
-                  hasError: walletService.hasError,
-                  errorMessage: walletService.errorMessage,
-                  data: recentTransactions,
-                  onRetry: () async {
-                    await walletService.getTransactions(refresh: true);
-                  },
-                  emptyMessage: 'noTransactions'.tr,
-                  emptyDescription: 'noTransactionsRecorded'.tr,
-                  loadingMessage: 'loadingTransactions'.tr,
-                  builder: (transactions) => Column(
-                    children: transactions
-                        .map((transaction) => _buildTransactionItem(
-                            context, transaction, walletService.currencySymbol))
-                        .toList(),
+    return Obx(() {
+      final recentTransactions = walletController.transactions.take(5).toList();
+      final isLoading = walletController.isLoading.value;
+
+      return Card(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.receipt_long,
+                    color: Theme.of(context).colorScheme.primary,
+                    size: 24,
                   ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'recentTransactions'.tr,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const Spacer(),
+                  TextButton(
+                    onPressed: () {
+                      Get.to(() => const TransactionsScreen());
+                    },
+                    child: Text('view_all'.tr),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // Use StateHandlerWidget for better error handling
+              StateHandlerWidget<WalletTransaction>(
+                isLoading: isLoading && recentTransactions.isEmpty,
+                hasError: walletController.errorMessage.isNotEmpty,
+                errorMessage: walletController.errorMessage.value,
+                data: recentTransactions,
+                onRetry: () async {
+                  await walletController.fetchTransactions(refresh: true);
+                },
+                emptyMessage: 'noTransactions'.tr,
+                emptyDescription: 'noTransactionsRecorded'.tr,
+                loadingMessage: 'loadingTransactions'.tr,
+                builder: (transactions) => Column(
+                  children: transactions
+                      .map((transaction) => _buildTransactionItem(
+                          context, transaction, walletController.currency))
+                      .toList(),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        );
-      },
-    );
+        ),
+      );
+    });
   }
 
   Widget _buildEmptyState(BuildContext context) {

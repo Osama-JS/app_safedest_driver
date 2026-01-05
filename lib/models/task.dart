@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../l10n/generated/app_localizations.dart';
 
 class Task {
@@ -23,6 +24,7 @@ class Task {
   final List<TaskItem>? items;
   final String? specialInstructions;
   final Map<String, dynamic>? additionalData;
+  final String? conditions;
 
   // حساب مستحقات السائق (السعر - العمولة)
   double get driverEarnings => totalPrice - commission;
@@ -49,6 +51,7 @@ class Task {
     this.items,
     this.specialInstructions,
     this.additionalData,
+    this.conditions,
   });
 
   factory Task.fromJson(Map<String, dynamic> json) {
@@ -87,10 +90,18 @@ class Task {
               .toList()
           : null,
       specialInstructions: _parseToString(json['special_instructions']),
-      additionalData: json['additional_data'] != null &&
-              json['additional_data'] is Map<String, dynamic>
-          ? Map<String, dynamic>.from(json['additional_data'])
+      additionalData: json['additional_data'] != null
+          ? (json['additional_data'] is Map
+              ? Map<String, dynamic>.from(json['additional_data'])
+              : (json['additional_data'] is List
+                  ? Map.fromEntries((json['additional_data'] as List)
+                      .whereType<Map<String, dynamic>>()
+                      .map((e) => MapEntry(
+                          _parseToString(e['label']) ?? 'unspecified'.tr,
+                          _parseToString(e['value']) ?? '')))
+                  : null))
           : null,
+      conditions: _parseToString(json['conditions']),
     );
   }
 
@@ -151,6 +162,7 @@ class Task {
       'items': items?.map((item) => item.toJson()).toList(),
       'special_instructions': specialInstructions,
       'additional_data': additionalData,
+      'conditions': conditions,
     };
   }
 
@@ -174,6 +186,7 @@ class Task {
     List<TaskItem>? items,
     String? specialInstructions,
     Map<String, dynamic>? additionalData,
+    String? conditions,
   }) {
     return Task(
       id: id ?? this.id,
@@ -195,6 +208,7 @@ class Task {
       items: items ?? this.items,
       specialInstructions: specialInstructions ?? this.specialInstructions,
       additionalData: additionalData ?? this.additionalData,
+      conditions: conditions ?? this.conditions,
     );
   }
 

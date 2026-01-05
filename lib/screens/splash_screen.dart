@@ -4,8 +4,10 @@ import 'package:provider/provider.dart';
 import '../l10n/generated/app_localizations.dart';
 import '../config/app_config.dart';
 import '../services/auth_service.dart';
-import '../services/notification_service.dart';
+// import '../services/notification_service.dart'; // Removed
 import '../services/location_service.dart';
+import '../models/api_response.dart';
+import 'auth/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -53,31 +55,49 @@ class _SplashScreenState extends State<SplashScreen>
 
       // Get services
       final authService = Provider.of<AuthService>(context, listen: false);
-      final notificationService =
-          Provider.of<NotificationService>(context, listen: false);
+      // final notificationService =
+      //     Provider.of<NotificationService>(context, listen: false); // Removed
       //TODO SAEED STOPED THIS
       // final locationService =
       //     Provider.of<LocationService>(context, listen: false);
 
       debugPrint('SplashScreen: Services obtained successfully');
 
-      // فحص الاتصال بالـ API مع timeout قصير
-      debugPrint('SplashScreen: Checking API connectivity...');
+      // فحص الاتصال بالـ API وحالة التطبيق
+      debugPrint('SplashScreen: Checking API connectivity and app status...');
 
       bool shouldShowConnectivityDialog = false;
+      bool shouldShowUpdateDialog = false;
+      AppStatus? appStatus;
+
       try {
-        final isConnected = await authService
-            .checkApiConnectivity()
-            .timeout(const Duration(seconds: 30));
+        final response = await authService.getAppStatus().timeout(const Duration(seconds: 30));
 
-        debugPrint('SplashScreen: API connectivity result: $isConnected');
+        debugPrint('SplashScreen: API status check success: ${response.success}');
 
-        if (!isConnected) {
+        if (!response.success) {
           shouldShowConnectivityDialog = true;
+        } else {
+          appStatus = response.data;
+          if (appStatus != null) {
+            // التحقق من الإصدار
+            if (_isVersionBelowMin(AppConfig.appVersion, appStatus.minVersion)) {
+              shouldShowUpdateDialog = true;
+            }
+          }
         }
       } catch (e) {
-        debugPrint('SplashScreen: API connectivity check failed: $e');
+        debugPrint('SplashScreen: API status check failed: $e');
         shouldShowConnectivityDialog = true;
+      }
+
+      // إذا كان هناك تحديث إجباري، اعرض الـ dialog وتوقف
+      if (shouldShowUpdateDialog && appStatus != null) {
+        debugPrint('SplashScreen: Forced update required. Showing update dialog.');
+        if (mounted) {
+          await _showUpdateDialog(appStatus.minVersion, appStatus.updateUrl);
+        }
+        return;
       }
 
       // إذا لم يكن هناك اتصال، اعرض الـ dialog
@@ -90,35 +110,16 @@ class _SplashScreenState extends State<SplashScreen>
         return; // توقف هنا ولا تكمل التهيئة
       }
 
-      // ✅ يوجد اتصال → نكمل التهيئة
-      debugPrint('SplashScreen: API connected, initializing services...');
+      // ✅ يوجد اتصال والتطبيق محدث → نكمل التهيئة
+      debugPrint('SplashScreen: API connected and app up to date, initializing services...');
 
       // Initialize services
       await authService.initialize();
       debugPrint('SplashScreen: AuthService initialized');
 
-      await notificationService.initialize();
-      debugPrint('SplashScreen: NotificationService initialized');
-
-      //TODO SAEED STOPED THIS
-      // await locationService.initialize();
-      // debugPrint('SplashScreen: LocationService initialized');
-      //
-      // // Check initial permission status for debugging
-      // debugPrint('SplashScreen: Checking initial permission status...');
-      // await locationService.getDetailedPermissionStatus();
-      //
-      // // Request GPS permission immediately after LocationService initialization
-      // debugPrint('SplashScreen: Requesting GPS permission...');
-      // await _requestGPSPermission(locationService);
-      //
-      // // Check final permission status
-      // debugPrint('SplashScreen: Checking final permission status...');
-      // await locationService.getDetailedPermissionStatus();
-
       // انتظار مدة الـ Splash
       debugPrint('SplashScreen: Waiting for splash duration...');
-      await Future.delayed(Duration(seconds: AppConfig.splashDuration));
+      await Future.delayed(const Duration(seconds: AppConfig.splashDuration));
 
       // Navigate based on authentication status
       if (mounted) {
@@ -159,6 +160,107 @@ class _SplashScreenState extends State<SplashScreen>
         _showErrorAndNavigate();
       }
     }
+  }
+
+  // دالة لمقارنة الإصدارات (بسيطة: Major.Minor.Patch)
+  bool _isVersionBelowMin(String currentVersion, String minVersion) {
+    try {
+      List<int> currentParts = currentVersion.split('.').map((e) => int.parse(e)).toList();
+      List<int> minParts = minVersion.split('.').map((e) => int.parse(e)).toList();
+
+      for (int i = 0; i < 3; i++) {
+        int currentV = i < currentParts.length ? currentParts[i] : 0;
+        int minV = i < minParts.length ? minParts[i] : 0;
+
+        if (currentV < minV) return true;
+        if (currentV > minV) return false;
+      }
+      return false;
+    } catch (e) {
+      debugPrint('Error comparing versions: $e');
+      return false;
+    }
+  }
+
+  // حوار التحديث الإجباري
+  Future<void> _showUpdateDialog(String minVersion, String updateUrl) async {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        elevation: 16,
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Theme.of(context).colorScheme.surface,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  color: Colors.blue.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.system_update_rounded,
+                  size: 40,
+                  color: Colors.blue,
+                ),
+              ),
+              const SizedBox(height: 24),
+              const Text(
+                'تحديث جديد متاح',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'يتوفر إصدار جديد من التطبيق ($minVersion). يرجى التحديث للمتابعة.',
+                style: const TextStyle(fontSize: 16),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 32),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    // فتح رابط المتجر
+                    // Import url_launcher or similar if needed, or use platform-specific approach
+                    // For now, we'll just log and provide a way for the user to see the logic
+                    debugPrint('Opening update URL: $updateUrl');
+                    // await launchUrl(Uri.parse(updateUrl));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text(
+                    'تحديث الآن',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../main.dart';
 import '../../services/auth_service.dart';
+import '../../models/driver.dart';
 import '../../config/app_config.dart';
 import '../../utils/debug_helper.dart';
 import '../profile/edit_profile_screen.dart';
@@ -157,7 +158,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildProfileHeader(driver, AppLocalizations l10n) {
+  Widget _buildProfileHeader(Driver driver, AppLocalizations l10n) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -242,7 +243,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildProfileInfo(driver, AppLocalizations l10n) {
+  Widget _buildProfileInfo(Driver driver, AppLocalizations l10n) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -262,11 +263,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _buildInfoRow(
                   'اسم المستخدم', driver.username!, Icons.account_circle),
             _buildInfoRow(l10n.phone, driver.phone, Icons.phone),
-            _buildInfoRow(l10n.address, driver.address, Icons.map),
+            _buildInfoRow(
+                l10n.address, driver.address ?? l10n.notSpecified, Icons.map),
             if (driver.team != null)
-              _buildInfoRow(l10n.team, driver.team!.name, Icons.group),
+              _buildInfoRow(l10n.team, driver.team?.name ?? '', Icons.group),
             if (driver.vehicleSize != null)
-              _buildInfoRow(l10n.vehicleSize, driver.vehicleSize!.name,
+              _buildInfoRow(l10n.vehicleSize, driver.vehicleSize?.name ?? '',
                   Icons.local_shipping),
           ],
         ),
@@ -284,7 +286,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             size: 20,
             color: Theme.of(context).colorScheme.primary,
           ),
-          const SizedBox(width: 12),
+          const SizedBox(height: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -299,7 +301,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                 ),
                 Text(
-                  value,
+                  value.isNotEmpty ? value : '-',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w500,
                       ),

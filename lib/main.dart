@@ -13,8 +13,6 @@ import 'theme/app_theme.dart';
 import 'services/auth_service.dart';
 import 'services/task_service.dart';
 import 'services/location_service.dart';
-import 'services/wallet_service.dart';
-import 'services/notification_service.dart';
 import 'screens/splash_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/forgot_password_screen.dart';
@@ -41,6 +39,12 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize all SharedPreferences helpers first
+  await Selected_Language.init();
+  await Theme_pref.init();
+  await Token_pref.init();
+  await User_pref.init();
   await Bool_pref.init();
   // Initialize Firebase with proper error handling
   try {
@@ -111,8 +115,6 @@ class _SafeDestsDriverAppState extends State<SafeDestsDriverApp> {
         ChangeNotifierProvider(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => TaskService()),
         ChangeNotifierProvider(create: (_) => LocationService()),
-        ChangeNotifierProvider(create: (_) => WalletService()),
-        ChangeNotifierProvider(create: (_) => NotificationService()),
         ChangeNotifierProvider(create: (_) => RegistrationService()),
         ChangeNotifierProvider(create: (_) => TaskAdsStatsService()),
         ChangeNotifierProvider.value(value: _settingsService),

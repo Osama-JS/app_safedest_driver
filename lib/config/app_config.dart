@@ -2,12 +2,15 @@ class AppConfig {
   // API Configuration
   //static const String baseUrl =
   // static const String baseUrl = 'http://192.168.0.186/safedestssss/public/api'; // For Devlober
- static const String baseUrl = 'https://o.safedest.com/api'; // For Tester
+  static const String baseUrl = 'https://o.safedest.com/api'; // For Tester
   // static const String baseUrl = 'https://o.safedest.com/api'; // For Production
 
   // App Information
   static const String appName = 'SafeDests Driver';
   static const String appVersion = '1.0.0';
+
+  // Mapbox Access Token
+  static const String mapboxAccessToken = 'pk.eyJ1Ijoib3NhbWExOTk4IiwiYSI6ImNtZ280cmw1YjFwNHQya3FxZnY2cjV5cmkifQ.gugWvJf_2VRFnk-3LVaI1w';
 
   // API Endpoints
   static const String loginEndpoint = '/driver/login';
@@ -118,6 +121,10 @@ class AppConfig {
 
   // Get storage URL for files
   static String getStorageUrl(String filePath) {
+    if (filePath.startsWith('http')) {
+      return filePath;
+    }
+
     // إزالة /api من baseUrl للحصول على رابط الملفات
     final storageBaseUrl = baseUrl.replaceAll('/api', '');
 

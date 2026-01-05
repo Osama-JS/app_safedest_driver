@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../Controllers/TaskController.dart';
+import '../Controllers/NotificationController.dart';
 import '../models/task.dart';
 import 'dart:async';
 
@@ -13,11 +14,13 @@ class PendingTaskCard extends StatefulWidget {
 
 class _PendingTaskCardState extends State<PendingTaskCard>
     with TickerProviderStateMixin {
+  late Worker _worker;
   Timer? _countdownTimer;
-  int _remainingSeconds = 180; // 3 minutes
+  int _remainingSeconds = 180;
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
   final TaskController _taskController = Get.find<TaskController>();
+  final NotificationController _notifController = Get.find<NotificationController>();
 
   @override
   void initState() {
@@ -34,17 +37,32 @@ class _PendingTaskCardState extends State<PendingTaskCard>
       curve: Curves.easeInOut,
     ));
     _pulseController.repeat(reverse: true);
-    _startCountdown();
+
+    // Reactive timer handling
+    _worker = ever(_taskController.pendingTask, (task) {
+      if (task != null) {
+        _resetAndStartTimer();
+      } else {
+        _stopTimer();
+      }
+    });
+
+    if (_taskController.pendingTask.value != null) {
+      _resetAndStartTimer();
+    }
   }
 
   @override
   void dispose() {
-    _countdownTimer?.cancel();
+    _worker.dispose();
+    _stopTimer();
     _pulseController.dispose();
     super.dispose();
   }
 
-  void _startCountdown() {
+  void _resetAndStartTimer() {
+    _stopTimer();
+    _remainingSeconds = 180;
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_remainingSeconds > 0) {
         if (mounted) {
@@ -53,21 +71,27 @@ class _PendingTaskCardState extends State<PendingTaskCard>
           });
         }
       } else {
-        timer.cancel();
+        _stopTimer();
         _handleTimeout();
       }
     });
   }
 
+  void _stopTimer() {
+    _countdownTimer?.cancel();
+    _countdownTimer = null;
+  }
+
   void _handleTimeout() {
+    // Only handle if there is still a task
+    if (_taskController.pendingTask.value == null) return;
+
     _taskController.rejectPendingTask();
 
-    Get.snackbar(
-      'errorTitle'.tr,
-      'task_expired_transferred'.tr,
-      backgroundColor: Colors.orange,
-      colorText: Colors.white,
-      snackPosition: SnackPosition.BOTTOM,
+    // Show internal notification
+    _notifController.showSimpleNotification(
+      title: 'task_transferred_title'.tr,
+      body: 'task_expired_transferred'.tr,
     );
   }
 
