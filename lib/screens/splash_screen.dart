@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -23,10 +24,21 @@ class _SplashScreenState extends State<SplashScreen>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   @override
   void initState() {
     super.initState();
+
+    messaging.getToken().then((token) {
+      print("MY FCM Token : $token");
+
+      if (token != null) {
+        // globals.notificationToken=token.toString();
+        print("MY FCM Token : $token");
+      }
+    });
+
     print('niaaaaaaaaaaaaaaaa SplashScreen: initState called');
     debugPrint('SplashScreen: initState called');
     _initializeAnimations();

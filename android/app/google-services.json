@@ -1,13 +1,70 @@
 {
   "project_info": {
-    "project_number": "674148004091",
-    "project_id": "safedest-driver",
-    "storage_bucket": "safedest-driver.firebasestorage.app"
+    "project_number": "837349139131",
+    "project_id": "safedests-1ce66",
+    "storage_bucket": "safedests-1ce66.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:674148004091:android:a46eb418ef3672a94e405e",
+        "mobilesdk_app_id": "1:837349139131:android:c745be5c8ac3eb747e3f9e",
+        "android_client_info": {
+          "package_name": "com.example.save_dest_customer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlabgpM_SMSSyQz1GRsg-8LA9lkCKlJ1M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:837349139131:android:409e1ad867e808647e3f9e",
+        "android_client_info": {
+          "package_name": "com.safedest.customer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlabgpM_SMSSyQz1GRsg-8LA9lkCKlJ1M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:837349139131:android:df416325beb538e67e3f9e",
+        "android_client_info": {
+          "package_name": "com.safedest.customers"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlabgpM_SMSSyQz1GRsg-8LA9lkCKlJ1M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:837349139131:android:2651b0107c441d8d7e3f9e",
         "android_client_info": {
           "package_name": "com.safedest.driver"
         }
@@ -15,7 +72,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCBSRutvov1Z_-61giEbmnKWyTVIntWppw"
+          "current_key": "AIzaSyAlabgpM_SMSSyQz1GRsg-8LA9lkCKlJ1M"
         }
       ],
       "services": {

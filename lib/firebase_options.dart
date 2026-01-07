@@ -50,19 +50,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCBSRutvov1Z_-61giEbmnKWyTVIntWppw',
-    appId: '1:674148004091:android:a46eb418ef3672a94e405e',
-    messagingSenderId: '674148004091',
-    projectId: 'safedest-driver',
-    storageBucket: 'safedest-driver.firebasestorage.app',
+    apiKey: 'AIzaSyAlabgpM_SMSSyQz1GRsg-8LA9lkCKlJ1M',
+    appId: '1:837349139131:android:2651b0107c441d8d7e3f9e',
+    messagingSenderId: '837349139131',
+    projectId: 'safedests-1ce66',
+    storageBucket: 'safedests-1ce66.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCBSRutvov1Z_-61giEbmnKWyTVIntWppw',
-    appId: '1:674148004091:ios:a46eb418ef3672a94e405e',
-    messagingSenderId: '674148004091',
-    projectId: 'safedest-driver',
-    storageBucket: 'safedest-driver.firebasestorage.app',
+    apiKey: 'AIzaSyAhGwckySxllB5VE67iCKU5BXJD0hYztfE',
+    appId: '1:837349139131:ios:4e83c4c5e589c79c7e3f9e',
+    messagingSenderId: '837349139131',
+    projectId: 'safedests-1ce66',
+    storageBucket: 'safedests-1ce66.firebasestorage.app',
     iosBundleId: 'com.safedest.driver',
   );
 }
