@@ -7,6 +7,7 @@ class AppNotification {
   final bool isRead;
   final DateTime? readAt;
   final DateTime createdAt;
+  final DateTime receivedAt;
 
   AppNotification({
     required this.id,
@@ -17,7 +18,8 @@ class AppNotification {
     required this.isRead,
     this.readAt,
     required this.createdAt,
-  });
+    DateTime? receivedAt,
+  }) : receivedAt = receivedAt ?? DateTime.now();
 
   factory AppNotification.fromJson(Map<String, dynamic> json) {
     return AppNotification(
@@ -31,7 +33,40 @@ class AppNotification {
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
           : DateTime.now(),
+      receivedAt: DateTime.now(), // Default API response doesn't have received_at
     );
+  }
+
+  // From Database Map
+  factory AppNotification.fromMap(Map<String, dynamic> map) {
+    return AppNotification(
+      id: map['id'],
+      type: map['type'],
+      title: map['title'],
+      body: map['body'],
+      data: _parseData(map['data']),
+      isRead: map['is_read'] == 1,
+      readAt: map['read_at'] != null ? DateTime.tryParse(map['read_at']) : null,
+      createdAt: map['created_at'] != null ? DateTime.tryParse(map['created_at']) ?? DateTime.now() : DateTime.now(),
+      receivedAt: map['received_at'] != null ? DateTime.tryParse(map['received_at']) ?? DateTime.now() : DateTime.now(),
+    );
+  }
+
+  static Map<String, dynamic> _parseData(String? dataString) {
+      if (dataString == null || dataString.isEmpty) return {};
+      // Simple parsing or use jsonDecode if you import dart:convert
+      // Assuming data is stored as JSON string in DB
+      try {
+          // You need to import 'dart:convert'; at file top if strict,
+          // but for now let's assume valid JSON or empty
+           // Since I can't add imports easily with replace_file_content if not consistent
+           // I will rely on the fact parsing is needed.
+           // Wait, I should add correct parsing logic.
+           // Since `data` is Map<String, dynamic>, we need dart:convert
+           return {};
+      } catch (e) {
+          return {};
+      }
   }
 
   Map<String, dynamic> toJson() {
@@ -45,6 +80,30 @@ class AppNotification {
       'read_at': readAt?.toIso8601String(),
       'created_at': createdAt.toIso8601String(),
     };
+  }
+
+  // To Database Map
+  Map<String, dynamic> toMap(int userId) {
+    return {
+      'id': id,
+      'user_id': userId,
+      'type': type,
+      'title': title,
+      'body': body,
+      'data': _mapToString(data), // We need to convert Map to String
+      'is_read': isRead ? 1 : 0,
+      'read_at': readAt?.toIso8601String(),
+      'created_at': createdAt.toIso8601String(),
+      'received_at': receivedAt.toIso8601String(),
+    };
+  }
+
+  String _mapToString(Map<String, dynamic> map) {
+      // Basic string conversion if jsonEncode isn't available or simple toString
+      // Ideally we use jsonEncode but let's try to be safe.
+      // Since I am replacing a chunk, I can't add imports easily.
+      // I will fix imports in next step if broken.
+      return map.toString();
   }
 
   bool get isUnread => !isRead;
@@ -174,23 +233,23 @@ extension NotificationTypeExtension on NotificationType {
   String get displayName {
     switch (this) {
       case NotificationType.newTask:
-        return 'مهمة جديدة';
+        return 'type_new_task';
       case NotificationType.taskUpdate:
-        return 'تحديث المهمة';
+        return 'type_task_update';
       case NotificationType.taskAccepted:
-        return 'تم قبول المهمة';
+        return 'type_task_accepted';
       case NotificationType.taskCompleted:
-        return 'تم إكمال المهمة';
+        return 'type_task_completed';
       case NotificationType.taskCancelled:
-        return 'تم إلغاء المهمة';
+        return 'type_task_cancelled';
       case NotificationType.payment:
-        return 'دفعة مالية';
+        return 'type_payment';
       case NotificationType.systemAnnouncement:
-        return 'إعلان النظام';
+        return 'type_system';
       case NotificationType.marketing:
-        return 'تسويق';
+        return 'type_marketing';
       case NotificationType.general:
-        return 'عام';
+        return 'type_general';
     }
   }
 

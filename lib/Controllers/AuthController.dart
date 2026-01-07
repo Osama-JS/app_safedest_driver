@@ -10,6 +10,8 @@ import '../Globals/global.dart' as globals;
 import '../services/api_service.dart';
 import '../services/auth_service.dart';
 
+import 'NotificationController.dart';
+
 class AuthController extends GetxController {
   final UserHelper _userHelper = UserHelper();
   final ApiService _apiService = ApiService();
@@ -60,6 +62,27 @@ class AuthController extends GetxController {
   }) async {
     _isLoading.value = true;
     try {
+      // Try to get FCM token from NotificationController if not provided
+      if (fcmToken == null || fcmToken.isEmpty) {
+        try {
+          if (Get.isRegistered<NotificationController>()) {
+             final notificationController = Get.find<NotificationController>();
+             fcmToken = notificationController.fcmToken.value;
+             debugPrint("🔑 AuthController: Fetched FCM Token from controller: $fcmToken");
+          } else {
+             debugPrint("⚠️ AuthController: NotificationController not registered yet.");
+          }
+        } catch (e) {
+          debugPrint("⚠️ AuthController: Error getting FCM token: $e");
+        }
+      }
+
+      if (fcmToken != null) {
+          debugPrint("🚀 LOGIN: Sending request with FCM Token: $fcmToken");
+      } else {
+          debugPrint("⚠️ LOGIN: FCM Token is NULL");
+      }
+
       final response = await _userHelper.login(
         login: login,
         password: password,
@@ -91,6 +114,12 @@ class AuthController extends GetxController {
           globals.user = loginData.driver!.toJson();
           globals.userName = loginData.driver!.name;
           globals.userId = loginData.driver!.id;
+
+          // Load notifications for the logged-in user
+          if (Get.isRegistered<NotificationController>()) {
+             final notificationController = Get.find<NotificationController>();
+             await notificationController.loadNotificationsForUser(loginData.driver!.id);
+          }
         }
       }
       return response;
@@ -112,6 +141,11 @@ class AuthController extends GetxController {
 
       // Sync with Provider-based AuthService
       await AuthService().forceLogout();
+
+      // Reset notifications
+      if (Get.isRegistered<NotificationController>()) {
+         Get.find<NotificationController>().reset();
+      }
 
       _isLoading.value = false;
       Get.offAllNamed('/login');
@@ -138,6 +172,12 @@ class AuthController extends GetxController {
   void forceLogout() {
     _clearAuthData();
     AuthService().forceLogout();
+
+    // Reset notifications
+    if (Get.isRegistered<NotificationController>()) {
+        Get.find<NotificationController>().reset();
+    }
+
     Get.offAllNamed('/login');
   }
 

@@ -349,6 +349,14 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       actions: [
+        Obx(() => _notificationController.unreadCount.value > 0
+            ? IconButton(
+                icon: const Icon(Icons.mark_email_read_outlined, color: Colors.white),
+                onPressed: () => _notificationController.markAllAsRead(),
+                tooltip: 'mark_all_as_read'.tr,
+              )
+            : const SizedBox.shrink()),
+
         // Notifications
         Obx(() => IconButton(
           icon: Stack(

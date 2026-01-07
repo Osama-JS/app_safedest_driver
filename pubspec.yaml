@@ -2,7 +2,7 @@ name: safedest_driver
 description: 'Safedest Driver'
 publish_to: 'none'
 
-version: 1.0.1+6
+version: 1.0.2+7
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -30,6 +30,8 @@ dependencies:
   # Local Storage
   shared_preferences: ^2.2.2
   flutter_secure_storage: ^9.0.0
+  sqflite: ^2.3.0
+  path: ^1.8.3
 
   # Location & Maps
   geolocator: ^10.1.0

@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import '../l10n/generated/app_localizations.dart';
 import '../config/app_config.dart';
 import '../services/auth_service.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:get/get.dart';
 // import '../services/notification_service.dart'; // Removed
 import '../services/location_service.dart';
 import '../models/api_response.dart';
@@ -217,9 +219,9 @@ class _SplashScreenState extends State<SplashScreen>
                 ),
               ),
               const SizedBox(height: 24),
-              const Text(
-                'تحديث جديد متاح',
-                style: TextStyle(
+              Text(
+                'update_available'.tr,
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -227,7 +229,7 @@ class _SplashScreenState extends State<SplashScreen>
               ),
               const SizedBox(height: 16),
               Text(
-                'يتوفر إصدار جديد من التطبيق ($minVersion). يرجى التحديث للمتابعة.',
+                'update_message'.trParams({'version': minVersion}),
                 style: const TextStyle(fontSize: 16),
                 textAlign: TextAlign.center,
               ),
@@ -236,11 +238,10 @@ class _SplashScreenState extends State<SplashScreen>
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () async {
-                    // فتح رابط المتجر
-                    // Import url_launcher or similar if needed, or use platform-specific approach
-                    // For now, we'll just log and provide a way for the user to see the logic
-                    debugPrint('Opening update URL: $updateUrl');
-                    // await launchUrl(Uri.parse(updateUrl));
+                    final uri = Uri.parse(updateUrl);
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
@@ -250,9 +251,9 @@ class _SplashScreenState extends State<SplashScreen>
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text(
-                    'تحديث الآن',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  child: Text(
+                    'update_now'.tr,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),

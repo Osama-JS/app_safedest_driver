@@ -5,8 +5,10 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../services/api_service.dart';
 import '../../services/auth_service.dart';
 import '../../services/settings_service.dart';
-import '../../widgets/custom_button.dart';
 import '../auth/login_screen.dart';
+import '../../config/app_config.dart';
+import '../../widgets/custom_button.dart';
+import '../../Controllers/AuthController.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -16,7 +18,7 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-
+  final AuthController _authController = Get.find<AuthController>();
   bool _isLoading = false;
 
   @override
@@ -207,7 +209,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         children: [
           _buildAboutTile(
             'version'.tr,
-            '1.0.0',
+            AppConfig.appVersion,
             Icons.info_outline,
             Colors.blue,
           ),
@@ -457,7 +459,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             const SizedBox(height: 16),
 
-            // أرقام الهاتف
+            // أرقام الواتساب
             Text(
               'contactUs'.tr,
               style: const TextStyle(
@@ -468,20 +470,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const SizedBox(height: 8),
 
             _buildContactItem(
-              icon: Icons.phone,
+              icon: Icons.chat_outlined,
               label: '',
-              value: '0545366466',
-              onTap: () => _launchPhone('0545366466'),
-              color: Colors.orange,
+              value: 'support_1'.tr,
+              onTap: () => _launchWhatsApp('0545366466'),
+              color: const Color(0xFF25D366), // WhatsApp color
             ),
             const SizedBox(height: 8),
 
             _buildContactItem(
-              icon: Icons.phone,
+              icon: Icons.chat_outlined,
               label: '',
-              value: '0556978782',
-              onTap: () => _launchPhone('0556978782'),
-              color: Colors.orange,
+              value: 'support_2'.tr,
+              onTap: () => _launchWhatsApp('0556978782'),
+              color: const Color(0xFF25D366), // WhatsApp color
             ),
           ],
         ),
@@ -588,6 +590,44 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('خطأ في فتح الموقع: $e')),
+        );
+      }
+    }
+  }
+
+  // فتح برنامج الوتساب
+  Future<void> _launchWhatsApp(String phoneNumber) async {
+    final driverName = _authController.currentDriver.value?.name ?? 'driver'.tr;
+    final message = 'whatsapp_support_message'.trParams({
+      'driverName': driverName,
+    });
+
+    // Clean phone number (remove leading zero if it exists for international format, but user provided local format)
+    // WhatsApp URL usually prefers international format, e.g., https://wa.me/966545366466
+    String cleanNumber = phoneNumber;
+    if (cleanNumber.startsWith('0')) {
+      cleanNumber = '966${cleanNumber.substring(1)}';
+    } else if (!cleanNumber.startsWith('966')) {
+      cleanNumber = '966$cleanNumber';
+    }
+
+    final url = "https://wa.me/$cleanNumber?text=${Uri.encodeComponent(message)}";
+    final uri = Uri.parse(url);
+
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('couldNotOpenWhatsApp'.tr)),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('errorOpeningWhatsApp'.tr + ': $e')),
         );
       }
     }
