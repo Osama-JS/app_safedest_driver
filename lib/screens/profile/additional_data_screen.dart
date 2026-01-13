@@ -1,275 +1,227 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../services/auth_service.dart';
+import '../../controllers/AdditionalDataController.dart';
 import '../../widgets/custom_button.dart';
 import '../../config/app_config.dart';
 
-class AdditionalDataScreen extends StatefulWidget {
+class AdditionalDataScreen extends StatelessWidget {
   const AdditionalDataScreen({super.key});
 
   @override
-  State<AdditionalDataScreen> createState() => _AdditionalDataScreenState();
-}
-
-class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
-  bool _isLoading = false;
-  Map<String, dynamic>? _additionalData;
-  String? _errorMessage;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadAdditionalData();
-  }
-
-  Future<void> _loadAdditionalData() async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
-
-    try {
-      final authService = Provider.of<AuthService>(context, listen: false);
-      final response = await authService.getAdditionalData();
-
-      if (response.isSuccess && response.data != null) {
-        setState(() {
-          _additionalData = response.data!['additional_data'] ?? {};
-          _isLoading = false;
-        });
-        debugPrint('Additional data loaded: $_additionalData');
-      } else {
-        // Log real error to console
-        debugPrint('API Error loading additional data: ${response.message}');
-        debugPrint('API Error details: ${response.errors}');
-
-        setState(() {
-           // Show user-friendly error message
-          _errorMessage = 'error_loading_additional_data'.tr;
-          _isLoading = false;
-        });
-      }
-    } catch (e) {
-      // Log Exception to console
-      debugPrint('Exception loading additional data: $e');
-
-      setState(() {
-        // Show user-friendly error message
-        _errorMessage = 'error_loading_additional_data'.tr;
-        _isLoading = false;
-      });
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+    // Initialize controller
+    final controller = Get.put(AdditionalDataController());
+
     return Scaffold(
       appBar: AppBar(
         title: Text('additionalData'.tr),
         elevation: 0,
-      ),
-      body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : _errorMessage != null
-              ? _buildErrorState()
-              : _additionalData == null || _additionalData!.isEmpty
-                  ? _buildEmptyState()
-                  : _buildDataContent(),
-    );
-  }
-
-  Widget _buildErrorState() {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final errorColor = Theme.of(context).colorScheme.error;
-
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.error_outline,
-            size: 64,
-            color: errorColor,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'error_occurred_title'.tr,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: errorColor,
-                ),
-          ),
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Text(
-              _errorMessage!,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withOpacity(0.7),
-                  ),
-            ),
-          ),
-          const SizedBox(height: 32),
-          CustomButton(
-            text: 'retry'.tr,
-            onPressed: _loadAdditionalData,
-            backgroundColor: errorColor,
+        actions: [
+          IconButton(
+            onPressed: controller.loadAdditionalData,
+            icon: const Icon(Icons.refresh),
           ),
         ],
       ),
+      body: Obx(() {
+        if (controller.isLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        if (controller.errorMessage != null) {
+          return _buildErrorState(context, controller);
+        }
+
+        if (controller.additionalData.isEmpty) {
+          return _buildEmptyState(context);
+        }
+
+        return _buildDataContent(context, controller);
+      }),
     );
   }
 
-  Widget _buildDataContent() {
+  Widget _buildErrorState(BuildContext context, AdditionalDataController controller) {
+    final errorColor = Theme.of(context).colorScheme.error;
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.error_outline,
+              size: 80,
+              color: errorColor,
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'error_occurred_title'.tr,
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: errorColor,
+                  ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              controller.errorMessage!,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  ),
+            ),
+            const SizedBox(height: 32),
+            SizedBox(
+              width: double.infinity,
+              child: CustomButton(
+                text: 'retry'.tr,
+                onPressed: controller.loadAdditionalData,
+                backgroundColor: errorColor,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.inventory_2_outlined,
+                size: 80,
+                color: Theme.of(context).primaryColor.withOpacity(0.5),
+              ),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'no_additional_data'.tr,
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'no_additional_data_desc'.tr,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                  ),
+            ),
+            const SizedBox(height: 40),
+            SizedBox(
+              width: double.infinity,
+              child: CustomButton(
+                text: 'back_to_profile'.tr,
+                onPressed: () => Get.back(),
+                backgroundColor: Theme.of(context).primaryColor,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDataContent(BuildContext context, AdditionalDataController controller) {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
         // Header
         Card(
+          elevation: 0,
+          color: Theme.of(context).primaryColor.withOpacity(0.05),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(color: Theme.of(context).primaryColor.withOpacity(0.1)),
+          ),
           child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            padding: const EdgeInsets.all(20),
+            child: Row(
               children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context)
-                            .primaryColor
-                            .withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8),
+                Icon(
+                  Icons.assignment_ind_outlined,
+                  color: Theme.of(context).primaryColor,
+                  size: 32,
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        controller.templateName ?? 'additionalData'.tr,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
-                      child: Icon(
-                        Icons.info_outline,
-                        color: Theme.of(context).primaryColor,
-                        size: 24,
+                      const SizedBox(height: 4),
+                      Text(
+                        'supplementary_info_desc'.tr,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                            ),
                       ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'additionalData'.tr,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleLarge
-                                ?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'supplementary_info_desc'.tr,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onSurface
-                                      .withOpacity(0.6),
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
 
         // Additional data fields
-        ..._additionalData!.entries.map((entry) {
+        ...controller.additionalData.entries.map((entry) {
           return Padding(
             padding: const EdgeInsets.only(bottom: 16),
-            child: _buildDataField(entry.key, entry.value),
+            child: _DataFieldWidget(labelKey: entry.key, value: entry.value),
           );
         }),
 
-        const SizedBox(height: 32),
-
-        // Refresh button
-        CustomButton(
-          text: 'refresh_data'.tr,
-          onPressed: _loadAdditionalData,
-          backgroundColor: Theme.of(context).primaryColor,
-        ),
+        const SizedBox(height: 24),
       ],
     );
   }
+}
 
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.info_outline,
-            size: 64,
-            color:
-                Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'no_additional_data'.tr,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withOpacity(0.7),
-                ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'no_additional_data_desc'.tr,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withOpacity(0.6),
-                ),
-          ),
-          const SizedBox(height: 32),
-          CustomButton(
-            text: 'back_to_profile'.tr,
-            onPressed: () => Navigator.pop(context),
-            backgroundColor: Theme.of(context).primaryColor,
-          ),
-        ],
-      ),
-    );
-  }
+class _DataFieldWidget extends StatelessWidget {
+  final String labelKey;
+  final dynamic value;
 
-  Widget _buildDataField(String key, dynamic value) {
+  const _DataFieldWidget({required this.labelKey, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
     if (value == null) return const SizedBox.shrink();
 
-    // Handle different data types
     if (value is Map<String, dynamic>) {
-      return _buildComplexField(key, value);
+      return _buildComplexField(context, labelKey, value);
     } else {
-      return _buildSimpleField(key, value.toString());
+      return _buildSimpleField(context, labelKey, value.toString());
     }
   }
 
-  Widget _buildSimpleField(String key, String value) {
+  Widget _buildSimpleField(BuildContext context, String key, String value) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -288,17 +240,11 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: isDark
-                    ? Theme.of(context)
-                        .colorScheme
-                        .surface
-                        .withOpacity(0.5)
+                    ? Theme.of(context).colorScheme.surface.withOpacity(0.5)
                     : Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .outline
-                      .withOpacity(0.3),
+                  color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
                 ),
               ),
               child: Text(
@@ -306,10 +252,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       color: value.isNotEmpty
                           ? Theme.of(context).colorScheme.onSurface
-                          : Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withOpacity(0.5),
+                          : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                     ),
               ),
             ),
@@ -319,7 +262,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
     );
   }
 
-  Widget _buildComplexField(String key, Map<String, dynamic> fieldData) {
+  Widget _buildComplexField(BuildContext context, String key, Map<String, dynamic> fieldData) {
     final label = fieldData['label'] ?? _getFieldLabel(key);
     final value = fieldData['value'];
     final type = fieldData['type'] ?? 'text';
@@ -328,12 +271,12 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
 
     return Card(
       elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Field label with type indicator
             Row(
               children: [
                 Expanded(
@@ -349,27 +292,24 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
               ],
             ),
             const SizedBox(height: 12),
-
-            // Handle different field types
-            // Handle different field types
             if (type == 'file' || type == 'image') ...[
-              _buildFileField(value, type, label),
+              _buildFileField(context, value, type, label),
             ] else if (type == 'file_expiration_date') ...[
-              _buildFileWithExpirationField(value, expiration, label),
+              _buildFileWithExpirationField(context, value, expiration, label),
             ] else if (type == 'file_with_text') ...[
-              _buildFileWithTextField(value, text, label),
+              _buildFileWithTextField(context, value, text, label),
             ] else if (type == 'date') ...[
-              _buildDateField(value),
+              _buildDateField(context, value),
             ] else if (type == 'number') ...[
-              _buildNumberField(value),
+              _buildNumberField(context, value),
             ] else if (type == 'email') ...[
-              _buildEmailField(value),
+              _buildEmailField(context, value),
             ] else if (type == 'phone') ...[
-              _buildPhoneField(value),
+              _buildPhoneField(context, value),
             ] else if (type == 'url') ...[
-              _buildUrlField(value),
+              _buildUrlField(context, value),
             ] else ...[
-              _buildTextValue(value),
+              _buildTextValue(context, value),
             ],
           ],
         ),
@@ -457,7 +397,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
     return ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic'].contains(extension);
   }
 
-  void _showImageDialog(String imageUrl, String label) {
+  void _showImageDialog(BuildContext context, String imageUrl, String label) {
     Get.dialog(
       Dialog(
         backgroundColor: Colors.transparent,
@@ -517,9 +457,9 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
     );
   }
 
-  Widget _buildFileField(dynamic value, String type, String label) {
+  Widget _buildFileField(BuildContext context, dynamic value, String type, String label) {
     if (value == null || value.toString().isEmpty) {
-      return _buildEmptyValue();
+      return _buildEmptyValue(context);
     }
 
     final imageUrl = AppConfig.getStorageUrl(value.toString());
@@ -532,7 +472,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
       children: [
         if (isImageFile)
           GestureDetector(
-            onTap: () => _showImageDialog(imageUrl, label),
+            onTap: () => _showImageDialog(context, imageUrl, label),
             child: Container(
               margin: const EdgeInsets.only(bottom: 12),
               width: double.infinity,
@@ -564,27 +504,17 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
               ),
             ),
           ),
-
-        // Only show file details if NOT an image
         if (!isImageFile)
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: isDark
-                  ? primaryColor.withOpacity(0.1)
-                  : primaryColor.withOpacity(0.05),
+              color: isDark ? primaryColor.withOpacity(0.1) : primaryColor.withOpacity(0.05),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: primaryColor.withOpacity(0.3),
-              ),
+              border: Border.all(color: primaryColor.withOpacity(0.3)),
             ),
             child: Row(
               children: [
-                Icon(
-                  Icons.attach_file,
-                  color: primaryColor,
-                  size: 24,
-                ),
+                Icon(Icons.attach_file, color: primaryColor, size: 24),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -602,10 +532,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
                         value.toString().split('/').last,
                         style: TextStyle(
                           fontSize: 12,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withOpacity(0.7),
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                         ),
                       ),
                     ],
@@ -618,10 +545,7 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
                       await launchUrl(url, mode: LaunchMode.externalApplication);
                     }
                   },
-                  icon: Icon(
-                    Icons.open_in_new,
-                    color: primaryColor,
-                  ),
+                  icon: Icon(Icons.open_in_new, color: primaryColor),
                 ),
               ],
             ),
@@ -630,32 +554,22 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
     );
   }
 
-  Widget _buildFileWithExpirationField(dynamic value, dynamic expiration, String label) {
+  Widget _buildFileWithExpirationField(BuildContext context, dynamic value, dynamic expiration, String label) {
     return Column(
       children: [
-        if (value != null) _buildFileField(value, 'file', label),
+        if (value != null) _buildFileField(context, value, 'file', label),
         if (value != null && expiration != null) const SizedBox(height: 12),
-        if (expiration != null) ...[
+        if (expiration != null)
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Theme.of(context)
-                  .colorScheme
-                  .errorContainer
-                  .withOpacity(0.3),
+              color: Theme.of(context).colorScheme.errorContainer.withOpacity(0.3),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color:
-                    Theme.of(context).colorScheme.error.withOpacity(0.5),
-              ),
+              border: Border.all(color: Theme.of(context).colorScheme.error.withOpacity(0.5)),
             ),
             child: Row(
               children: [
-                Icon(
-                  Icons.schedule,
-                  color: Theme.of(context).colorScheme.error,
-                  size: 20,
-                ),
+                Icon(Icons.schedule, color: Theme.of(context).colorScheme.error, size: 20),
                 const SizedBox(width: 8),
                 Text(
                   'expiration_date_label'.trParams({'date': expiration.toString()}),
@@ -667,93 +581,62 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
               ],
             ),
           ),
-        ],
       ],
     );
   }
 
-  Widget _buildFileWithTextField(dynamic value, dynamic text, String label) {
+  Widget _buildFileWithTextField(BuildContext context, dynamic value, dynamic text, String label) {
     return Column(
       children: [
-        if (value != null) _buildFileField(value, 'file', label),
+        if (value != null) _buildFileField(context, value, 'file', label),
         if (value != null && text != null) const SizedBox(height: 12),
-        if (text != null) _buildTextValue(text),
+        if (text != null) _buildTextValue(context, text),
       ],
     );
   }
 
-  Widget _buildDateField(dynamic value) {
-    if (value == null || value.toString().isEmpty) {
-      return _buildEmptyValue();
-    }
-
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+  Widget _buildDateField(BuildContext context, dynamic value) {
+    if (value == null || value.toString().isEmpty) return _buildEmptyValue(context);
     final successColor = Theme.of(context).colorScheme.primary;
-
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: isDark
-            ? successColor.withOpacity(0.1)
-            : successColor.withOpacity(0.05),
+        color: successColor.withOpacity(0.05),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: successColor.withOpacity(0.3),
-        ),
+        border: Border.all(color: successColor.withOpacity(0.3)),
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.calendar_today,
-            color: successColor,
-            size: 20,
-          ),
+          Icon(Icons.calendar_today, color: successColor, size: 20),
           const SizedBox(width: 12),
           Text(
             value.toString(),
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
+            style: TextStyle(fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildTextValue(dynamic value) {
-    if (value == null || value.toString().isEmpty) {
-      return _buildEmptyValue();
-    }
-
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
+  Widget _buildTextValue(BuildContext context, dynamic value) {
+    if (value == null || value.toString().isEmpty) return _buildEmptyValue(context);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: isDark
-            ? Theme.of(context).colorScheme.surface.withOpacity(0.5)
-            : Theme.of(context).colorScheme.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
-        ),
+        border: Border.all(color: Theme.of(context).colorScheme.outline.withOpacity(0.3)),
       ),
       child: Text(
         value.toString(),
-        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
+        style: Theme.of(context).textTheme.bodyLarge,
       ),
     );
   }
 
-  Widget _buildNumberField(dynamic value) {
-    if (value == null || value.toString().isEmpty) {
-      return _buildEmptyValue();
-    }
-
+  Widget _buildNumberField(BuildContext context, dynamic value) {
+    if (value == null || value.toString().isEmpty) return _buildEmptyValue(context);
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -763,30 +646,19 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.numbers,
-            color: Colors.purple[600],
-            size: 20,
-          ),
+          Icon(Icons.numbers, color: Colors.purple[600], size: 20),
           const SizedBox(width: 12),
           Text(
             value.toString(),
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              color: Colors.purple[800],
-              fontSize: 16,
-            ),
+            style: TextStyle(fontWeight: FontWeight.w600, color: Colors.purple[800], fontSize: 16),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildEmailField(dynamic value) {
-    if (value == null || value.toString().isEmpty) {
-      return _buildEmptyValue();
-    }
-
+  Widget _buildEmailField(BuildContext context, dynamic value) {
+    if (value == null || value.toString().isEmpty) return _buildEmptyValue(context);
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -796,31 +668,16 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.email,
-            color: Colors.red[600],
-            size: 20,
-          ),
+          Icon(Icons.email, color: Colors.red[600], size: 20),
           const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              value.toString(),
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                color: Colors.red[800],
-              ),
-            ),
-          ),
+          Expanded(child: Text(value.toString(), style: TextStyle(fontWeight: FontWeight.w600, color: Colors.red[800]))),
         ],
       ),
     );
   }
 
-  Widget _buildPhoneField(dynamic value) {
-    if (value == null || value.toString().isEmpty) {
-      return _buildEmptyValue();
-    }
-
+  Widget _buildPhoneField(BuildContext context, dynamic value) {
+    if (value == null || value.toString().isEmpty) return _buildEmptyValue(context);
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -830,31 +687,16 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.phone,
-            color: Colors.teal[600],
-            size: 20,
-          ),
+          Icon(Icons.phone, color: Colors.teal[600], size: 20),
           const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              value.toString(),
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                color: Colors.teal[800],
-              ),
-            ),
-          ),
+          Expanded(child: Text(value.toString(), style: TextStyle(fontWeight: FontWeight.w600, color: Colors.teal[800]))),
         ],
       ),
     );
   }
 
-  Widget _buildUrlField(dynamic value) {
-    if (value == null || value.toString().isEmpty) {
-      return _buildEmptyValue();
-    }
-
+  Widget _buildUrlField(BuildContext context, dynamic value) {
+    if (value == null || value.toString().isEmpty) return _buildEmptyValue(context);
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -864,70 +706,45 @@ class _AdditionalDataScreenState extends State<AdditionalDataScreen> {
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.link,
-            color: Colors.indigo[600],
-            size: 20,
-          ),
+          Icon(Icons.link, color: Colors.indigo[600], size: 20),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               value.toString(),
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                color: Colors.indigo[800],
-                decoration: TextDecoration.underline,
-              ),
+              style: TextStyle(fontWeight: FontWeight.w600, color: Colors.indigo[800], decoration: TextDecoration.underline),
             ),
           ),
           IconButton(
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('open_url_coming_soon'.tr),
-                ),
-              );
+            onPressed: () async {
+              final url = Uri.parse(value.toString());
+              if (await canLaunchUrl(url)) {
+                await launchUrl(url, mode: LaunchMode.externalApplication);
+              }
             },
-            icon: Icon(
-              Icons.open_in_new,
-              color: Colors.indigo[600],
-            ),
+            icon: Icon(Icons.open_in_new, color: Colors.indigo[600]),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildEmptyValue() {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
+  Widget _buildEmptyValue(BuildContext context) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: isDark
-            ? Theme.of(context).colorScheme.surface.withOpacity(0.3)
-            : Theme.of(context).colorScheme.surface.withOpacity(0.5),
+        color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
-        ),
+        border: Border.all(color: Theme.of(context).colorScheme.outline.withOpacity(0.2)),
       ),
       child: Text(
         'not_specified'.tr,
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context)
-                  .colorScheme
-                  .onSurface
-                  .withOpacity(0.5),
-            ),
+        style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
       ),
     );
   }
 
   String _getFieldLabel(String key) {
-    // Return key as label if no specific translation logic needed
-    // You could map keys to readable labels here if needed
     return key;
   }
 }
