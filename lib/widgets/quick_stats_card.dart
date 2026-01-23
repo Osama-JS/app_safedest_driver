@@ -5,7 +5,18 @@ import '../Controllers/WalletController.dart';
 import '../models/task.dart';
 
 class QuickStatsCard extends StatelessWidget {
-  const QuickStatsCard({super.key});
+  final Key? balanceKey;
+  final Key? availableTasksKey;
+  final Key? activeTasksKey;
+  final Key? totalEarningsKey;
+  
+  const QuickStatsCard({
+    super.key, 
+    this.balanceKey,
+    this.availableTasksKey,
+    this.activeTasksKey,
+    this.totalEarningsKey,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -39,22 +50,28 @@ class QuickStatsCard extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: _buildStatItem(
-                      context,
-                      'available_tasks'.tr,
-                      '${taskController.getTaskCountByStatus('assign')}',
-                      Icons.assignment_outlined,
-                      Colors.blue,
+                    child: Container(
+                      key: availableTasksKey,
+                      child: _buildStatItem(
+                        context,
+                        'available_tasks'.tr,
+                        '${taskController.getTaskCountByStatus('assign')}',
+                        Icons.assignment_outlined,
+                        Colors.blue,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: _buildStatItem(
-                      context,
-                      'active_tasks'.tr,
-                      '${taskController.activeTasks.length}',
-                      Icons.work_outline,
-                      Colors.orange,
+                    child: Container(
+                      key: activeTasksKey,
+                      child: _buildStatItem(
+                        context,
+                        'active_tasks'.tr,
+                        '${taskController.activeTasks.length}',
+                        Icons.work_outline,
+                        Colors.orange,
+                      ),
                     ),
                   ),
                 ],
@@ -63,22 +80,28 @@ class QuickStatsCard extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: _buildStatItem(
-                      context,
-                      'current_balance'.tr,
-                      '${walletController.currentBalance.toStringAsFixed(2)} ${walletController.currency}',
-                      Icons.account_balance_wallet_outlined,
-                      Colors.green,
+                    child: Container(
+                      key: balanceKey,
+                      child: _buildStatItem(
+                        context,
+                        'current_balance'.tr,
+                        '${walletController.currentBalance.toStringAsFixed(2)} ${walletController.currency}',
+                        Icons.account_balance_wallet_outlined,
+                        Colors.green,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: _buildStatItem(
-                      context,
-                      'total_earnings'.tr,
-                      '${walletController.totalEarnings.toStringAsFixed(2)} ${walletController.currency}',
-                      Icons.trending_up,
-                      Colors.purple,
+                    child: Container(
+                      key: totalEarningsKey,
+                      child: _buildStatItem(
+                        context,
+                        'total_earnings'.tr,
+                        '${walletController.totalEarnings.toStringAsFixed(2)} ${walletController.currency}',
+                        Icons.trending_up,
+                        Colors.purple,
+                      ),
                     ),
                   ),
                 ],

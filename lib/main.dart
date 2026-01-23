@@ -15,6 +15,7 @@ import 'services/task_service.dart';
 import 'services/location_service.dart';
 import 'screens/splash_screen.dart';
 import 'screens/auth/login_screen.dart';
+import 'screens/auth/onboarding_screen.dart';
 import 'screens/auth/forgot_password_screen.dart';
 import 'screens/main/main_screen.dart';
 import 'screens/profile/edit_profile_screen.dart';
@@ -153,6 +154,7 @@ class _SafeDestsDriverAppState extends State<SafeDestsDriverApp> {
             initialRoute: '/',
             getPages: [
               GetPage(name: '/', page: () => const SplashScreen()),
+              GetPage(name: '/onboarding', page: () => const OnboardingScreen()),
               GetPage(name: '/login', page: () => const LoginScreen()),
               GetPage(name: '/register', page: () => const RegisterScreen()),
               GetPage(name: '/forgot-password', page: () => const ForgotPasswordScreen()),

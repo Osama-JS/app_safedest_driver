@@ -5,7 +5,10 @@ import '../Controllers/AuthController.dart';
 import '../Controllers/LocationController.dart';
 
 class DriverStatusCard extends StatefulWidget {
-  const DriverStatusCard({super.key});
+  final Key? onlineSwitchKey;
+  final Key? busyStatusKey;
+  
+  const DriverStatusCard({super.key, this.onlineSwitchKey, this.busyStatusKey});
 
   @override
   State<DriverStatusCard> createState() => _DriverStatusCardState();
@@ -49,45 +52,48 @@ class _DriverStatusCardState extends State<DriverStatusCard> {
               const SizedBox(height: 20),
 
               // Online/Offline Status
-              Row(
-                children: [
-                  Container(
-                    width: 12,
-                    height: 12,
-                    decoration: BoxDecoration(
-                      color: isOnline ? Colors.green : Colors.grey,
-                      shape: BoxShape.circle,
+              Container(
+                 key: widget.onlineSwitchKey,
+                 child: Row(
+                  children: [
+                    Container(
+                      width: 12,
+                      height: 12,
+                      decoration: BoxDecoration(
+                        color: isOnline ? Colors.green : Colors.grey,
+                        shape: BoxShape.circle,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    isOnline ? 'online'.tr : 'offline'.tr,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: isOnline ? Colors.green : Colors.grey,
+                    const SizedBox(width: 12),
+                    Text(
+                      isOnline ? 'online'.tr : 'offline'.tr,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: isOnline ? Colors.green : Colors.grey,
+                      ),
                     ),
-                  ),
-                  const Spacer(),
-
-                  Obx(() {
-                    final busy = _isChangingStatus.value;
-                    return Row(
-                      children: [
-                        if (busy)
-                          const SizedBox(
-                            width: 18,
-                            height: 18,
-                            child: CircularProgressIndicator(strokeWidth: 2),
+                    const Spacer(),
+  
+                    Obx(() {
+                      final busy = _isChangingStatus.value;
+                      return Row(
+                        children: [
+                          if (busy)
+                            const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                          if (busy) const SizedBox(width: 10),
+                          Switch(
+                            value: isOnline,
+                            onChanged: busy ? null : (value) => _onToggle(value),
                           ),
-                        if (busy) const SizedBox(width: 10),
-                        Switch(
-                          value: isOnline,
-                          onChanged: busy ? null : (value) => _onToggle(value),
-                        ),
-                      ],
-                    );
-                  }),
-                ],
+                        ],
+                      );
+                    }),
+                  ],
+                ),
               ),
 
               const SizedBox(height: 16),
@@ -114,37 +120,40 @@ class _DriverStatusCardState extends State<DriverStatusCard> {
               const SizedBox(height: 16),
 
               // Available/Busy Status
-              Row(
-                children: [
-                  Icon(
-                    driver?.free == true ? Icons.check_circle : Icons.work,
-                    color: driver?.free == true ? Colors.green : Colors.orange,
-                    size: 20,
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    driver?.free == true ? 'available'.tr : 'busy'.tr,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              Container(
+                key: widget.busyStatusKey,
+                child: Row(
+                  children: [
+                    Icon(
+                      driver?.free == true ? Icons.check_circle : Icons.work,
                       color: driver?.free == true ? Colors.green : Colors.orange,
-                      fontWeight: FontWeight.w500,
+                      size: 20,
                     ),
-                  ),
-                  const Spacer(),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      'system_controlled'.tr,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey[600],
-                        fontSize: 10,
+                    const SizedBox(width: 12),
+                    Text(
+                      driver?.free == true ? 'available'.tr : 'busy'.tr,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: driver?.free == true ? Colors.green : Colors.orange,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                  ),
-                ],
+                    const Spacer(),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        'system_controlled'.tr,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Colors.grey[600],
+                          fontSize: 10,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
 
               if (driver != null) ...[

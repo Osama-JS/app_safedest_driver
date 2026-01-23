@@ -1,0 +1,197 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../Controllers/OnboardingController.dart';
+
+class OnboardingScreen extends StatelessWidget {
+  const OnboardingScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final OnboardingController controller = Get.put(OnboardingController());
+
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Skip Button
+            Align(
+              alignment: AlignmentDirectional.topEnd,
+              child: TextButton(
+                onPressed: controller.skip,
+                child: Text(
+                  'skip'.tr,
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+
+            // Page View
+            Expanded(
+              child: PageView.builder(
+                controller: controller.pageController,
+                itemCount: controller.onboardingData.length,
+                onPageChanged: controller.onPageChanged,
+                itemBuilder: (context, index) {
+                  return OnboardingPage(
+                    title: controller.onboardingData[index]['title']!,
+                    desc: controller.onboardingData[index]['desc']!,
+                    index: index,
+                  );
+                },
+              ),
+            ),
+
+            // Dots Indicator & Next Button
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                  // Dots
+                  Obx(
+                    () => Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        controller.onboardingData.length,
+                        (index) => AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          margin: const EdgeInsets.symmetric(horizontal: 5),
+                          height: 10,
+                          width: controller.currentPage.value == index ? 25 : 10,
+                          decoration: BoxDecoration(
+                            color: controller.currentPage.value == index
+                                ? Theme.of(context).primaryColor
+                                : Colors.grey.shade300,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 40),
+
+                  // Button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 55,
+                    child: Obx(
+                      () => ElevatedButton(
+                        onPressed: controller.nextPage,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).primaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                        child: Text(
+                          controller.currentPage.value ==
+                                  controller.onboardingData.length - 1
+                              ? 'get_started'.tr
+                              : 'next'.tr,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class OnboardingPage extends StatelessWidget {
+  final String title;
+  final String desc;
+  final int index;
+
+  const OnboardingPage({
+    super.key,
+    required this.title,
+    required this.desc,
+    required this.index,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Image Placeholder (Animate It)
+          Expanded(
+            flex: 3,
+            child: TweenAnimationBuilder(
+              tween: Tween<double>(begin: 0.8, end: 1.0),
+              duration: const Duration(milliseconds: 800),
+              curve: Curves.elasticOut,
+              builder: (context, value, child) {
+                return Transform.scale(
+                  scale: value,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor.withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Icon(
+                        // Dynamic icons based on index
+                        index == 0
+                            ? Icons.bar_chart_rounded
+                            : index == 1
+                                ? Icons.delivery_dining_rounded
+                                : Icons.account_balance_wallet_rounded,
+                        size: 100,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          
+          const SizedBox(height: 40),
+
+          // Text Content (Fade/Slide Up)
+          Expanded(
+            flex: 2,
+            child: Column(
+              children: [
+                Text(
+                  title.tr,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  desc.tr,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Colors.grey[600],
+                        height: 1.5,
+                      ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

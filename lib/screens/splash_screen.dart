@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 // import '../services/notification_service.dart'; // Removed
 import '../services/location_service.dart';
 import '../models/api_response.dart';
+import '../shared_prff.dart';
 import 'auth/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -161,8 +162,17 @@ class _SplashScreenState extends State<SplashScreen>
             Navigator.of(context).pushReplacementNamed('/main');
           }
         } else {
-          debugPrint('SplashScreen: Navigating to /login');
-          Navigator.of(context).pushReplacementNamed('/login');
+             final bool seenOnboarding = Bool_pref.getBool('seenOnboarding') ?? false;
+             if (!seenOnboarding) {
+                 debugPrint('SplashScreen: Onboarding not seen, navigating to /onboarding');
+                 Get.offAllNamed('/onboarding');
+             } else {
+                 debugPrint('SplashScreen: Navigating to /login');
+                 Navigator.of(context).pushReplacementNamed('/login');
+                 // Navigator.of(context).pushReplacementNamed('/main');
+
+
+             }
         }
       } else {
         debugPrint('SplashScreen: Widget not mounted, skipping navigation');

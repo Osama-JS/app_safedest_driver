@@ -3,9 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import '../../Controllers/AuthController.dart';
-// import '../../services/notification_service.dart'; // Removed
 import '../../Controllers/NotificationController.dart'; // Added
 import '../../l10n/generated/app_localizations.dart';
+// import '../../l10n/generated/app_localizations.dart';
 import 'home_screen.dart';
 import 'tasks_screen.dart';
 import 'wallet_screen.dart';
@@ -29,11 +29,54 @@ class _MainScreenState extends State<MainScreen> {
     const ProfileScreen(),
   ];
 
+  // Tutorial Keys
+/*  final GlobalKey _homeKey = GlobalKey();
+  final GlobalKey _tasksKey = GlobalKey();
+  final GlobalKey _walletKey = GlobalKey();
+  final GlobalKey _profileKey = GlobalKey();*/
+
   @override
   void initState() {
     super.initState();
     _initializeAndCheckAuth();
   }
+
+/*  void _startTutorial() {
+     final tutorialController = Get.put(TutorialController());
+     tutorialController.showTutorial(
+        context: context,
+        targets: [
+           TutorialController.createTarget(
+              identify: "home_tab",
+              key: _homeKey,
+              title: "tutorial_home_title",
+              desc: "tutorial_home_desc",
+              align: ContentAlign.top,
+           ),
+           TutorialController.createTarget(
+              identify: "tasks_tab",
+              key: _tasksKey,
+              title: "tutorial_tasks_title",
+              desc: "tutorial_tasks_desc",
+              align: ContentAlign.top,
+           ),
+           TutorialController.createTarget(
+              identify: "wallet_tab",
+              key: _walletKey,
+              title: "tutorial_wallet_title",
+              desc: "tutorial_wallet_desc",
+              align: ContentAlign.top,
+           ),
+           TutorialController.createTarget(
+              identify: "profile_tab",
+              key: _profileKey,
+              title: "tutorial_profile_title",
+              desc: "tutorial_profile_desc",
+              align: ContentAlign.top,
+           ),
+        ],
+     );
+  }*/
 
   Future<void> _initializeAndCheckAuth() async {
     final authController = Get.find<AuthController>();
@@ -48,6 +91,17 @@ class _MainScreenState extends State<MainScreen> {
       setState(() {
         _isInitialized = true;
       });
+
+      // Start tutorial after UI is built with a small delay to ensure keys are ready
+      /*WidgetsBinding.instance.addPostFrameCallback((_) {
+         debugPrint('MainScreen: Scheduling tutorial...');
+         Future.delayed(const Duration(seconds: 1), () {
+            if (mounted) {
+               debugPrint('MainScreen: Starting tutorial now.');
+               _startTutorial();
+            }
+         });
+      });*/
 
       // Check authentication status
       debugPrint('MainScreen: Checking auth status via AuthController');
@@ -118,12 +172,12 @@ class _MainScreenState extends State<MainScreen> {
           type: BottomNavigationBarType.fixed,
           items: [
             BottomNavigationBarItem(
-              icon: const Icon(Icons.home_outlined),
+              icon: Icon(Icons.home_outlined),//, key: _homeKey),
               activeIcon: const Icon(Icons.home),
               label: l10n.home,
             ),
             BottomNavigationBarItem(
-              icon: const Icon(Icons.assignment_outlined),
+              icon: Icon(Icons.assignment_outlined),//, key: _tasksKey),
               activeIcon: const Icon(Icons.assignment),
               label: l10n.tasks,
               backgroundColor: _currentIndex == 1
@@ -131,12 +185,12 @@ class _MainScreenState extends State<MainScreen> {
                   : null,
             ),
             BottomNavigationBarItem(
-              icon: const Icon(Icons.account_balance_wallet_outlined),
+              icon: Icon(Icons.account_balance_wallet_outlined),//, key: _walletKey),
               activeIcon: const Icon(Icons.account_balance_wallet),
               label: l10n.wallet,
             ),
             BottomNavigationBarItem(
-              icon: const Icon(Icons.person_outlined),
+              icon: Icon(Icons.person_outlined),//, key: _profileKey),
               activeIcon: const Icon(Icons.person),
               label: l10n.profile,
             ),

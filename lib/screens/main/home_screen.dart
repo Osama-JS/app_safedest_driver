@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../Controllers/AuthController.dart';
 import '../../Controllers/TaskController.dart';
 import '../../Controllers/LocationController.dart';
@@ -13,6 +14,7 @@ import '../../widgets/pending_task_card.dart';
 import '../../widgets/earnings_summary_card.dart';
 import '../task_ads/task_ads_screen.dart';
 import 'notifications_screen.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,13 +31,22 @@ class _HomeScreenState extends State<HomeScreen> {
   final NotificationController _notificationController = Get.find<NotificationController>();
   final TaskAdsController _taskAdsController = Get.find<TaskAdsController>();
 
+
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadData();
+      
+      // Schedule tutorial
+      Future.delayed(const Duration(seconds: 2), () {
+        if (mounted)     _checkTutorial();
+
+      });
     });
   }
+
 
   Future<void> _loadData() async {
     try {
@@ -270,8 +281,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: RefreshIndicator(
+
         onRefresh: _refreshData,
         child: CustomScrollView(
+          controller: _singleScrollController,
           slivers: [
             _buildAppBar(),
             SliverPadding(
@@ -279,25 +292,45 @@ class _HomeScreenState extends State<HomeScreen> {
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
                   // Pending Task Card (if any)
-                  const PendingTaskCard(),
+                  const SizedBox(height: 16),
+
+                  // Recent Tasks (Pending)
+                  Container(
+                    key: _recentTasksKey,
+                    child: const PendingTaskCard(),
+                  ),
 
                   // Driver Status Card
-                  const DriverStatusCard(),
+                  DriverStatusCard(
+                    onlineSwitchKey: _onlineSwitchKey,
+                    busyStatusKey: _busyStatusKey,
+                  ),
 
                   const SizedBox(height: 16),
 
                   // Quick Stats
-                  const QuickStatsCard(),
+                  QuickStatsCard(
+                    availableTasksKey: _availableTasksKey,
+                    activeTasksKey: _activeTasksKey,
+                    balanceKey: _balanceKey,
+                    totalEarningsKey: _totalEarningsKey,
+                  ),
 
                   const SizedBox(height: 16),
 
                   // Task Ads Section
-                  _buildTaskAdsSection(),
+                  Container(
+                    key: _adsKey,
+                    child: _buildTaskAdsSection(),
+                  ),
 
                   const SizedBox(height: 16),
 
                   // Earnings Summary
-                  const EarningsSummaryCard(),
+                  Container(
+                    key: _earningsCardKey,
+                    child: const EarningsSummaryCard(),
+                  ),
 
                   const SizedBox(height: 16),
 
@@ -400,4 +433,347 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
     );
   }
+
+
+
+
+
+  final ScrollController _singleScrollController = ScrollController();
+
+
+
+  // Tutorial Keys - 9 Steps
+  final GlobalKey _onlineSwitchKey = GlobalKey();
+  final GlobalKey _busyStatusKey = GlobalKey();
+  final GlobalKey _availableTasksKey = GlobalKey();
+  final GlobalKey _activeTasksKey = GlobalKey();
+  final GlobalKey _balanceKey = GlobalKey();
+  final GlobalKey _totalEarningsKey = GlobalKey();
+  final GlobalKey _adsKey = GlobalKey();
+  final GlobalKey _earningsCardKey = GlobalKey();
+  final GlobalKey _recentTasksKey = GlobalKey();
+  TutorialCoachMark? tutorialCoachMark;
+
+
+  Future<void> _checkTutorial() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool hasSeen = prefs.getBool('hasSeenHomeScreen') ?? false;
+
+    if (!hasSeen) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _viewTutorial();
+      });
+    }
+  }
+
+  void _viewTutorial() {
+    int counter = 0;
+    List<TargetFocus> targets = _createTargets();
+    Scrollable.ensureVisible(
+      targets[counter].keyTarget?.currentContext ?? context,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
+
+    tutorialCoachMark = TutorialCoachMark(
+        targets: _createTargets(),
+        colorShadow: Colors.red.shade500,
+        textSkip: "skip".tr,
+        paddingFocus: 10,
+        opacityShadow: 0.9,
+        onFinish: () {
+          _markTutorialAsSeen();
+        },
+        onSkip: () {
+          _markTutorialAsSeen();
+          return true;
+        },
+        onClickTarget: (target) {
+          counter++;
+          if (counter < targets.length) {
+            Scrollable.ensureVisible(
+              targets[counter].keyTarget?.currentContext ?? context,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeInOut,
+              alignment: 0.5,
+            );
+          }
+        });
+
+
+    Future.delayed(const Duration(milliseconds: 500), () {
+      tutorialCoachMark?.show(context: context);
+    });
+  }
+
+
+
+
+
+
+
+  void _createTutorial() {
+    int counter=0;
+    _singleScrollController.animateTo(_singleScrollController.position.minScrollExtent,duration: const Duration(milliseconds:1),curve: Curves.easeOut);
+    _scrollToKey(_onlineSwitchKey.currentContext);
+
+    tutorialCoachMark = TutorialCoachMark(
+        targets: _createTargets(),
+        colorShadow: Colors.red.shade500,
+        textSkip: "تخطي",
+        paddingFocus: 10,
+        opacityShadow: 0.9,
+        onFinish: () {
+          _markTutorialAsSeen();
+        },
+        onSkip: () {
+          _markTutorialAsSeen();
+          return true;
+        },
+
+        onClickTarget: (target) {
+          // _scrollToKey(target.keyTarget?.currentContext);
+          // setState(() {
+          print(counter);
+          counter++;
+          if(counter==1) {
+            _singleScrollController.animateTo(_singleScrollController.position.maxScrollExtent,duration: const Duration(milliseconds:500),curve: Curves.ease);
+          } else if(counter==2) {
+            _singleScrollController.animateTo(_singleScrollController.position.maxScrollExtent,duration: const Duration(milliseconds:500),curve: Curves.ease);
+          }
+          // });
+        }
+    );
+  }
+
+  void _scrollToKey(BuildContext? context) {
+    // final context = key.currentContext;
+    if (context != null) {
+      // This ensures the widget associated with the key is visible in its parent scrollable
+      Scrollable.ensureVisible(
+        context,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        alignment: 0.5, // Optional: centers the widget in the viewport
+      );
+    }
+  }
+
+
+  void _markTutorialAsSeen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('hasSeenHomeScreen', true);
+  }
+
+  List<TargetFocus> _createTargets() {
+    List<TargetFocus> targets = [];
+
+    // targets.add(
+    //   TargetFocus(
+    //     identify: "history",
+    //     keyTarget: _historyKey,
+    //     shape: ShapeLightFocus.Circle,
+    //     contents: [
+    //       TargetContent(
+    //         align: ContentAlign.bottom,
+    //         child: _buildTutorialItem(
+    //           title: "transaction_history".tr,
+    //           description: "transaction_history_description".tr,
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // );
+
+    targets.add(
+      TargetFocus(
+        identify: "online_switch",
+        keyTarget: _onlineSwitchKey,
+
+        // onSelected: (target) {
+        //   _scrollToKey(_summaryKey);
+        // },
+        shape: ShapeLightFocus.RRect,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: _buildTutorialItem(
+            title: "tutorial_online_title".tr,
+            description: "tutorial_online_desc".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "busy_status",
+        keyTarget: _busyStatusKey,
+        shape: ShapeLightFocus.RRect,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            child: _buildTutorialItem(
+              title: "tutorial_busy_title".tr,
+              description: "tutorial_busy_desc".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+
+    targets.add(
+      TargetFocus(
+        identify: "available_tasks",
+        keyTarget: _availableTasksKey,
+        shape: ShapeLightFocus.RRect,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            child: _buildTutorialItem(
+              title: "tutorial_available_title".tr,
+              description: "tutorial_available_desc".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+
+
+    targets.add(
+      TargetFocus(
+        identify: "active_tasks",
+        keyTarget: _activeTasksKey,
+        shape: ShapeLightFocus.RRect,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            child: _buildTutorialItem(
+              title: "tutorial_active_title".tr,
+              description: "tutorial_active_desc".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+
+    targets.add(
+      TargetFocus(
+        identify: "current_balance",
+        keyTarget: _balanceKey,
+        shape: ShapeLightFocus.RRect,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            child: _buildTutorialItem(
+              title: "tutorial_balance_title".tr,
+              description: "tutorial_balance_desc".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+
+    targets.add(
+    TargetFocus(
+    identify: "total_earnings",
+    keyTarget: _totalEarningsKey,
+    shape: ShapeLightFocus.RRect,
+    contents: [
+    TargetContent(
+    align: ContentAlign.top,
+    child: _buildTutorialItem(
+    title: "tutorial_total_title".tr,
+    description: "tutorial_total_desc".tr,
+    ),
+    ),
+    ],
+    ),
+    );
+
+
+    targets.add(
+    TargetFocus(
+    identify: "ads_section",
+    keyTarget: _adsKey,
+    shape: ShapeLightFocus.RRect,
+    contents: [
+    TargetContent(
+    align: ContentAlign.top,
+    child: _buildTutorialItem(
+    title: "tutorial_ads_title".tr,
+    description: "tutorial_ads_desc".tr,
+    ),
+    ),
+    ],
+    ),
+    );
+
+    targets.add(
+    TargetFocus(
+    identify: "earnings_summary",
+    keyTarget: _earningsCardKey,
+    shape: ShapeLightFocus.RRect,
+    contents: [
+    TargetContent(
+    align: ContentAlign.top,
+    child: _buildTutorialItem(
+    title: "tutorial_earnings_card_title".tr,
+    description: "tutorial_earnings_card_desc".tr,
+    ),
+    ),
+    ],
+    ),
+    );
+
+
+
+
+    targets.add(
+    TargetFocus(
+    identify: "recent_tasks",
+    keyTarget: _recentTasksKey,
+    shape: ShapeLightFocus.RRect,
+    contents: [
+    TargetContent(
+    align: ContentAlign.top,
+    child: _buildTutorialItem(
+    title: "tutorial_recent_title".tr,
+    description: "tutorial_recent_desc".tr,
+    ),
+    ),
+    ],
+    ),
+    );
+
+
+
+
+    return targets;
+  }
+
+  Widget _buildTutorialItem({required String title, required String description}) {
+    return Container(
+      constraints: BoxConstraints(maxWidth: Get.width * 0.8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.black.withAlpha(150),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          Text(description, style: const TextStyle(color: Colors.white70, fontSize: 14)),
+        ],
+      ),
+    );
+  }
+
 }
