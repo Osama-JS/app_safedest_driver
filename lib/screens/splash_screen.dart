@@ -168,9 +168,8 @@ class _SplashScreenState extends State<SplashScreen>
                  Get.offAllNamed('/onboarding');
              } else {
                  debugPrint('SplashScreen: Navigating to /login');
-                 //TODO SAEEEEEEED RETURN
-                 // Navigator.of(context).pushReplacementNamed('/login');
-                 Navigator.of(context).pushReplacementNamed('/main');
+                 Navigator.of(context).pushReplacementNamed('/login');
+                 // Navigator.of(context).pushReplacementNamed('/main');
 
 
              }

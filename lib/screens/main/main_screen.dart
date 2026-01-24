@@ -78,8 +78,7 @@ class _MainScreenState extends State<MainScreen> {
       if (!authController.isAuthenticated.value || authController.currentDriver.value == null) {
         debugPrint('MainScreen: Not authenticated, navigating to login');
         // Use Get.offAllNamed to clear stack and go to login
-        //TODO SAEEEEEEED RETURN
-        // Get.offAllNamed('/login');
+        Get.offAllNamed('/login');
       } else {
         debugPrint('MainScreen: Authenticated, staying on main screen');
       }
