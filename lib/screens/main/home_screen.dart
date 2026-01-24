@@ -296,7 +296,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   // Recent Tasks (Pending)
                   Container(
-                    key: _recentTasksKey,
+                    // key: _recentTasksKey,
                     child: const PendingTaskCard(),
                   ),
 
@@ -335,7 +335,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 16),
 
                   // Recent Tasks
-                  const RecentTasksCard(),
+                     RecentTasksCard(
+                    key: _recentTasksKey,
+
+                  ),
 
                   const SizedBox(
                       height: 100), // Bottom padding for navigation bar
@@ -345,6 +348,19 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+        floatingActionButton: FloatingActionButton(
+          key: _helpKey,
+          backgroundColor: Colors.red.shade900,
+          onPressed: () async {
+            _reviewTutorial();
+            // _viewTutorial();
+            // _createTutorial();
+            // tutorialCoachMark?.show(context: context);
+
+          },
+          child: const Icon(Icons.help_outline, color: Colors.white),
+        )
+
     );
   }
 
@@ -442,7 +458,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
 
-  // Tutorial Keys - 9 Steps
   final GlobalKey _onlineSwitchKey = GlobalKey();
   final GlobalKey _busyStatusKey = GlobalKey();
   final GlobalKey _availableTasksKey = GlobalKey();
@@ -452,6 +467,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey _adsKey = GlobalKey();
   final GlobalKey _earningsCardKey = GlobalKey();
   final GlobalKey _recentTasksKey = GlobalKey();
+  final GlobalKey _helpKey = GlobalKey();
+
   TutorialCoachMark? tutorialCoachMark;
 
 
@@ -466,7 +483,20 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  void _reviewTutorial() {
+    if (_onlineSwitchKey.currentContext == null) {
+      _singleScrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeOut,
+      ).then((_) => _viewTutorial());
+    } else {
+      _viewTutorial();
+    }
+  }
+
   void _viewTutorial() {
+
     int counter = 0;
     List<TargetFocus> targets = _createTargets();
     Scrollable.ensureVisible(
@@ -568,31 +598,12 @@ class _HomeScreenState extends State<HomeScreen> {
   List<TargetFocus> _createTargets() {
     List<TargetFocus> targets = [];
 
-    // targets.add(
-    //   TargetFocus(
-    //     identify: "history",
-    //     keyTarget: _historyKey,
-    //     shape: ShapeLightFocus.Circle,
-    //     contents: [
-    //       TargetContent(
-    //         align: ContentAlign.bottom,
-    //         child: _buildTutorialItem(
-    //           title: "transaction_history".tr,
-    //           description: "transaction_history_description".tr,
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
+
 
     targets.add(
       TargetFocus(
         identify: "online_switch",
         keyTarget: _onlineSwitchKey,
-
-        // onSelected: (target) {
-        //   _scrollToKey(_summaryKey);
-        // },
         shape: ShapeLightFocus.RRect,
         contents: [
           TargetContent(
@@ -753,7 +764,51 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
 
+    targets.add(
+      TargetFocus(
+        identify: "tutorial_home_page_help",
+        keyTarget: _helpKey,
+        shape: ShapeLightFocus.RRect,
+        radius: 10,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            child: Container(
+              constraints: BoxConstraints(
+                maxHeight: 300,
+                maxWidth: Get.width*0.8,
+              ),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.black.withAlpha(100),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "replay_instructions".tr,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      "tap_to_rewatch".tr,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ),
 
+          ),
+        ],
+      ),
+    );
     return targets;
   }
 

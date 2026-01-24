@@ -5,7 +5,9 @@ import '../models/task.dart';
 import '../theme/app_theme.dart';
 
 class RecentTasksCard extends StatelessWidget {
-  const RecentTasksCard({super.key});
+  final Key? recentTasksKey;
+
+  const RecentTasksCard({super.key,this.recentTasksKey});
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +18,7 @@ class RecentTasksCard extends StatelessWidget {
 
       return Card(
         child: Padding(
+          key: recentTasksKey,
           padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

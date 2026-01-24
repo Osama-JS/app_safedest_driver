@@ -41,42 +41,6 @@ class _MainScreenState extends State<MainScreen> {
     _initializeAndCheckAuth();
   }
 
-/*  void _startTutorial() {
-     final tutorialController = Get.put(TutorialController());
-     tutorialController.showTutorial(
-        context: context,
-        targets: [
-           TutorialController.createTarget(
-              identify: "home_tab",
-              key: _homeKey,
-              title: "tutorial_home_title",
-              desc: "tutorial_home_desc",
-              align: ContentAlign.top,
-           ),
-           TutorialController.createTarget(
-              identify: "tasks_tab",
-              key: _tasksKey,
-              title: "tutorial_tasks_title",
-              desc: "tutorial_tasks_desc",
-              align: ContentAlign.top,
-           ),
-           TutorialController.createTarget(
-              identify: "wallet_tab",
-              key: _walletKey,
-              title: "tutorial_wallet_title",
-              desc: "tutorial_wallet_desc",
-              align: ContentAlign.top,
-           ),
-           TutorialController.createTarget(
-              identify: "profile_tab",
-              key: _profileKey,
-              title: "tutorial_profile_title",
-              desc: "tutorial_profile_desc",
-              align: ContentAlign.top,
-           ),
-        ],
-     );
-  }*/
 
   Future<void> _initializeAndCheckAuth() async {
     final authController = Get.find<AuthController>();
@@ -114,7 +78,8 @@ class _MainScreenState extends State<MainScreen> {
       if (!authController.isAuthenticated.value || authController.currentDriver.value == null) {
         debugPrint('MainScreen: Not authenticated, navigating to login');
         // Use Get.offAllNamed to clear stack and go to login
-        Get.offAllNamed('/login');
+        //TODO SAEEEEEEED RETURN
+        // Get.offAllNamed('/login');
       } else {
         debugPrint('MainScreen: Authenticated, staying on main screen');
       }

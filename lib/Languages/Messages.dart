@@ -478,6 +478,9 @@ class Messages extends Translations {
       'tutorial_recent_title': 'Recent Tasks',
       'tutorial_recent_desc': 'Quickly access or accept your most recent task assignments.',
       'screen_tap_hint': 'Tap to continue',
+      "replay_instructions": "Replay Instructions",
+      "tap_to_rewatch": "Tap this button at any time to replay the step-by-step app interface explanation.",
+
     },
     'ar': {
       'bg_location_title': 'تتبع الموقع نشط',
@@ -920,6 +923,9 @@ class Messages extends Translations {
       'confirm_reject_task': 'هل أنت متأكد من رغبتك في رفض هذا العرض؟',
       'task_rejected_successfully': 'تم رفض العرض بنجاح',
       'failed_to_reject_task': 'فشل في رفض العرض',
+      "replay_instructions": "إعادة عرض التعليمات",
+      "tap_to_rewatch": "اضغط على هذا الزر في أي وقت لإعادة مشاهدة شرح واجهة التطبيق خطوة بخطوة.",
+
     },
     'zh': {
       'appName': 'SafeDests - 司机',
@@ -1286,8 +1292,9 @@ class Messages extends Translations {
       "disclosure_required": "必须接受免责声明屏幕以启用在线模式。",
       "location_permission_required": "启用跟踪需要后台位置权限（始终允许）。",
       "location_service_disabled": "位置服务已关闭。请打开 GPS 并重试。",
-      "server_error_try_again": "由于服务器问题，无法激活状态。请重试。"
-
+      "server_error_try_again": "由于服务器问题，无法激活状态。请重试。",
+  "replay_instructions": "重放说明",
+  "tap_to_rewatch": "随时点击此按钮，即可逐步重新观看应用界面说明。",
     },
     'ur': {
       'appName': 'SafeDests - ڈرائیور',
@@ -1688,8 +1695,8 @@ class Messages extends Translations {
       'tutorial_recent_title': 'المهام الأخيرة',
       'tutorial_recent_desc': 'وصول سريع أو قبول لآخر المهام المسندة إليك.',
       'screen_tap_hint': 'اضغط للمتابعة',
-
-
+      "replay_instructions": "ہدایات دوبارہ دیکھیں",
+      "tap_to_rewatch": "ایپ انٹرفیس کی مرحلہ وار وضاحت دوبارہ دیکھنے کے لیے کسی بھی وقت اس بٹن پر کلک کریں۔",
     },
   };
 }
