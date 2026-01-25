@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../services/task_ads_service.dart';
 import '../../models/task_ad.dart';
 import '../../models/api_response.dart';
 import '../../widgets/task_ad_card.dart';
 import 'task_ad_details_screen.dart';
 import 'my_offers_screen.dart';
-import '../../l10n/generated/app_localizations.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TaskAdsScreen extends StatefulWidget {
   const TaskAdsScreen({super.key});
@@ -21,6 +23,13 @@ class _TaskAdsScreenState extends State<TaskAdsScreen>
   final TaskAdsService _taskAdsService = TaskAdsService();
   final GlobalKey<MyOffersScreenState> _myOffersKey =
       GlobalKey<MyOffersScreenState>();
+
+  // Tutorial Keys
+  final GlobalKey _filterKey = GlobalKey();
+  final GlobalKey _refreshKey = GlobalKey();
+  final GlobalKey _tabsKey = GlobalKey();
+  final GlobalKey _searchKey = GlobalKey();
+  final GlobalKey _helpKey = GlobalKey();
 
   // State variables
   List<TaskAd> _taskAds = [];
@@ -42,6 +51,7 @@ class _TaskAdsScreenState extends State<TaskAdsScreen>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _loadTaskAds();
+    _checkTutorial();
   }
 
   @override
@@ -75,12 +85,7 @@ class _TaskAdsScreenState extends State<TaskAdsScreen>
         sortOrder: _sortOrder,
       );
 
-      debugPrint('TaskAdsScreen: Response success: ${response.success}');
-      debugPrint('TaskAdsScreen: Response data: ${response.data}');
-      debugPrint('TaskAdsScreen: Response message: ${response.message}');
-
       if (response.success && response.data != null) {
-        debugPrint('TaskAdsScreen: Ads count: ${response.data!.data.length}');
         setState(() {
           if (refresh) {
             _taskAds = response.data!.data;
@@ -114,10 +119,8 @@ class _TaskAdsScreenState extends State<TaskAdsScreen>
 
   Future<void> _refreshCurrentTab() async {
     if (_tabController.index == 0) {
-      // الإعلانات المتاحة
       await _refreshTaskAds();
     } else {
-      // عروضي - تحديث العروض
       _myOffersKey.currentState?.refreshOffers();
     }
   }
@@ -158,15 +161,6 @@ class _TaskAdsScreenState extends State<TaskAdsScreen>
     );
   }
 
-  void _navigateToMyOffers() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const MyOffersScreen(),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -174,22 +168,30 @@ class _TaskAdsScreenState extends State<TaskAdsScreen>
         title: Text(AppLocalizations.of(context)!.taskAds),
         actions: [
           IconButton(
+            key: _filterKey,
             icon: const Icon(Icons.filter_list),
             onPressed: _showFilterDialog,
             tooltip: AppLocalizations.of(context)!.filter,
           ),
           IconButton(
+            key: _refreshKey,
             icon: const Icon(Icons.refresh),
             onPressed: _refreshCurrentTab,
             tooltip: AppLocalizations.of(context)!.refresh,
           ),
+          IconButton(
+            key: _helpKey,
+            icon: const Icon(Icons.help_outline),
+            onPressed: _viewTutorial,
+            tooltip: "help".tr,
+          ),
         ],
         bottom: TabBar(
+          key: _tabsKey,
           controller: _tabController,
-          labelColor: Colors.white, // لون النص للتبويب المحدد
-          unselectedLabelColor: Colors.white
-              .withOpacity(0.7), // لون النص للتبويبات غير المحددة
-          indicatorColor: Colors.white, // لون المؤشر
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.white.withOpacity(0.7),
+          indicatorColor: Colors.white,
           tabs: [
             Tab(text: AppLocalizations.of(context)!.availableAds),
             Tab(text: AppLocalizations.of(context)!.myOffers),
@@ -209,10 +211,10 @@ class _TaskAdsScreenState extends State<TaskAdsScreen>
   Widget _buildTaskAdsList() {
     return Column(
       children: [
-        // Search bar
         Padding(
           padding: const EdgeInsets.all(16),
           child: TextField(
+            key: _searchKey,
             controller: _searchController,
             decoration: InputDecoration(
               hintText: AppLocalizations.of(context)!.searchInAds,
@@ -222,6 +224,7 @@ class _TaskAdsScreenState extends State<TaskAdsScreen>
                       icon: const Icon(Icons.clear),
                       onPressed: () {
                         _searchController.clear();
+                        setState(() {});
                         _refreshTaskAds();
                       },
                     )
@@ -231,18 +234,13 @@ class _TaskAdsScreenState extends State<TaskAdsScreen>
               ),
             ),
             onChanged: (_) {
-              // تحديث فوري عند تغيير النص
-              setState(() {}); // لتحديث suffixIcon
+              setState(() {});
               _refreshTaskAds();
             },
             onSubmitted: (_) => _refreshTaskAds(),
           ),
         ),
-
-        // Quick stats
         if (_taskAds.isNotEmpty) _buildQuickStats(),
-
-        // Task ads list
         Expanded(
           child: _buildTaskAdsContent(),
         ),
@@ -322,7 +320,7 @@ class _TaskAdsScreenState extends State<TaskAdsScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(Icons.error_outline, size: 64, color: Colors.red),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               _errorMessage ??
                   AppLocalizations.of(context)!.unexpectedErrorOccurred,
@@ -348,8 +346,8 @@ class _TaskAdsScreenState extends State<TaskAdsScreen>
             Center(
               child: Column(
                 children: [
-                  Icon(Icons.campaign_outlined, size: 64, color: Colors.grey),
-                  SizedBox(height: 16),
+                  const Icon(Icons.campaign_outlined, size: 64, color: Colors.grey),
+                  const SizedBox(height: 16),
                   Text(
                     AppLocalizations.of(context)!.noAdsAvailable,
                     style: const TextStyle(
@@ -397,6 +395,155 @@ class _TaskAdsScreenState extends State<TaskAdsScreen>
             );
           },
         ),
+      ),
+    );
+  }
+
+  // --- Tutorial Methods ---
+
+  TutorialCoachMark? tutorialCoachMark;
+
+  void _checkTutorial() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool hasSeen = prefs.getBool('hasSeenTaskAdsTutorial') ?? false;
+
+    if (!hasSeen) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _viewTutorial();
+      });
+    }
+  }
+
+  void _viewTutorial() {
+    tutorialCoachMark = TutorialCoachMark(
+      targets: _createTargets(),
+      colorShadow: Colors.red.shade500,
+      textSkip: "tutorial_skip".tr,
+      paddingFocus: 10,
+      opacityShadow: 0.9,
+      onFinish: _markTutorialAsSeen,
+      onClickTarget: (target) {},
+      onSkip: () {
+        _markTutorialAsSeen();
+        return true;
+      },
+    );
+
+    tutorialCoachMark?.show(context: context);
+  }
+
+  void _markTutorialAsSeen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('hasSeenTaskAdsTutorial', true);
+  }
+
+  List<TargetFocus> _createTargets() {
+    List<TargetFocus> targets = [];
+
+    targets.add(
+      TargetFocus(
+        identify: "search_bar",
+        keyTarget: _searchKey,
+        shape: ShapeLightFocus.RRect,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: _buildTutorialItem(
+              title: "tutorial_ads_search_title".tr,
+              description: "tutorial_ads_search_desc".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "filter_btn",
+        keyTarget: _filterKey,
+        shape: ShapeLightFocus.Circle,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: _buildTutorialItem(
+              title: "tutorial_ads_filter_title".tr,
+              description: "tutorial_ads_filter_desc".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "refresh_btn",
+        keyTarget: _refreshKey,
+        shape: ShapeLightFocus.Circle,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: _buildTutorialItem(
+              title: "tutorial_ads_refresh_title".tr,
+              description: "tutorial_ads_refresh_desc".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "ads_tabs",
+        keyTarget: _tabsKey,
+        shape: ShapeLightFocus.RRect,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: _buildTutorialItem(
+              title: "tutorial_ads_tabs_title".tr,
+              description: "tutorial_ads_tabs_desc".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "help_btn",
+        keyTarget: _helpKey,
+        shape: ShapeLightFocus.Circle,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: _buildTutorialItem(
+              title: "replay_instructions".tr,
+              description: "tap_to_rewatch".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    return targets;
+  }
+
+  Widget _buildTutorialItem({required String title, required String description}) {
+    return Container(
+      constraints: BoxConstraints(maxWidth: Get.width * 0.8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.black.withAlpha(150),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          Text(description, style: const TextStyle(color: Colors.white70, fontSize: 14)),
+        ],
       ),
     );
   }
@@ -456,7 +603,6 @@ class _FilterDialogState extends State<_FilterDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Price range
             const Text('نطاق الأسعار',
                 style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
@@ -486,8 +632,6 @@ class _FilterDialogState extends State<_FilterDialog> {
               ],
             ),
             const SizedBox(height: 16),
-
-            // Sort by
             Text(AppLocalizations.of(context)!.sortBy,
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
@@ -517,8 +661,6 @@ class _FilterDialogState extends State<_FilterDialog> {
               },
             ),
             const SizedBox(height: 16),
-
-            // Sort order
             Text(AppLocalizations.of(context)!.sortOrder,
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
@@ -543,7 +685,6 @@ class _FilterDialogState extends State<_FilterDialog> {
       actions: [
         TextButton(
           onPressed: () {
-            // Clear filters
             _minPriceController.clear();
             _maxPriceController.clear();
             _selectedSortBy = 'created_at';

@@ -5,6 +5,8 @@ import '../../models/task_offer.dart';
 import '../../widgets/offer_card.dart';
 import 'submit_offer_screen.dart';
 import 'package:get/get.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TaskAdDetailsScreen extends StatefulWidget {
   final int adId;
@@ -29,11 +31,17 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
   bool _hasError = false;
   String? _errorMessage;
 
+  // Tutorial Keys
+  final GlobalKey _infoKey = GlobalKey();
+  final GlobalKey _submitKey = GlobalKey();
+  final GlobalKey _helpKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _loadAdDetails();
+    _checkTutorial();
   }
 
   @override
@@ -50,7 +58,6 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
     });
 
     try {
-      // Load ad details
       final adResponse = await _taskAdsService.getTaskAdDetails(widget.adId);
 
       if (adResponse.success && adResponse.data != null) {
@@ -58,7 +65,6 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
           _taskAd = adResponse.data!;
         });
 
-        // Load offers if we can view them
         if (_taskAd!.canViewDetails) {
           final offersResponse = await _taskAdsService.getAdOffers(widget.adId);
 
@@ -75,14 +81,14 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
       } else {
         setState(() {
           _hasError = true;
-           _errorMessage = adResponse.message ?? 'loading_details'.tr;
+          _errorMessage = adResponse.message ?? 'loading_details'.tr;
           _isLoading = false;
         });
       }
     } catch (e) {
       setState(() {
         _hasError = true;
-         _errorMessage = 'error_occurred'.tr + ': $e';
+        _errorMessage = 'error_occurred'.tr + ': $e';
         _isLoading = false;
       });
     }
@@ -110,25 +116,30 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-         title: Text('ad_number'.tr + '${widget.adId}'),
+        title: Text('ad_number'.tr + '${widget.adId}'),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _refreshData,
-             tooltip: 'refresh'.tr,
+            tooltip: 'refresh'.tr,
+          ),
+          IconButton(
+            key: _helpKey,
+            icon: const Icon(Icons.help_outline),
+            tooltip: 'help'.tr,
+            onPressed: _viewTutorial,
           ),
         ],
         bottom: _taskAd != null
             ? TabBar(
                 controller: _tabController,
-                labelColor: Colors.white, // لون النص للتبويب المحدد
-                unselectedLabelColor: Colors.white
-                    .withOpacity(0.7), // لون النص للتبويبات غير المحددة
-                indicatorColor: Colors.white, // لون المؤشر
-                 tabs: [
-                   Tab(text: 'ad_details_tab'.tr),
-                   Tab(text: 'offers_tab'.tr),
-                 ],
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.white.withOpacity(0.7),
+                indicatorColor: Colors.white,
+                tabs: [
+                  Tab(text: 'ad_details_tab'.tr),
+                  Tab(text: 'offers_tab'.tr),
+                ],
               )
             : null,
       ),
@@ -139,16 +150,16 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
 
   Widget _buildBody() {
     if (_isLoading) {
-       return Center(
-         child: Column(
-           mainAxisAlignment: MainAxisAlignment.center,
-           children: [
-             CircularProgressIndicator(),
-             SizedBox(height: 16),
-             Text('loading_details'.tr),
-           ],
-         ),
-       );
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('loading_details'.tr),
+          ],
+        ),
+      );
     }
 
     if (_hasError) {
@@ -159,14 +170,14 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
             const Icon(Icons.error_outline, size: 64, color: Colors.red),
             const SizedBox(height: 16),
             Text(
-               _errorMessage ?? 'error_occurred'.tr,
+              _errorMessage ?? 'error_occurred'.tr,
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _refreshData,
-               child: Text('retry'.tr),
+              child: Text('retry'.tr),
             ),
           ],
         ),
@@ -175,7 +186,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
 
     if (_taskAd == null) {
       return Center(
-         child: Text('no_data_to_display'.tr),
+        child: Text('no_data_to_display'.tr),
       );
     }
 
@@ -196,23 +207,12 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Status and basic info
-            _buildStatusCard(),
-
+            Container(key: _infoKey, child: _buildStatusCard()),
             const SizedBox(height: 16),
-
-            // Description
             if (_taskAd!.description.isNotEmpty) _buildDescriptionCard(),
-
-            // Price range
             _buildPriceRangeCard(),
-
             const SizedBox(height: 16),
-
-            // Task details
             if (_taskAd!.task != null) _buildTaskDetailsCard(),
-
-            // My offer status
             if (_taskAd!.myOffer != null) _buildMyOfferCard(),
           ],
         ),
@@ -222,25 +222,25 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
 
   Widget _buildOffersTab() {
     if (!_taskAd!.canViewDetails) {
-       return Center(
-         child: Column(
-           mainAxisAlignment: MainAxisAlignment.center,
-           children: [
-             Icon(Icons.lock_outline, size: 64, color: Colors.grey),
-             SizedBox(height: 16),
-             Text(
-               'cannot_view_offers'.tr,
-               style: TextStyle(fontSize: 16),
-             ),
-             SizedBox(height: 8),
-             Text(
-               'must_submit_offer_first'.tr,
-               textAlign: TextAlign.center,
-               style: TextStyle(color: Colors.grey),
-             ),
-           ],
-         ),
-       );
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.lock_outline, size: 64, color: Colors.grey),
+            SizedBox(height: 16),
+            Text(
+              'cannot_view_offers'.tr,
+              style: TextStyle(fontSize: 16),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'must_submit_offer_first'.tr,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.grey),
+            ),
+          ],
+        ),
+      );
     }
 
     if (_offers.isEmpty) {
@@ -249,25 +249,25 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
         child: ListView(
           children: [
             SizedBox(height: MediaQuery.of(context).size.height * 0.3),
-             Center(
-               child: Column(
-                 children: [
-                   Icon(Icons.local_offer_outlined,
-                       size: 64, color: Colors.grey),
-                   SizedBox(height: 16),
-                   Text(
-                     'no_offers_submitted'.tr,
-                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                   ),
-                   SizedBox(height: 8),
-                   Text(
-                     'no_offers_for_ad'.tr,
-                     textAlign: TextAlign.center,
-                     style: TextStyle(color: Colors.grey),
-                   ),
-                 ],
-               ),
-             ),
+            Center(
+              child: Column(
+                children: [
+                  Icon(Icons.local_offer_outlined,
+                      size: 64, color: Colors.grey),
+                  SizedBox(height: 16),
+                  Text(
+                    'no_offers_submitted'.tr,
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'no_offers_for_ad'.tr,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       );
@@ -298,7 +298,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
               children: [
                 Expanded(
                   child: Text(
-                     'ad_number'.tr + '${_taskAd!.id}',
+                    'ad_number'.tr + '${_taskAd!.id}',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -328,7 +328,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
                 Icon(Icons.schedule, size: 16, color: Colors.grey[600]),
                 const SizedBox(width: 8),
                 Text(
-                   'created_date'.tr + ': ${_formatDate(_taskAd!.createdAt)}',
+                  'created_date'.tr + ': ${_formatDate(_taskAd!.createdAt)}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Colors.grey[600],
                       ),
@@ -341,7 +341,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
                 Icon(Icons.local_offer, size: 16, color: Colors.grey[600]),
                 const SizedBox(width: 8),
                 Text(
-                   'offers_count'.tr + ': ${_taskAd!.offersCount}',
+                  'offers_count'.tr + ': ${_taskAd!.offersCount}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Colors.grey[600],
                       ),
@@ -375,6 +375,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
     if (taskAdsService.canSubmitOffer(_taskAd!) ||
         taskAdsService.canEditOffer(_taskAd!)) {
       return Container(
+        key: _submitKey,
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
@@ -385,62 +386,63 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
             ),
           ],
         ),
-         padding: const EdgeInsets.all(16),
-         child: SafeArea(
-           child: Row(
-             children: [
-               Expanded(
-                 child: ElevatedButton.icon(
-                   onPressed: _navigateToSubmitOffer,
-                   icon: Icon(
-                     _taskAd!.myOffer != null
-                         ? Icons.edit_outlined
-                         : Icons.add_circle_outline,
-                     size: 24,
-                   ),
-                   label: Text(
-                     _taskAd!.myOffer != null ? 'edit_offer'.tr : 'submit_offer'.tr,
-                     style: const TextStyle(
-                       fontSize: 16,
-                       fontWeight: FontWeight.w600,
-                     ),
-                   ),
-                   style: ElevatedButton.styleFrom(
-                     backgroundColor: Theme.of(context).primaryColor,
-                     foregroundColor: Colors.white,
-                     elevation: 4,
-                     shadowColor:
-                         Theme.of(context).primaryColor.withOpacity(0.3),
-                     shape: RoundedRectangleBorder(
-                       borderRadius: BorderRadius.circular(16),
-                     ),
-                     padding:
-                         const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                   ),
-                 ),
-               ),
-               if (_taskAd!.myOffer != null && _taskAd!.myOffer!.status == TaskOfferStatus.pending) ...[
-                 const SizedBox(width: 12),
-                 IconButton(
-                   onPressed: _showDeleteOfferDialog,
-                   icon: const Icon(Icons.delete_outline),
-                   color: Colors.red,
-                   iconSize: 28,
-                   tooltip: 'delete_offer'.tr,
-                   style: IconButton.styleFrom(
-                     backgroundColor: Colors.red.withOpacity(0.1),
-                     padding: const EdgeInsets.all(12),
-                   ),
-                 ),
-               ],
-             ],
-           ),
-         ),
+        padding: const EdgeInsets.all(16),
+        child: SafeArea(
+          child: Row(
+            children: [
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: _navigateToSubmitOffer,
+                  icon: Icon(
+                    _taskAd!.myOffer != null
+                        ? Icons.edit_outlined
+                        : Icons.add_circle_outline,
+                    size: 24,
+                  ),
+                  label: Text(
+                    _taskAd!.myOffer != null ? 'edit_offer'.tr : 'submit_offer'.tr,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    foregroundColor: Colors.white,
+                    elevation: 4,
+                    shadowColor:
+                        Theme.of(context).primaryColor.withOpacity(0.3),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  ),
+                ),
+              ),
+              if (_taskAd!.myOffer != null && _taskAd!.myOffer!.status == TaskOfferStatus.pending) ...[
+                const SizedBox(width: 12),
+                IconButton(
+                  onPressed: _showDeleteOfferDialog,
+                  icon: const Icon(Icons.delete_outline),
+                  color: Colors.red,
+                  iconSize: 28,
+                  tooltip: 'delete_offer'.tr,
+                  style: IconButton.styleFrom(
+                    backgroundColor: Colors.red.withOpacity(0.1),
+                    padding: const EdgeInsets.all(12),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
       );
     }
 
     if (taskAdsService.canAcceptTask(_taskAd!)) {
       return Container(
+        key: _submitKey,
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
@@ -576,7 +578,6 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
   void _rejectTask() async {
     if (_taskAd?.myOffer == null) return;
 
-    // Show loading
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -589,7 +590,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
       final response = await _taskAdsService.rejectTask(_taskAd!.myOffer!.id);
 
       if (mounted) {
-        Navigator.pop(context); // Close loading
+        Navigator.pop(context);
 
         if (response.success) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -610,7 +611,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
       }
     } catch (e) {
       if (mounted) {
-        Navigator.pop(context); // Close loading
+        Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('error_occurred'.tr + ': $e'),
@@ -624,7 +625,6 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
   void _acceptTask() async {
     if (_taskAd?.myOffer == null) return;
 
-    // Show loading
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -637,12 +637,12 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
       final response = await _taskAdsService.acceptTask(_taskAd!.myOffer!.id);
 
       if (mounted) {
-        Navigator.pop(context); // Close loading
+        Navigator.pop(context);
 
         if (response.success) {
           ScaffoldMessenger.of(context).showSnackBar(
-             SnackBar(
-               content: Text('task_accepted_successfully'.tr),
+            SnackBar(
+              content: Text('task_accepted_successfully'.tr),
               backgroundColor: Colors.green,
             ),
           );
@@ -650,7 +650,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-               content: Text(response.message ?? 'failed_to_accept_task'.tr),
+              content: Text(response.message ?? 'failed_to_accept_task'.tr),
               backgroundColor: Colors.red,
             ),
           );
@@ -658,10 +658,10 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
       }
     } catch (e) {
       if (mounted) {
-        Navigator.pop(context); // Close loading
+        Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-             content: Text('error_occurred'.tr + ': $e'),
+            content: Text('error_occurred'.tr + ': $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -708,7 +708,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
       final response = await _taskAdsService.deleteOffer(_taskAd!.myOffer!.id);
 
       if (mounted) {
-        Navigator.pop(context); // Close loading
+        Navigator.pop(context);
 
         if (response.success) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -717,7 +717,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
               backgroundColor: Colors.green,
             ),
           );
-          _refreshData(); // Refresh data to reflect the deleted offer
+          _refreshData();
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -729,7 +729,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
       }
     } catch (e) {
       if (mounted) {
-        Navigator.pop(context); // Close loading
+        Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('error_occurred'.tr + ': $e'),
@@ -754,9 +754,9 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
   String _getStatusText() {
     switch (_taskAd!.status.toLowerCase()) {
       case 'running':
-         return 'status_running'.tr;
+        return 'status_running'.tr;
       case 'closed':
-         return 'status_closed'.tr;
+        return 'status_closed'.tr;
       default:
         return _taskAd!.status;
     }
@@ -771,7 +771,7 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-               'task_description'.tr,
+              'task_description'.tr,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -796,55 +796,19 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-               'price_range'.tr,
+              'price_range'.tr,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
-            const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.monetization_on, color: Colors.blue),
-                  const SizedBox(width: 12),
-                  Expanded(
-                     child: _taskAd!.lowestPrice == 0 && _taskAd!.highestPrice == 0
-                       ? Text(
-                           'open_price'.tr,
-                           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                 fontWeight: FontWeight.w600,
-                                 color: Colors.blue[700],
-                               ),
-                         )
-                       : Column(
-                           crossAxisAlignment: CrossAxisAlignment.start,
-                           children: [
-                             Text(
-                               'from'.tr + ' ${_taskAd!.lowestPrice.toStringAsFixed(2)} ' + 'sar'.tr,
-                               style:
-                                   Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                         fontWeight: FontWeight.w600,
-                                         color: Colors.blue[700],
-                                       ),
-                             ),
-                             Text(
-                               'to'.tr + ' ${_taskAd!.highestPrice.toStringAsFixed(2)} ' + 'sar'.tr,
-                               style:
-                                   Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                         fontWeight: FontWeight.w600,
-                                         color: Colors.blue[700],
-                                       ),
-                             ),
-                           ],
-                         ),
-                  ),
-                ],
-              ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildPriceItem('lowest_price'.tr, _taskAd!.lowestPrice),
+                const Icon(Icons.arrow_forward, color: Colors.grey),
+                _buildPriceItem('highest_price'.tr, _taskAd!.highestPrice),
+              ],
             ),
           ],
         ),
@@ -852,9 +816,29 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
     );
   }
 
+  Widget _buildPriceItem(String label, double value) {
+    return Column(
+      children: [
+        Text(
+          '${value.toStringAsFixed(2)} ر.س',
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: Theme.of(context).primaryColor,
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Colors.grey[600],
+              ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildTaskDetailsCard() {
     final task = _taskAd!.task!;
-
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       child: Padding(
@@ -863,40 +847,18 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-               'task_details'.tr,
+              'task_info'.tr,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
             const SizedBox(height: 16),
-
-            // Vehicle size
-            if (task.vehicleSize != null)
-              _buildDetailRow(
-                Icons.local_shipping,
-                 'vehicle_size'.tr,
-                task.vehicleSize!,
-                Colors.purple,
-              ),
-
-            // Pickup point
-            if (task.pickup != null) ...[
+            _buildDetailRow(Icons.location_on, 'pickup_point'.tr, task.pickup?.address ?? '-'),
+            const SizedBox(height: 12),
+            _buildDetailRow(Icons.flag, 'delivery_point'.tr, task.delivery?.address ?? '-'),
+            if (_taskAd!.commission != null) ...[
               const SizedBox(height: 12),
-              _buildAddressDetail(
-                 'pickup_point'.tr,
-                task.pickup!,
-                Colors.green,
-              ),
-            ],
-
-            // Delivery point
-            if (task.delivery != null) ...[
-              const SizedBox(height: 12),
-              _buildAddressDetail(
-                 'delivery_point'.tr,
-                task.delivery!,
-                Colors.red,
-              ),
+              _buildDetailRow(Icons.monetization_on, 'commission'.tr, '${_taskAd!.commission!.serviceCommission} ر.س'),
             ],
           ],
         ),
@@ -904,114 +866,14 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
     );
   }
 
-  Widget _buildDetailRow(
-      IconData icon, String label, String value, Color color) {
-    return Row(
-      children: [
-        Icon(icon, color: color, size: 20),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: color,
-                    ),
-              ),
-              Text(
-                value,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildAddressDetail(String title, TaskAdPoint point, Color color) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(Icons.location_on, color: color, size: 20),
-            const SizedBox(width: 8),
-            Text(
-              title,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: color,
-                  ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Padding(
-          padding: const EdgeInsets.only(right: 28),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                point.address,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              // إخفاء معلومات الاتصال في إعلانات المهام (لم يتم تسليم المهمة للسائق بعد)
-              // if (point.contactName != null || point.contactPhone != null) ...[
-              //   const SizedBox(height: 4),
-              //   if (point.contactName != null)
-              //     Text(
-              //       'جهة الاتصال: ${point.contactName}',
-              //       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              //             color: Colors.grey[600],
-              //           ),
-              //     ),
-              //   if (point.contactPhone != null)
-              //     Text(
-              //       'رقم الهاتف: ${point.contactPhone}',
-              //       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              //             color: Colors.grey[600],
-              //           ),
-              //     ),
-              // ],
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-
   Widget _buildMyOfferCard() {
     final offer = _taskAd!.myOffer!;
-    final status = offer.status;
-
-    Color statusColor;
-    String statusText;
-    IconData statusIcon;
-
-    switch (status) {
-      case TaskOfferStatus.pending:
-        statusColor = Colors.orange;
-         statusText = 'offer_pending'.tr;
-        statusIcon = Icons.schedule;
-        break;
-      case TaskOfferStatus.accepted:
-        statusColor = Colors.green;
-         statusText = 'offer_accepted_status'.tr;
-        statusIcon = Icons.check_circle;
-        break;
-      case TaskOfferStatus.rejected:
-        statusColor = Colors.red;
-         statusText = 'offer_rejected'.tr;
-        statusIcon = Icons.cancel;
-        break;
-    }
-
     return Card(
+      color: Theme.of(context).primaryColor.withOpacity(0.05),
+      shape: RoundedRectangleBorder(
+        side: BorderSide(color: Theme.of(context).primaryColor.withOpacity(0.2)),
+        borderRadius: BorderRadius.circular(12),
+      ),
       margin: const EdgeInsets.only(bottom: 16),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -1020,45 +882,30 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
           children: [
             Row(
               children: [
-                Icon(statusIcon, color: statusColor),
+                Icon(Icons.local_offer, color: Theme.of(context).primaryColor),
                 const SizedBox(width: 8),
                 Text(
-                   'my_offer'.tr,
+                  'your_offer'.tr,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColor,
                       ),
                 ),
                 const Spacer(),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: statusColor,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Text(
-                    statusText,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
+                _buildOfferStatusBadge(offer.status),
               ],
             ),
             const SizedBox(height: 12),
             Text(
-               'proposed_price'.tr + ': ${offer.price.toStringAsFixed(2)} ' + 'sar'.tr,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.blue[700],
+              '${offer.price.toStringAsFixed(2)} ر.س',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
                   ),
             ),
             if (offer.description.isNotEmpty) ...[
               const SizedBox(height: 8),
               Text(
-                 'offer_description'.tr + ': ${offer.description}',
+                offer.description,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
@@ -1068,7 +915,174 @@ class _TaskAdDetailsScreenState extends State<TaskAdDetailsScreen>
     );
   }
 
+  Widget _buildOfferStatusBadge(TaskOfferStatus status) {
+    Color color;
+    String text;
+
+    switch (status) {
+      case TaskOfferStatus.pending:
+        color = Colors.orange;
+        text = 'status_pending'.tr;
+        break;
+      case TaskOfferStatus.accepted:
+        color = Colors.green;
+        text = 'status_accepted'.tr;
+        break;
+      case TaskOfferStatus.rejected:
+        color = Colors.red;
+        text = 'status_rejected'.tr;
+        break;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withOpacity(0.5)),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(IconData icon, String label, String value) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 20, color: Colors.grey[600]),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(label, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+              Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
+    return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+  }
+
+  // --- Tutorial Methods ---
+
+  TutorialCoachMark? tutorialCoachMark;
+
+  void _checkTutorial() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool hasSeen = prefs.getBool('hasSeenAdDetailsTutorial') ?? false;
+
+    if (!hasSeen) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _viewTutorial();
+      });
+    }
+  }
+
+  void _viewTutorial() {
+    tutorialCoachMark = TutorialCoachMark(
+      targets: _createTargets(),
+      colorShadow: Colors.red.shade500,
+      textSkip: "tutorial_skip".tr,
+      paddingFocus: 10,
+      opacityShadow: 0.9,
+      onFinish: _markTutorialAsSeen,
+      onClickTarget: (target) {},
+      onSkip: () {
+        _markTutorialAsSeen();
+        return true;
+      },
+    );
+
+    tutorialCoachMark?.show(context: context);
+  }
+
+  void _markTutorialAsSeen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('hasSeenAdDetailsTutorial', true);
+  }
+
+  List<TargetFocus> _createTargets() {
+    List<TargetFocus> targets = [];
+
+    targets.add(
+      TargetFocus(
+        identify: "ad_info",
+        keyTarget: _infoKey,
+        shape: ShapeLightFocus.RRect,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: _buildTutorialItem(
+              title: "tutorial_ad_details_info_title".tr,
+              description: "tutorial_ad_details_info_desc".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "submit_offer",
+        keyTarget: _submitKey,
+        shape: ShapeLightFocus.RRect,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            child: _buildTutorialItem(
+              title: "tutorial_ad_details_offer_title".tr,
+              description: "tutorial_ad_details_offer_desc".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "help_btn",
+        keyTarget: _helpKey,
+        shape: ShapeLightFocus.Circle,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: _buildTutorialItem(
+              title: "replay_instructions".tr,
+              description: "tap_to_rewatch".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    return targets;
+  }
+
+  Widget _buildTutorialItem({required String title, required String description}) {
+    return Container(
+      constraints: BoxConstraints(maxWidth: Get.width * 0.8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.black.withAlpha(150),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          Text(description, style: const TextStyle(color: Colors.white70, fontSize: 14)),
+        ],
+      ),
+    );
   }
 }

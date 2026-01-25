@@ -9,6 +9,8 @@ import '../../screens/tasks/task_detail_screen.dart';
 import '../../utils/debug_helper.dart';
 import '../../config/app_config.dart';
 import '../../l10n/generated/app_localizations.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TransactionsScreen extends StatefulWidget {
   const TransactionsScreen({super.key});
@@ -32,12 +34,20 @@ class _TransactionsScreenState extends State<TransactionsScreen>
   String? _selectedStatus;
   DateTimeRange? _selectedDateRange;
 
+  // Tutorial Keys
+  final GlobalKey _searchKey = GlobalKey();
+  final GlobalKey _tabsKey = GlobalKey();
+  final GlobalKey _filterKey = GlobalKey();
+  final GlobalKey _refreshKey = GlobalKey();
+  final GlobalKey _helpKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
     _scrollController.addListener(_onScroll);
     _loadTransactions();
+    _checkTutorial();
   }
 
   @override
@@ -153,6 +163,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: TextField(
+                  key: _searchKey,
                   controller: _searchController,
                   decoration: InputDecoration(
                     hintText:
@@ -202,12 +213,20 @@ class _TransactionsScreenState extends State<TransactionsScreen>
         ),
         actions: [
           IconButton(
+            key: _filterKey,
             icon: const Icon(Icons.filter_list),
             onPressed: _showFilterDialog,
           ),
           IconButton(
+            key: _refreshKey,
             icon: const Icon(Icons.refresh),
             onPressed: _refreshTransactions,
+          ),
+          IconButton(
+            key: _helpKey,
+            icon: const Icon(Icons.help_outline),
+            tooltip: 'help'.tr,
+            onPressed: _viewTutorial,
           ),
         ],
       ),
@@ -1237,5 +1256,120 @@ class _TransactionsScreenState extends State<TransactionsScreen>
         );
       }
     }
+  }
+
+  // --- Tutorial Methods ---
+
+  TutorialCoachMark? tutorialCoachMark;
+
+  void _checkTutorial() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool hasSeen = prefs.getBool('hasSeenTransactionsTutorial') ?? false;
+
+    if (!hasSeen) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _viewTutorial();
+      });
+    }
+  }
+
+  void _viewTutorial() {
+    tutorialCoachMark = TutorialCoachMark(
+      targets: _createTargets(),
+      colorShadow: Colors.red.shade500,
+      textSkip: "tutorial_skip".tr,
+      paddingFocus: 10,
+      opacityShadow: 0.9,
+      onFinish: _markTutorialAsSeen,
+      onClickTarget: (target) {},
+      onSkip: () {
+        _markTutorialAsSeen();
+        return true;
+      },
+    );
+
+    tutorialCoachMark?.show(context: context);
+  }
+
+  void _markTutorialAsSeen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('hasSeenTransactionsTutorial', true);
+  }
+
+  List<TargetFocus> _createTargets() {
+    List<TargetFocus> targets = [];
+
+    targets.add(
+      TargetFocus(
+        identify: "search_bar",
+        keyTarget: _searchKey,
+        shape: ShapeLightFocus.RRect,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: _buildTutorialItem(
+              title: "tutorial_transactions_list_title".tr,
+              description: "tutorial_transactions_list_desc".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "filter_btn",
+        keyTarget: _filterKey,
+        shape: ShapeLightFocus.Circle,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: _buildTutorialItem(
+              title: "filter".tr,
+              description: "tutorial_ads_filter_desc".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "help_btn",
+        keyTarget: _helpKey,
+        shape: ShapeLightFocus.Circle,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: _buildTutorialItem(
+              title: "replay_instructions".tr,
+              description: "tap_to_rewatch".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    return targets;
+  }
+
+  Widget _buildTutorialItem({required String title, required String description}) {
+    return Container(
+      constraints: BoxConstraints(maxWidth: Get.width * 0.8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.black.withAlpha(150),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          Text(description, style: const TextStyle(color: Colors.white70, fontSize: 14)),
+        ],
+      ),
+    );
   }
 }

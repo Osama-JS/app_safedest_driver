@@ -146,8 +146,8 @@ class _SafeDestsDriverAppState extends State<SafeDestsDriverApp> {
             supportedLocales: const [
               Locale('ar', 'SA'),
               Locale('en', 'US'),
-              Locale('ur', 'PK'),
-              Locale('zh', 'CN'),
+              // Locale('ur', 'PK'),
+              // Locale('zh', 'CN'),
             ],
 
             // GetPages instead of simple routes

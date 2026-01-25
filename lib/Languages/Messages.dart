@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 class Messages extends Translations {
   @override
   Map<String, Map<String, String>> get keys => {
-    'en': {
+    'en_US': {
       'bg_location_title': 'Location Tracking Active',
       'bg_location_body': 'App is securely updating your location to provide you with nearby tasks.',
       'appName': 'SafeDests - Driver',
@@ -446,7 +446,7 @@ class Messages extends Translations {
       'skip': 'Skip',
       'get_started': 'Get Started',
       'onboarding_skip_login': 'Skip to Login',
-      
+
       // Tutorial
       'tutorial_skip': 'SKIP',
       'tutorial_home_title': 'Home Dashboard',
@@ -457,7 +457,7 @@ class Messages extends Translations {
       'tutorial_wallet_desc': 'Check your balance, transactions, and request withdrawals.',
       'tutorial_profile_title': 'Profile',
       'tutorial_profile_desc': 'Manage your personal info, vehicle data, and app settings.',
-      
+
       // Home Tutorial
       'tutorial_online_title': 'Go Online',
       'tutorial_online_desc': 'Toggle this switch to start receiving delivery requests.',
@@ -481,8 +481,56 @@ class Messages extends Translations {
       "replay_instructions": "Replay Instructions",
       "tap_to_rewatch": "Tap this button at any time to replay the step-by-step app interface explanation.",
 
+      // Task Ads Tutorial
+      'tutorial_ads_filter_title': 'Filter Opportunities',
+      'tutorial_ads_filter_desc': 'Use filters to find tasks that match your preferred price range and timing.',
+      'tutorial_ads_refresh_title': 'Latest Tasks',
+      'tutorial_ads_refresh_desc': 'Refresh to see the most recent delivery opportunities in real-time.',
+      'tutorial_ads_tabs_title': 'Available vs My Offers',
+      'tutorial_ads_tabs_desc': 'Switch between browsing all tasks and tracking the offers you have already submitted.',
+      'tutorial_ads_search_title': 'Fast Search',
+      'tutorial_ads_search_desc': 'Search for specific locations or task descriptions quickly.',
+
+      // Wallet Tutorial
+      'tutorial_wallet_balance_title': 'Wallet Balance',
+      'tutorial_wallet_balance_desc': 'View your available balance and total earnings at a glance.',
+      'tutorial_wallet_chart_title': 'Earnings Statistics',
+      'tutorial_wallet_chart_desc': 'Track your performance with visual charts of your daily and monthly profits.',
+      'tutorial_wallet_history_title': 'Transaction History',
+      'tutorial_wallet_history_desc': 'Access a detailed log of all your deposits, withdrawals, and commissions.',
+
+      // Profile Tutorial
+      'tutorial_profile_edit_title': 'Edit Profile',
+      'tutorial_profile_edit_desc': 'Update your personal information and profile picture here.',
+      'tutorial_profile_header_title': 'Driver Status',
+      'tutorial_profile_header_desc': 'Monitor your account activation status and online presence.',
+      'tutorial_profile_info_title': 'Account Details',
+      'tutorial_profile_info_desc': 'Verify your contact information, team, and vehicle details.',
+      'tutorial_profile_additional_title': 'Additional Data',
+      'tutorial_profile_additional_desc': 'Manage your supplementary documents and official records.',
+
+      // Expanded Tutorial
+      'tutorial_transactions_list_title': 'Transactions List',
+      'tutorial_transactions_list_desc': 'View all your financial activities and deposit/withdrawal records here.',
+      'tutorial_ad_details_info_title': 'Ad Information',
+      'tutorial_ad_details_info_desc': 'Check task requirements, distance, and price before submitting an offer.',
+      'tutorial_ad_details_offer_title': 'Submit Offer',
+      'tutorial_ad_details_offer_desc': 'Send your price proposal and comments to the customer from this section.',
+      'tutorial_task_details_status_title': 'Task Progress',
+      'tutorial_task_details_status_desc': 'Update your task status as you move from pickup to delivery.',
+      'tutorial_task_details_map_title': 'Navigation',
+      'tutorial_task_details_map_desc': 'Use the map to find the exact pickup and delivery locations.',
+
+      // Tasks Tutorial
+      'tutorial_tasks_refresh_title': 'Sync Tasks',
+      'tutorial_tasks_refresh_desc': 'Refresh your task lists to get the latest assignment updates.',
+      'tutorial_tasks_tabs_title': 'Task Status Categories',
+      'tutorial_tasks_tabs_desc': 'Track tasks by their current phase: waiting for acceptance, in progress, or finished.',
+      'tutorial_tasks_list_title': 'Work Management',
+      'tutorial_tasks_list_desc': 'Review task details, update delivery statuses, and stay organized.',
+
     },
-    'ar': {
+    'ar_SA': {
       'bg_location_title': 'تتبع الموقع نشط',
       'bg_location_body': 'التطبيق يقوم بتحديث موقعك بأمان لتزويدك بالمهام القريبة منك.',
       'appName': 'وجهات آمنة - ناقلين',
@@ -926,8 +974,88 @@ class Messages extends Translations {
       "replay_instructions": "إعادة عرض التعليمات",
       "tap_to_rewatch": "اضغط على هذا الزر في أي وقت لإعادة مشاهدة شرح واجهة التطبيق خطوة بخطوة.",
 
+      // Tutorial Navigation
+      'tutorial_skip': 'تخطي الشرح',
+      'tutorial_home_title': 'لوحة التحكم الرئيسية',
+      'tutorial_home_desc': 'هنا يمكنك رؤية مهامك النشطة، ملخص الأرباح وحالتك الحالية.',
+      'tutorial_tasks_title': 'مهامي',
+      'tutorial_tasks_desc': 'إدارة مهامك الحالية وسجل المهام السابقة.',
+      'tutorial_wallet_title': 'المحفظة',
+      'tutorial_wallet_desc': 'تحقق من رصيدك، معاملاتك واطلب سحب الأرباح.',
+      'tutorial_profile_title': 'الملف الشخصي',
+      'tutorial_profile_desc': 'إدارة معلوماتك الشخصية، بيانات المركبة وإعدادات التطبيق.',
+
+      // Home Screen Tutorial
+      'tutorial_online_title': 'بدء العمل أونلاين',
+      'tutorial_online_desc': 'قم بتفعيل هذا الزر لبدء استقبال طلبات التوصيل الجديدة.',
+      'tutorial_busy_title': 'حالة الاتصال',
+      'tutorial_busy_desc': 'تحقق مما إذا كنت مشغولاً أو متاحاً لاستقبال مهام جديدة.',
+      'tutorial_available_title': 'المهام المتاحة',
+      'tutorial_available_desc': 'شاهد عدد المهام التي تنتظر التعيين في منطقتك.',
+      'tutorial_active_title': 'المهام النشطة',
+      'tutorial_active_desc': 'مراقبة المهام التي تعمل عليها حالياً.',
+      'tutorial_balance_title': 'الرصيد الحالي',
+      'tutorial_balance_desc': 'تتبع رصيدك الحالي في المحفظة.',
+      'tutorial_total_title': 'إجمالي الأرباح',
+      'tutorial_total_desc': 'عرض مجموع أرباحك الكلية منذ انضمامك.',
+      'tutorial_ads_title': 'فرص العمل',
+      'tutorial_ads_desc': 'تصفح واقبل مهام توصيل جديدة من هذا القسم.',
+      'tutorial_earnings_card_title': 'ملخص الأرباح',
+      'tutorial_earnings_card_desc': 'تفصيل دقيق لدخلك اليومي والشهري.',
+      'tutorial_recent_title': 'المهام الأخيرة',
+      'tutorial_recent_desc': 'الوصول السريع لآخر المهام التي تم تعيينها لك.',
+      'screen_tap_hint': 'اضغط للمتابعة',
+
+      // Task Ads Tutorial
+      'tutorial_ads_filter_title': 'فلترة الفرص',
+      'tutorial_ads_filter_desc': 'استخدم الفلاتر للعثور على المهام التي تناسب السعر والوقت المفضل لديك.',
+      'tutorial_ads_refresh_title': 'أحدث المهام',
+      'tutorial_ads_refresh_desc': 'قم بالتحديث لمشاهدة أحدث فرص التوصيل المتاحة الآن.',
+      'tutorial_ads_tabs_title': 'المهام المتاحة وعروضي',
+      'tutorial_ads_tabs_desc': 'التنقل بين تصفح جميع المهام ومتابعة العروض التي قدمتها بالفعل.',
+      'tutorial_ads_search_title': 'بحث سريع',
+      'tutorial_ads_search_desc': 'البحث عن مواقع محددة أو أوصاف المهام بسرعة.',
+
+      // Wallet Tutorial
+      'tutorial_wallet_balance_title': 'رصيد المحفظة',
+      'tutorial_wallet_balance_desc': 'عرض رصيدك المتاح وإجمالي الأرباح في لمحة سريعة.',
+      'tutorial_wallet_chart_title': 'إحصائيات الأرباح',
+      'tutorial_wallet_chart_desc': 'تتبع أداءك من خلال الرسوم البيانية لأرباحك اليومية والشهرية.',
+      'tutorial_wallet_history_title': 'سجل المعاملات',
+      'tutorial_wallet_history_desc': 'الوصول إلى سجل مفصل لجميع عمليات الإيداع، السحب، والعمولات.',
+
+      // Profile Tutorial
+      'tutorial_profile_edit_title': 'تعديل الملف الشخصي',
+      'tutorial_profile_edit_desc': 'تحديث بياناتك الشخصية وصورة الملف الشخصي من هنا.',
+      'tutorial_profile_header_title': 'حالة السائق',
+      'tutorial_profile_header_desc': 'مراقبة حالة تفعيل حسابك وتواجدك أونلاين.',
+      'tutorial_profile_info_title': 'تفاصيل الحساب',
+      'tutorial_profile_info_desc': 'التحقق من معلومات الاتصال، الفريق، وبيانات المركبة.',
+      'tutorial_profile_additional_title': 'بيانات إضافية',
+      'tutorial_profile_additional_desc': 'إدارة مستنداتك التكميلية وسجلاتك الرسمية.',
+
+      // Tasks Tutorial
+      'tutorial_tasks_refresh_title': 'مزامنة المهام',
+      'tutorial_tasks_refresh_desc': 'تحديث قوائم المهام للحصول على أحدث المستجدات حول التعيينات.',
+      'tutorial_tasks_tabs_title': 'تصنيفات حالة المهام',
+      'tutorial_tasks_tabs_desc': 'تتبع المهام حسب مرحلتها الحالية: بانتظار القبول، قيد التنفيذ، أو منتهية.',
+      'tutorial_tasks_list_title': 'إدارة العمل',
+      'tutorial_tasks_list_desc': 'مراجعة تفاصيل المهام، تحديث حالات التوصيل، والبقاء منظماً.',
+
+      // Expanded Tutorial
+      'tutorial_transactions_list_title': 'سجل المعاملات',
+      'tutorial_transactions_list_desc': 'عرض جميع أنشطتك المالية وسجلات الإيداع والسحب هنا.',
+      'tutorial_ad_details_info_title': 'معلومات الإعلان',
+      'tutorial_ad_details_info_desc': 'تحقق من متطلبات المهمة، المسافة، والسعر قبل تقديم العرض.',
+      'tutorial_ad_details_offer_title': 'تقديم عرض',
+      'tutorial_ad_details_offer_desc': 'أرسل مقترح السعر الخاص بك وتعليقاتك للعميل من هذا القسم.',
+      'tutorial_task_details_status_title': 'تقدم المهمة',
+      'tutorial_task_details_status_desc': 'قم بتحديث حالة المهمة أثناء تنقلك من نقطة الاستلام إلى التسليم.',
+      'tutorial_task_details_map_title': 'الملاحة',
+      'tutorial_task_details_map_desc': 'استخدم الخريطة للعثور على مواقع الاستلام والتسليم الدقيقة.',
+
     },
-    'zh': {
+    'zh_CN': {
       'appName': 'SafeDests - 司机',
       'home': '首页',
       'tasks': '任务',
@@ -1293,10 +1421,75 @@ class Messages extends Translations {
       "location_permission_required": "启用跟踪需要后台位置权限（始终允许）。",
       "location_service_disabled": "位置服务已关闭。请打开 GPS 并重试。",
       "server_error_try_again": "由于服务器问题，无法激活状态。请重试。",
-  "replay_instructions": "重放说明",
-  "tap_to_rewatch": "随时点击此按钮，即可逐步重新观看应用界面说明。",
+
+      // Onboarding
+      'onboarding_title_1': '跟踪您的收入',
+      'onboarding_desc_1': '通过详细的统计和报告监控您的每日、每周和每月收入。',
+      'onboarding_title_2': '高效管理任务',
+      'onboarding_desc_2': '通过易于使用的界面接收、接受和管理配送任务。',
+      'onboarding_title_3': '即时获得报酬',
+      'onboarding_desc_3': '安全快速地将您的收入提取到您的银行账户或数字钱包。',
+      'next': '下一步',
+      'skip': '跳过',
+      'get_started': '开始使用',
+
+      // Tutorial
+      'tutorial_skip': '跳过',
+      'tutorial_home_title': '主页仪表板',
+      'tutorial_home_desc': '在此查看您的活动任务、收入摘要和状态。',
+      'tutorial_tasks_title': '我的任务',
+      'tutorial_tasks_desc': '管理您当前和过去的任务历史。',
+      'tutorial_wallet_title': '钱包',
+      'tutorial_wallet_desc': '检查您的余额、交易并请求提款。',
+      'tutorial_profile_title': '个人资料',
+      'tutorial_profile_desc': '管理您的个人信息、车辆数据和应用设置。',
+
+      // Home Tutorial
+      'tutorial_online_title': '上线',
+      'tutorial_online_desc': '切换此开关以开始接收配送请求。',
+      'tutorial_busy_title': '状态控制',
+      'tutorial_busy_desc': '检查您是否忙碌或可接受新任务。',
+      'tutorial_available_title': '可用任务',
+      'tutorial_available_desc': '查看有多少任务正在等待分配。',
+      'tutorial_active_title': '活动任务',
+      'tutorial_active_desc': '监控您当前正在处理的任务。',
+      'tutorial_balance_title': '当前余额',
+      'tutorial_balance_desc': '跟踪您当前的钱包余额。',
+      'tutorial_total_title': '总收入',
+      'tutorial_total_desc': '查看您加入以来的总收入。',
+      'tutorial_ads_title': '任务机会',
+      'tutorial_ads_desc': '在此浏览并接受新的配送任务。',
+      'tutorial_earnings_card_title': '收入摘要',
+      'tutorial_earnings_card_desc': '您每日和每月收入的详细分类。',
+      'tutorial_recent_title': '最近任务',
+      'tutorial_recent_desc': '快速访问或接受您最近的任务分配。',
+      'screen_tap_hint': '点击继续',
+      "replay_instructions": "重放说明",
+      "tap_to_rewatch": "随时点击此按钮，即可逐步重新观看应用界面说明。",
+
+      // Task Ads Tutorial
+      'tutorial_ads_filter_title': '筛选机会',
+      'tutorial_ads_filter_desc': '使用筛选器寻找符合您首选价格范围和时间的任务。',
+      'tutorial_ads_refresh_title': '最新任务',
+      'tutorial_ads_refresh_desc': '刷新以实时查看最新的配送机会。',
+      'tutorial_ads_tabs_title': '可用任务 vs 我的报价',
+      'tutorial_ads_tabs_desc': '在浏览所有任务和跟踪您已提交的报价之间切换。',
+      'tutorial_ads_search_title': '快速搜索',
+      'tutorial_ads_search_desc': '快速搜索特定位置或任务描述。',
+
+      // Expanded Tutorial
+      'tutorial_transactions_list_title': '交易列表',
+      'tutorial_transactions_list_desc': '在此处查看您所有的财务活动以及充值/提现记录。',
+      'tutorial_ad_details_info_title': '广告信息',
+      'tutorial_ad_details_info_desc': '在提交报价前检查任务要求、距离和价格。',
+      'tutorial_ad_details_offer_title': '提交报价',
+      'tutorial_ad_details_offer_desc': '在此部分向客户发送您的价格建议和评论。',
+      'tutorial_task_details_status_title': '任务进度',
+      'tutorial_task_details_status_desc': '在从取货到送货的过程中更新您的任务状态。',
+      'tutorial_task_details_map_title': '导航',
+      'tutorial_task_details_map_desc': '使用地图查找准确的取货和送货位置。',
     },
-    'ur': {
+    'ur_PK': {
       'appName': 'SafeDests - ڈرائیور',
       'home': 'ہوم',
       'tasks': 'ٹاسک',
@@ -1664,39 +1857,95 @@ class Messages extends Translations {
       "server_error_try_again": "سرور کے مسئلے کی وجہ سے حیثیت کو فعال نہیں کیا جا سکا۔ دوبارہ کوشش کریں۔",
 
        // Onboarding
-      'onboarding_title_1': 'تتبع أرباحك',
-      'onboarding_desc_1': 'راقب أرباحك اليومية والأسبوعية والشهرية مع إحصائيات وتقارير مفصلة.',
-      'onboarding_title_2': 'إدارة المهام بكفاءة',
-      'onboarding_desc_2': 'استقبل وقبل وأدر مهام التوصيل واجهة سهلة الاستخدام.',
-      'onboarding_title_3': 'احصل على مستحقاتك فوراً',
-      'onboarding_desc_3': 'اسحب أرباحك إلى حسابك البنكي أو محفظتك الرقمية بأمان وسرعة.',
-      'next': 'التالي',
-      'skip': 'تخطي',
-      'get_started': 'ابدأ الآن',
+      'onboarding_title_1': 'اپنی آمدنی کو ٹریک کریں',
+      'onboarding_desc_1': 'تفصیلی اعدادوشمار اور رپورٹس کے ساتھ اپنی روزانہ، ہفتہ وار اور ماہانہ آمدنی کی نگرانی کریں۔',
+      'onboarding_title_2': 'ٹاسک کو مؤثر طریقے سے منظم کریں',
+      'onboarding_desc_2': 'استعمال میں آسان انٹرفیس کے ساتھ ڈیلیوری ٹاسک وصول، قبول اور منظم کریں۔',
+      'onboarding_title_3': 'فوری طور پر ادائیگی حاصل کریں',
+      'onboarding_desc_3': 'اپنی آمدنی کو محفوظ اور تیزی سے اپنے بینک اکاؤنٹ یا ڈیجیٹل والیٹ میں نکالیں۔',
+      'next': 'اگلا',
+      'skip': 'چھوڑیں',
+      'get_started': 'شروع کریں',
 
-      // Home Tutorial
-      'tutorial_skip': 'تخطي الشرح',
-      'tutorial_online_title': 'ابدأ العمل',
-      'tutorial_online_desc': 'قم بتفعيل هذا الزر لبدء استقبال طلبات التوصيل.',
-      'tutorial_busy_title': 'حالة الانشغال',
-      'tutorial_busy_desc': 'تأكد مما إذا كنت مشغولاً أو متاحاً لمهام جديدة.',
-      'tutorial_available_title': 'المهام المتاحة',
-      'tutorial_available_desc': 'شاهد عدد المهام التي تنتظر التعيين.',
-      'tutorial_active_title': 'المهام النشطة',
-      'tutorial_active_desc': 'تابع المهام التي تعمل عليها حالياً.',
-      'tutorial_balance_title': 'الرصيد الحالي',
-      'tutorial_balance_desc': 'راقب رصيد محفظتك الحالي هنا.',
-      'tutorial_total_title': 'إجمالي الأرباح',
-      'tutorial_total_desc': 'شاهد مجموع أرباحك منذ انضمامك.',
-      'tutorial_ads_title': 'فرص العمل',
-      'tutorial_ads_desc': 'تصفح وقبل مهام توصيل جديدة من هذا القسم.',
-      'tutorial_earnings_card_title': 'ملخص الأرباح',
-      'tutorial_earnings_card_desc': 'تفاصيل دقيقة لدخلك اليومي والشهري.',
-      'tutorial_recent_title': 'المهام الأخيرة',
-      'tutorial_recent_desc': 'وصول سريع أو قبول لآخر المهام المسندة إليك.',
-      'screen_tap_hint': 'اضغط للمتابعة',
+      // Tutorial
+      'tutorial_skip': 'چھوڑیں',
+      'tutorial_home_title': 'ہوم ڈیش بورڈ',
+      'tutorial_home_desc': 'یہاں اپنے فعال ٹاسک، آمدنی کا خلاصہ اور حیثیت دیکھیں۔',
+      'tutorial_tasks_title': 'میرے ٹاسک',
+      'tutorial_tasks_desc': 'اپنے موجودہ اور ماضی کے ٹاسک کی تاریخ کا نظم کریں۔',
+      'tutorial_wallet_title': 'والیٹ',
+      'tutorial_wallet_desc': 'اپنا بیلنس، لین دین چیک کریں اور نکلوانے کی درخواست کریں۔',
+      'tutorial_profile_title': 'پروفائل',
+      'tutorial_profile_desc': 'اپنی ذاتی معلومات، گاڑی کا ڈیٹا اور ایپ کی ترتیبات کا نظم کریں۔',
+      'tutorial_online_title': 'آن لائن جائیں',
+      'tutorial_online_desc': 'ڈیلیوری کی درخواستیں موصول کرنا شروع کرنے کے لیے اس سوئچ کو ٹوگل کریں۔',
+      'tutorial_busy_title': 'حیثیت کنٹرول',
+      'tutorial_busy_desc': 'چیک کریں کہ آیا آپ مصروف ہیں یا نئے ٹاسک کے لیے دستیاب ہیں۔',
+      'tutorial_available_title': 'دستیاب ٹاسک',
+      'tutorial_available_desc': 'دیکھیں کہ کتنے ٹاسک تفویض ہونے کا انتظار کر رہے ہیں۔',
+      'tutorial_active_title': 'فعال ٹاسک',
+      'tutorial_active_desc': 'ان ٹاسک کی نگرانی کریں جن پر آپ فی الحال کام کر رہے ہیں۔',
+      'tutorial_balance_title': 'موجودہ بیلنس',
+      'tutorial_balance_desc': 'اپنے موجودہ والیٹ بیلنس کو ٹریک کریں۔',
+      'tutorial_total_title': 'کل آمدنی',
+      'tutorial_total_desc': 'شامل ہونے کے بعد سے اپنی کل آمدنی دیکھیں۔',
+      'tutorial_ads_title': 'ٹاسک کے مواقع',
+      'tutorial_ads_desc': 'یہاں نئے ڈیلیوری ٹاسک براؤز اور قبول کریں۔',
+      'tutorial_earnings_card_title': 'آمدنی کا خلاصہ',
+      'tutorial_earnings_card_desc': 'آپ کی روزانہ اور ماہانہ آمدنی کی تفصیلی تقسیم۔',
+      'tutorial_recent_title': 'حالیہ ٹاسک',
+      'tutorial_recent_desc': 'اپنے حالیہ ٹاسک اسائنمنٹس تک فوری رسائی یا قبول کریں۔',
+      'screen_tap_hint': 'جاری رکھنے کے لیے ٹیپ کریں',
       "replay_instructions": "ہدایات دوبارہ دیکھیں",
-      "tap_to_rewatch": "ایپ انٹرفیس کی مرحلہ وار وضاحت دوبارہ دیکھنے کے لیے کسی بھی وقت اس بٹن پر کلک کریں۔",
+      "tap_to_rewatch": "ایپ انٹرفیس کی مرحلة وار وضاحت دوبارہ دیکھنے کے لیے کسی بھی وقت اس بٹن پر کلک کریں۔",
+
+      // Task Ads Tutorial
+      'tutorial_ads_filter_title': 'مواقع تلاش کریں',
+      'tutorial_ads_filter_desc': 'اپنی پسندیدہ قیمت کی حد اور وقت کے مطابق ٹاسک تلاش کرنے کے لیے فلٹرز استعمال کریں۔',
+      'tutorial_ads_refresh_title': 'تازہ ترین ٹاسک',
+      'tutorial_ads_refresh_desc': 'ریئل ٹائم میں ڈیلیوری کے تازہ ترین مواقع دیکھنے کے لیے ریفریش کریں۔',
+      'tutorial_ads_tabs_title': 'دستیاب بمقابلہ میری پیشکشیں',
+      'tutorial_ads_tabs_desc': 'تمام ٹاسک براؤز کرنے اور اپنی پہلے سے جمع کرائی گئی پیشکشوں کو ٹریک کرنے کے درمیان سوئچ کریں۔',
+      'tutorial_ads_search_title': 'تیز تلاش',
+      'tutorial_ads_search_desc': 'مخصوص مقامات یا ٹاسک کی تفصیلات جلدی سے تلاش کریں۔',
+
+      // Wallet Tutorial
+      'tutorial_wallet_balance_title': 'والیٹ بیلنس',
+      'tutorial_wallet_balance_desc': 'اپنی دستیاب رقم اور کل آمدنی ایک ہی جگہ دیکھیں۔',
+      'tutorial_wallet_chart_title': 'آمدنی کے اعدادوشمار',
+      'tutorial_wallet_chart_desc': 'اپنے روزانہ اور ماہانہ منافع کے گراف کے ساتھ اپنی کارکردگی دیکھیں۔',
+      'tutorial_wallet_history_title': 'لین دین کی تاریخ',
+      'tutorial_wallet_history_desc': 'اپنے تمام ڈپازٹس، نکالنے اور کمیشنوں کا تفصیلی ریکارڈ دیکھیں۔',
+
+      // Profile Tutorial
+      'tutorial_profile_edit_title': 'پروفائل تبدیل کریں',
+      'tutorial_profile_edit_desc': 'اپنی ذاتی معلومات اور پروفائل تصویر یہاں اپ ڈیٹ کریں۔',
+      'tutorial_profile_header_title': 'ڈرائیور کی حیثیت',
+      'tutorial_profile_header_desc': 'اپنے اکاؤنٹ کی فعالیت اور آن لائن موجودگی کی نگرانی کریں۔',
+      'tutorial_profile_info_title': 'اکاؤنٹ کی تفصیلات',
+      'tutorial_profile_info_desc': 'اپنی رابطہ کی معلومات، ٹیم اور گاڑی کی تفصیلات کی تصدیق کریں۔',
+      'tutorial_profile_additional_title': 'اضافی ڈیٹا',
+      'tutorial_profile_additional_desc': 'اپنی تکمیلی دستاویزات اور سرکاری ریکارڈ کا نظم کریں۔',
+
+      // Tasks Tutorial
+      'tutorial_tasks_refresh_title': 'ٹاسک ہم آہنگ کریں',
+      'tutorial_tasks_refresh_desc': 'تازہ ترین اسائنمنٹ اپ ڈیٹس حاصل کرنے کے لیے اپنی ٹاسک لسٹ ریفریش کریں۔',
+      'tutorial_tasks_tabs_title': 'ٹاسک کی حیثیت کے زمرے',
+      'tutorial_tasks_tabs_desc': 'ٹاسک کو ان کے موجودہ مرحلے کے مطابق ٹریک کریں: قبولیت کا انتظار، جاری، یا مکمل۔',
+      'tutorial_tasks_list_title': 'کام کا انتظام',
+      'tutorial_tasks_list_desc': 'ٹاسک کی تفصیلات کا جائزہ لیں، ڈیلیوری کی حیثیت اپ ڈیٹ کریں، اور منظم رہیں۔',
+
+      // Expanded Tutorial
+      'tutorial_transactions_list_title': 'لین دین کی فہرست',
+      'tutorial_transactions_list_desc': 'اپنی تمام مالی سرگرمیاں اور ڈپازٹ/نکالنے کا ریکارڈ یہاں دیکھیں۔',
+      'tutorial_ad_details_info_title': 'اشتہار کی معلومات',
+      'tutorial_ad_details_info_desc': 'پیشکش جمع کرانے سے پہلے ٹاسک کی ضروریات، فاصلہ اور قیمت چیک کریں۔',
+      'tutorial_ad_details_offer_title': 'پیشکش جمع کروائیں',
+      'tutorial_ad_details_offer_desc': 'اس سیکشن سے گاہک کو اپنی قیمت کی تجویز اور تبصرے بھیجیں۔',
+      'tutorial_task_details_status_title': 'ٹاسک کی ترقی',
+      'tutorial_task_details_status_desc': 'پک اپ سے ڈیلیوری تک جاتے ہوئے اپنے ٹاسک کی حیثیت کو اپ ڈیٹ کریں۔',
+      'tutorial_task_details_map_title': 'نیویگیشن',
+      'tutorial_task_details_map_desc': 'پک اپ اور ڈیلیوری کے درست مقامات تلاش کرنے کے لیے نقشہ استعمال کریں۔',
     },
   };
 }

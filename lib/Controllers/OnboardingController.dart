@@ -1,10 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../shared_prff.dart';
+import '../Languages/LanguageController.dart';
 
 class OnboardingController extends GetxController {
   var pageController = PageController();
   var currentPage = 0.obs;
+  final LanguageController _languageController = Get.find();
+  var selectedLanguage = 'ar'.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _loadSavedLanguage();
+  }
+
+  void _loadSavedLanguage() {
+    selectedLanguage.value = Selected_Language.getLanguage() ?? 'ar';
+  }
+
+  void changeLanguage(String languageCode) {
+    selectedLanguage.value = languageCode;
+    _languageController.changeLanguage(languageCode);
+  }
 
   List<Map<String, String>> onboardingData = [
     {

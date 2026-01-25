@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import '../../main.dart';
 import '../../services/auth_service.dart';
+import '../../Controllers/AuthController.dart';
 import '../../models/driver.dart';
 import '../../config/app_config.dart';
 import '../../utils/debug_helper.dart';
 import '../profile/edit_profile_screen.dart';
 import '../profile/additional_data_screen.dart';
 import '../../l10n/generated/app_localizations.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -19,12 +23,20 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   bool _isRefreshing = false;
 
+  // Tutorial Keys
+  final GlobalKey _headerKey = GlobalKey();
+  final GlobalKey _infoKey = GlobalKey();
+  final GlobalKey _settingsKey = GlobalKey();
+  final GlobalKey _editKey = GlobalKey();
+  final GlobalKey _helpKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
     // Refresh profile data when screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _refreshProfileData();
+      _checkTutorial();
     });
   }
 
@@ -65,6 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: Text(l10n.profile),
         actions: [
           IconButton(
+            key: _editKey,
             icon: const Icon(Icons.edit),
             onPressed: () async {
               final result = await Navigator.push(
@@ -81,6 +94,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 await authService.refreshDriverData();
               }
             },
+          ),
+          IconButton(
+            key: _helpKey,
+            icon: const Icon(Icons.help_outline),
+            tooltip: 'help'.tr,
+            onPressed: _viewTutorial,
           ),
         ],
       ),
@@ -131,17 +150,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
 
                   // Profile Header
-                  _buildProfileHeader(driver, l10n),
+                  Container(key: _headerKey, child: _buildProfileHeader(driver, l10n)),
 
                   const SizedBox(height: 24),
 
                   // Profile Information
-                  _buildProfileInfo(driver, l10n),
+                  Container(key: _infoKey, child: _buildProfileInfo(driver, l10n)),
 
                   const SizedBox(height: 24),
 
                   // Settings Section
-                  _buildSettingsSection(l10n),
+                  Container(key: _settingsKey, child: _buildSettingsSection(l10n)),
 
                   const SizedBox(height: 24),
 
@@ -446,6 +465,155 @@ class _ProfileScreenState extends State<ProfileScreen> {
         const SizedBox(height: 16),
         Text(l10n.appDescription),
       ],
+    );
+  }
+
+  // --- Tutorial Methods ---
+
+  TutorialCoachMark? tutorialCoachMark;
+
+  void _checkTutorial() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool hasSeen = prefs.getBool('hasSeenProfileTutorial') ?? false;
+
+    if (!hasSeen) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _viewTutorial();
+      });
+    }
+  }
+
+  void _viewTutorial() {
+    tutorialCoachMark = TutorialCoachMark(
+      targets: _createTargets(),
+      colorShadow: Colors.red.shade500,
+      textSkip: "tutorial_skip".tr,
+      paddingFocus: 10,
+      opacityShadow: 0.9,
+      onFinish: _markTutorialAsSeen,
+      onClickTarget: (target) {},
+      onSkip: () {
+        _markTutorialAsSeen();
+        return true;
+      },
+    );
+
+    tutorialCoachMark?.show(context: context);
+  }
+
+  void _markTutorialAsSeen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('hasSeenProfileTutorial', true);
+  }
+
+  List<TargetFocus> _createTargets() {
+    List<TargetFocus> targets = [];
+
+    targets.add(
+      TargetFocus(
+        identify: "profile_header",
+        keyTarget: _headerKey,
+        shape: ShapeLightFocus.RRect,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: _buildTutorialItem(
+              title: "tutorial_profile_header_title".tr,
+              description: "tutorial_profile_header_desc".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "edit_btn",
+        keyTarget: _editKey,
+        shape: ShapeLightFocus.Circle,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: _buildTutorialItem(
+              title: "tutorial_profile_edit_title".tr,
+              description: "tutorial_profile_edit_desc".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "profile_info",
+        keyTarget: _infoKey,
+        shape: ShapeLightFocus.RRect,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            child: _buildTutorialItem(
+              title: "tutorial_profile_info_title".tr,
+              description: "tutorial_profile_info_desc".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "settings_section",
+        keyTarget: _settingsKey,
+        shape: ShapeLightFocus.RRect,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            child: _buildTutorialItem(
+              title: "tutorial_profile_additional_title".tr,
+              description: "tutorial_profile_additional_desc".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "help_btn",
+        keyTarget: _helpKey,
+        shape: ShapeLightFocus.Circle,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: _buildTutorialItem(
+              title: "replay_instructions".tr,
+              description: "tap_to_rewatch".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    return targets;
+  }
+
+  Widget _buildTutorialItem({required String title, required String description}) {
+    return Container(
+      constraints: BoxConstraints(maxWidth: Get.width * 0.8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.black.withAlpha(150),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          Text(description, style: const TextStyle(color: Colors.white70, fontSize: 14)),
+        ],
+      ),
     );
   }
 }

@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import '../../Controllers/TaskController.dart';
 import '../../models/task.dart';
 import '../../widgets/task_card.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TasksScreen extends StatefulWidget {
   const TasksScreen({super.key});
@@ -16,12 +18,18 @@ class _TasksScreenState extends State<TasksScreen>
   late TabController _tabController;
   final TaskController _taskController = Get.find<TaskController>();
 
+  // Tutorial Keys
+  final GlobalKey _refreshKey = GlobalKey();
+  final GlobalKey _tabsKey = GlobalKey();
+  final GlobalKey _helpKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadTasks();
+      _checkTutorial();
     });
   }
 
@@ -32,7 +40,6 @@ class _TasksScreenState extends State<TasksScreen>
   }
 
   Future<void> _loadTasks() async {
-    // Load all task types
     await Future.wait([
       _taskController.getTasks(status: 'pending', refresh: true),
       _taskController.getTasks(status: 'in_progress', refresh: true),
@@ -41,15 +48,14 @@ class _TasksScreenState extends State<TasksScreen>
   }
 
   Future<void> _refreshTasks() async {
-    // Refresh based on current tab
     switch (_tabController.index) {
-      case 0: // Available tasks
+      case 0:
         await _taskController.getTasks(status: 'pending', refresh: true);
         break;
-      case 1: // Current tasks
+      case 1:
         await _taskController.getTasks(status: 'in_progress', refresh: true);
         break;
-      case 2: // Completed tasks
+      case 2:
         await _taskController.getTasks(status: 'completed', refresh: true);
         break;
     }
@@ -62,12 +68,20 @@ class _TasksScreenState extends State<TasksScreen>
         title: Text('tasks'.tr),
         actions: [
           IconButton(
+            key: _refreshKey,
             icon: const Icon(Icons.refresh),
             onPressed: _refreshTasks,
             tooltip: 'refreshTasks'.tr,
           ),
+          IconButton(
+            key: _helpKey,
+            icon: const Icon(Icons.help_outline),
+            tooltip: 'help'.tr,
+            onPressed: _viewTutorial,
+          ),
         ],
         bottom: TabBar(
+          key: _tabsKey,
           controller: _tabController,
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white.withOpacity(0.7),
@@ -323,5 +337,120 @@ class _TasksScreenState extends State<TasksScreen>
         colorText: Colors.white,
       );
     }
+  }
+
+  // --- Tutorial Methods ---
+
+  TutorialCoachMark? tutorialCoachMark;
+
+  void _checkTutorial() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool hasSeen = prefs.getBool('hasSeenTasksTutorial') ?? false;
+
+    if (!hasSeen) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _viewTutorial();
+      });
+    }
+  }
+
+  void _viewTutorial() {
+    tutorialCoachMark = TutorialCoachMark(
+      targets: _createTargets(),
+      colorShadow: Colors.red.shade500,
+      textSkip: "tutorial_skip".tr,
+      paddingFocus: 10,
+      opacityShadow: 0.9,
+      onFinish: _markTutorialAsSeen,
+      onClickTarget: (target) {},
+      onSkip: () {
+        _markTutorialAsSeen();
+        return true;
+      },
+    );
+
+    tutorialCoachMark?.show(context: context);
+  }
+
+  void _markTutorialAsSeen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('hasSeenTasksTutorial', true);
+  }
+
+  List<TargetFocus> _createTargets() {
+    List<TargetFocus> targets = [];
+
+    targets.add(
+      TargetFocus(
+        identify: "tasks_tabs",
+        keyTarget: _tabsKey,
+        shape: ShapeLightFocus.RRect,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: _buildTutorialItem(
+              title: "tutorial_tasks_tabs_title".tr,
+              description: "tutorial_tasks_tabs_desc".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "refresh_btn",
+        keyTarget: _refreshKey,
+        shape: ShapeLightFocus.Circle,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: _buildTutorialItem(
+              title: "tutorial_tasks_refresh_title".tr,
+              description: "tutorial_tasks_refresh_desc".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "help_btn",
+        keyTarget: _helpKey,
+        shape: ShapeLightFocus.Circle,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: _buildTutorialItem(
+              title: "replay_instructions".tr,
+              description: "tap_to_rewatch".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    return targets;
+  }
+
+  Widget _buildTutorialItem({required String title, required String description}) {
+    return Container(
+      constraints: BoxConstraints(maxWidth: Get.width * 0.8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.black.withAlpha(150),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          Text(description, style: const TextStyle(color: Colors.white70, fontSize: 14)),
+        ],
+      ),
+    );
   }
 }

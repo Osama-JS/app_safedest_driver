@@ -8,6 +8,8 @@ import '../../widgets/task_history_sheet.dart';
 import '../../config/app_config.dart';
 import '../../services/mapbox_service.dart';
 import '../../Controllers/LocationController.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TaskDetailScreen extends StatefulWidget {
   final Task task;
@@ -31,11 +33,17 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   final Rxn<double> _distanceDriverToPickup = Rxn<double>();
   final Rxn<double> _distanceDriverToDelivery = Rxn<double>();
 
+  // Tutorial Keys
+  final GlobalKey _stepperKey = GlobalKey();
+  final GlobalKey _navigationKey = GlobalKey();
+  final GlobalKey _helpKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
     _currentTask.value = widget.task;
     _loadTaskDetails();
+    _checkTutorial();
   }
 
   Future<void> _loadTaskDetails() async {
@@ -101,6 +109,12 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                 IconButton(
                   onPressed: _loadTaskDetails,
                   icon: const Icon(Icons.refresh, color: Colors.white),
+                ),
+                IconButton(
+                  key: _helpKey,
+                  icon: const Icon(Icons.help_outline, color: Colors.white),
+                  tooltip: 'help'.tr,
+                  onPressed: _viewTutorial,
                 ),
               ],
               flexibleSpace: FlexibleSpaceBar(
@@ -228,12 +242,12 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                 child: Column(
                   children: [
                     // Quick Actions Card
-                    _buildQuickActionsCard(),
+                    Container(key: _navigationKey, child: _buildQuickActionsCard()),
 
                     const SizedBox(height: 16),
 
                     // Task Status Stepper
-                    TaskStatusStepper(task: task),
+                    Container(key: _stepperKey, child: TaskStatusStepper(task: task)),
 
                     const SizedBox(height: 16),
 
@@ -1672,6 +1686,121 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
               height: 20,
               child: CircularProgressIndicator(strokeWidth: 2),
             ),
+        ],
+      ),
+    );
+  }
+
+  // --- Tutorial Methods ---
+
+  TutorialCoachMark? tutorialCoachMark;
+
+  void _checkTutorial() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool hasSeen = prefs.getBool('hasSeenTaskDetailTutorial') ?? false;
+
+    if (!hasSeen) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _viewTutorial();
+      });
+    }
+  }
+
+  void _viewTutorial() {
+    tutorialCoachMark = TutorialCoachMark(
+      targets: _createTargets(),
+      colorShadow: Colors.red.shade500,
+      textSkip: "tutorial_skip".tr,
+      paddingFocus: 10,
+      opacityShadow: 0.9,
+      onFinish: _markTutorialAsSeen,
+      onClickTarget: (target) {},
+      onSkip: () {
+        _markTutorialAsSeen();
+        return true;
+      },
+    );
+
+    tutorialCoachMark?.show(context: context);
+  }
+
+  void _markTutorialAsSeen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('hasSeenTaskDetailTutorial', true);
+  }
+
+  List<TargetFocus> _createTargets() {
+    List<TargetFocus> targets = [];
+
+    targets.add(
+      TargetFocus(
+        identify: "nav_actions",
+        keyTarget: _navigationKey,
+        shape: ShapeLightFocus.RRect,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: _buildTutorialItem(
+              title: "tutorial_task_details_map_title".tr,
+              description: "tutorial_task_details_map_desc".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "status_steps",
+        keyTarget: _stepperKey,
+        shape: ShapeLightFocus.RRect,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: _buildTutorialItem(
+              title: "tutorial_task_details_status_title".tr,
+              description: "tutorial_task_details_status_desc".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "help_btn",
+        keyTarget: _helpKey,
+        shape: ShapeLightFocus.Circle,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: _buildTutorialItem(
+              title: "replay_instructions".tr,
+              description: "tap_to_rewatch".tr,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    return targets;
+  }
+
+  Widget _buildTutorialItem({required String title, required String description}) {
+    return Container(
+      constraints: BoxConstraints(maxWidth: Get.width * 0.8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.black.withAlpha(150),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          Text(description, style: const TextStyle(color: Colors.white70, fontSize: 14)),
         ],
       ),
     );

@@ -13,18 +13,62 @@ class OnboardingScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // Skip Button
-            Align(
-              alignment: AlignmentDirectional.topEnd,
-              child: TextButton(
-                onPressed: controller.skip,
-                child: Text(
-                  'skip'.tr,
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontSize: 16,
+            // Language Selection Row
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Language Buttons
+                  Obx(
+                    () => Row(
+                      children: [
+                        OnboardingScreen._buildLanguageButton(
+                          context,
+                          'ar',
+                          'ع',
+                          controller.selectedLanguage.value == 'ar',
+                          controller,
+                        ),
+                        const SizedBox(width: 8),
+                        OnboardingScreen._buildLanguageButton(
+                          context,
+                          'en',
+                          'EN',
+                          controller.selectedLanguage.value == 'en',
+                          controller,
+                        ),
+                        const SizedBox(width: 8),
+                        OnboardingScreen._buildLanguageButton(
+                          context,
+                          'ur',
+                          'اُ',
+                          controller.selectedLanguage.value == 'ur',
+                          controller,
+                        ),
+                        const SizedBox(width: 8),
+                        OnboardingScreen._buildLanguageButton(
+                          context,
+                          'zh',
+                          '中',
+                          controller.selectedLanguage.value == 'zh',
+                          controller,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
+                  // Skip Button
+                  TextButton(
+                    onPressed: controller.skip,
+                    child: Text(
+                      'skip'.tr,
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
 
@@ -36,8 +80,8 @@ class OnboardingScreen extends StatelessWidget {
                 onPageChanged: controller.onPageChanged,
                 itemBuilder: (context, index) {
                   return OnboardingPage(
-                    title: controller.onboardingData[index]['title']!,
-                    desc: controller.onboardingData[index]['desc']!,
+                    title: controller.onboardingData[index]['title'] ?? '',
+                    desc: controller.onboardingData[index]['desc'] ?? '',
                     index: index,
                   );
                 },
@@ -109,6 +153,41 @@ class OnboardingScreen extends StatelessWidget {
       ),
     );
   }
+
+  static Widget _buildLanguageButton(
+    BuildContext context,
+    String locale,
+    String label,
+    bool isSelected,
+    OnboardingController controller,
+  ) {
+    return GestureDetector(
+      onTap: () => controller.changeLanguage(locale),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? Theme.of(context).primaryColor
+              : Colors.grey.shade200,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isSelected
+                ? Theme.of(context).primaryColor
+                : Colors.grey.shade300,
+            width: 1.5,
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected ? Colors.white : Colors.grey.shade700,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            fontSize: 14,
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class OnboardingPage extends StatelessWidget {
@@ -162,7 +241,7 @@ class OnboardingPage extends StatelessWidget {
               },
             ),
           ),
-          
+
           const SizedBox(height: 40),
 
           // Text Content (Fade/Slide Up)

@@ -38,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadData();
-      
+
       // Schedule tutorial
       Future.delayed(const Duration(seconds: 2), () {
         if (mounted)     _checkTutorial();
@@ -440,6 +440,14 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           onPressed: () => Get.to(() => const NotificationsScreen()),
         )),
+
+        // Help
+        IconButton(
+          key: _helpKey,
+          icon: const Icon(Icons.help_outline, color: Colors.white),
+          tooltip: 'help'.tr,
+          onPressed: _reviewTutorial,
+        ),
 
         // Settings
         IconButton(

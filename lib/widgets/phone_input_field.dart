@@ -101,9 +101,8 @@ class PhoneInputField extends StatelessWidget {
                   validator: validator,
                   decoration: InputDecoration(
                     hintText: isWhatsApp
-                        ? AppLocalizations.of(context)!
-                            .whatsappNumberPlaceholder
-                        : AppLocalizations.of(context)!.phoneNumberPlaceholder,
+                        ? AppLocalizations.of(context)?.whatsappNumberPlaceholder ?? 'WhatsApp Number'
+                        : AppLocalizations.of(context)?.phoneNumberPlaceholder ?? 'Phone Number',
                     prefixIcon: prefixIcon != null
                         ? Icon(prefixIcon,
                             color: isWhatsApp ? Colors.green[600] : null)
