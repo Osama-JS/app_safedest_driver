@@ -159,8 +159,8 @@ class _SplashScreenState extends State<SplashScreen>
             }
           } else {
             debugPrint('SplashScreen: Navigating to /main');
-            // Navigator.of(context).pushReplacementNamed('/main');
-            Get.offAllNamed('/onboarding');
+            Navigator.of(context).pushReplacementNamed('/main');
+            // Get.offAllNamed('/onboarding');
 
           }
         } else {
