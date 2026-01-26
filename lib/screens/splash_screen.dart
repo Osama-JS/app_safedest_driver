@@ -159,7 +159,9 @@ class _SplashScreenState extends State<SplashScreen>
             }
           } else {
             debugPrint('SplashScreen: Navigating to /main');
-            Navigator.of(context).pushReplacementNamed('/main');
+            // Navigator.of(context).pushReplacementNamed('/main');
+            Get.offAllNamed('/onboarding');
+
           }
         } else {
              final bool seenOnboarding = Bool_pref.getBool('seenOnboarding') ?? false;

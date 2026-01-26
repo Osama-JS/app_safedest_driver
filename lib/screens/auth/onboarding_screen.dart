@@ -20,13 +20,51 @@ class OnboardingScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   // Language Buttons
+                  // Obx(
+                  //   () => Row(
+                  //     children: [
+                  //       OnboardingScreen._buildLanguageButton(
+                  //         context,
+                  //         'ar',
+                  //         'ع',
+                  //         controller.selectedLanguage.value == 'ar',
+                  //         controller,
+                  //       ),
+                  //       const SizedBox(width: 8),
+                  //       OnboardingScreen._buildLanguageButton(
+                  //         context,
+                  //         'en',
+                  //         'EN',
+                  //         controller.selectedLanguage.value == 'en',
+                  //         controller,
+                  //       ),
+                  //       const SizedBox(width: 8),
+                  //       OnboardingScreen._buildLanguageButton(
+                  //         context,
+                  //         'ur',
+                  //         'اُ',
+                  //         controller.selectedLanguage.value == 'ur',
+                  //         controller,
+                  //       ),
+                  //       const SizedBox(width: 8),
+                  //       OnboardingScreen._buildLanguageButton(
+                  //         context,
+                  //         'zh',
+                  //         '中',
+                  //         controller.selectedLanguage.value == 'zh',
+                  //         controller,
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+                  // Language Buttons
                   Obx(
-                    () => Row(
+                        () => Row(
                       children: [
                         OnboardingScreen._buildLanguageButton(
                           context,
                           'ar',
-                          'ع',
+                          '🇸🇦', // علم السعودية للغة العربية
                           controller.selectedLanguage.value == 'ar',
                           controller,
                         ),
@@ -34,7 +72,7 @@ class OnboardingScreen extends StatelessWidget {
                         OnboardingScreen._buildLanguageButton(
                           context,
                           'en',
-                          'EN',
+                          '🇺🇸', // علم أمريكا للغة الإنجليزية
                           controller.selectedLanguage.value == 'en',
                           controller,
                         ),
@@ -42,7 +80,7 @@ class OnboardingScreen extends StatelessWidget {
                         OnboardingScreen._buildLanguageButton(
                           context,
                           'ur',
-                          'اُ',
+                          '🇵🇰', // علم باكستان للغة الأوردو
                           controller.selectedLanguage.value == 'ur',
                           controller,
                         ),
@@ -50,7 +88,7 @@ class OnboardingScreen extends StatelessWidget {
                         OnboardingScreen._buildLanguageButton(
                           context,
                           'zh',
-                          '中',
+                          '🇨🇳', // علم الصين للغة الصينية
                           controller.selectedLanguage.value == 'zh',
                           controller,
                         ),
@@ -154,22 +192,58 @@ class OnboardingScreen extends StatelessWidget {
     );
   }
 
+  // static Widget _buildLanguageButton(
+  //   BuildContext context,
+  //   String locale,
+  //   String label,
+  //   bool isSelected,
+  //   OnboardingController controller,
+  // ) {
+  //   return GestureDetector(
+  //     onTap: () => controller.changeLanguage(locale),
+  //     child: Container(
+  //       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+  //       decoration: BoxDecoration(
+  //         color: isSelected
+  //             ? Theme.of(context).primaryColor
+  //             : Colors.grey.shade200,
+  //         borderRadius: BorderRadius.circular(20),
+  //         border: Border.all(
+  //           color: isSelected
+  //               ? Theme.of(context).primaryColor
+  //               : Colors.grey.shade300,
+  //           width: 1.5,
+  //         ),
+  //       ),
+  //       child: Text(
+  //         label,
+  //         style: TextStyle(
+  //           color: isSelected ? Colors.white : Colors.grey.shade700,
+  //           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+  //           fontSize: 14,
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+
   static Widget _buildLanguageButton(
-    BuildContext context,
-    String locale,
-    String label,
-    bool isSelected,
-    OnboardingController controller,
-  ) {
+      BuildContext context,
+      String locale,
+      String flag, // نغير التسمية لـ flag للوضوح
+      bool isSelected,
+      OnboardingController controller,
+      ) {
     return GestureDetector(
       onTap: () => controller.changeLanguage(locale),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      child: AnimatedContainer( // أضفنا حركة بسيطة عند الاختيار
+        duration: const Duration(milliseconds: 300),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
           color: isSelected
-              ? Theme.of(context).primaryColor
-              : Colors.grey.shade200,
-          borderRadius: BorderRadius.circular(20),
+              ? Theme.of(context).primaryColor.withOpacity(0.2) // خلفية فاتحة عند الاختيار
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
                 ? Theme.of(context).primaryColor
@@ -178,11 +252,9 @@ class OnboardingScreen extends StatelessWidget {
           ),
         ),
         child: Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? Colors.white : Colors.grey.shade700,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            fontSize: 14,
+          flag,
+          style: const TextStyle(
+            fontSize: 22, // حجم العلم ليكون واضحاً كأيقونة
           ),
         ),
       ),

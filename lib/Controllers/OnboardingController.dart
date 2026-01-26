@@ -7,7 +7,7 @@ class OnboardingController extends GetxController {
   var pageController = PageController();
   var currentPage = 0.obs;
   final LanguageController _languageController = Get.find();
-  var selectedLanguage = 'ar'.obs;
+  var selectedLanguage = 'en'.obs;
 
   @override
   void onInit() {
@@ -16,7 +16,7 @@ class OnboardingController extends GetxController {
   }
 
   void _loadSavedLanguage() {
-    selectedLanguage.value = Selected_Language.getLanguage() ?? 'ar';
+    selectedLanguage.value = Selected_Language.getLanguage() ?? 'en';
   }
 
   void changeLanguage(String languageCode) {
