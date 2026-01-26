@@ -348,18 +348,18 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-        floatingActionButton: FloatingActionButton(
-          key: _helpKey,
-          backgroundColor: Colors.red.shade900,
-          onPressed: () async {
-            _reviewTutorial();
-            // _viewTutorial();
-            // _createTutorial();
-            // tutorialCoachMark?.show(context: context);
-
-          },
-          child: const Icon(Icons.help_outline, color: Colors.white),
-        )
+        // floatingActionButton: FloatingActionButton(
+        //   key: _helpKey,
+        //   backgroundColor: Colors.red.shade900,
+        //   onPressed: () async {
+        //     _reviewTutorial();
+        //     // _viewTutorial();
+        //     // _createTutorial();
+        //     // tutorialCoachMark?.show(context: context);
+        //
+        //   },
+        //   child: const Icon(Icons.help_outline, color: Colors.white),
+        // )
 
     );
   }

@@ -73,7 +73,12 @@ class _MainScreenState extends State<MainScreen> {
       child: Scaffold(
         body: IndexedStack(
           index: _currentIndex,
-          children: _screens,
+          // children: _screens,
+          children: [
+            const HomeScreen(),
+            _currentIndex == 1 ? const TasksScreen() : const SizedBox.shrink(),
+            _currentIndex == 2 ? const WalletScreen() : const SizedBox.shrink(),
+            _currentIndex == 3 ? const ProfileScreen() : const SizedBox.shrink(),],
         ),
         bottomNavigationBar: _buildBottomNavigationBar(),
       ),

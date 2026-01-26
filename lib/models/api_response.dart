@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'driver.dart';
 import 'task.dart';
 import 'wallet.dart';
@@ -264,10 +266,19 @@ class AppStatus {
   });
 
   factory AppStatus.fromJson(Map<String, dynamic> json) {
+    String mainUpdateUrl = "";
+
+    if (Platform.isAndroid) {
+      mainUpdateUrl = json['update_url']??'';
+    } else if (Platform.isIOS) {
+      mainUpdateUrl = json['update_url_ios'];
+    } else {
+      mainUpdateUrl = json['update_url']??'';
+    }
     return AppStatus(
       success: json['success'] ?? false,
       minVersion: json['min_version'] ?? '1.0.0',
-      updateUrl: json['update_url'] ?? '',
+      updateUrl:  mainUpdateUrl,
       serverTime: json['server_time'] ?? '',
     );
   }
