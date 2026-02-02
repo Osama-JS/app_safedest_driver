@@ -2,7 +2,8 @@ class AppConfig {
   // API Configuration
   //static const String baseUrl =
   // static const String baseUrl = 'http://192.168.0.186/safedestssss/public/api'; // For Devlober
-  static const String baseUrl = 'https://o.safedest.com/api'; // For Tester
+  // static const String baseUrl = 'https://o.safedest.com/api'; // For Tester
+  static const String baseUrl = 'https://tester.safedest.com/api'; // For Tester
   //  static const String baseUrl = 'http://192.168.8.23/safedestssss/public/api'; // For Production
 
   // App Information
