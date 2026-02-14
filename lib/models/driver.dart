@@ -7,6 +7,7 @@ class Driver {
   final String? username;
   final String phone;
   final String? phoneCode;
+  final String? driverCode;
   final String? image;
   final String status;
   final bool online;
@@ -27,6 +28,11 @@ class Driver {
   final Team? team;
   final VehicleSize? vehicleSize;
 
+  final String? signatureImage;
+  final String? bankName;
+  final String? accountNumber;
+  final String? ibanNumber;
+
   Driver({
     required this.id,
     required this.name,
@@ -34,6 +40,7 @@ class Driver {
     this.username,
     required this.phone,
     this.phoneCode,
+    this.driverCode,
     this.image,
     required this.status,
     required this.online,
@@ -53,6 +60,10 @@ class Driver {
     this.additionalData,
     this.team,
     this.vehicleSize,
+    this.signatureImage,
+    this.bankName,
+    this.accountNumber,
+    this.ibanNumber,
   });
 
   factory Driver.fromJson(Map<String, dynamic> json) {
@@ -63,6 +74,7 @@ class Driver {
       username: json['username'],
       phone: json['phone'] ?? '',
       phoneCode: json['phone_code'],
+      driverCode: json['driver_code'],
       image: json['image'],
       status: json['status'] ?? 'inactive',
       online: json['online'] ?? false,
@@ -88,12 +100,18 @@ class Driver {
           ? (json['additional_data'] is String
               ? Map<String, dynamic>.from(
                   jsonDecode(json['additional_data']) ?? {})
-              : Map<String, dynamic>.from(json['additional_data'] ?? {}))
+              : (json['additional_data'] is Map
+                  ? Map<String, dynamic>.from(json['additional_data'])
+                  : {}))
           : null,
       team: json['team'] != null ? Team.fromJson(json['team']) : null,
       vehicleSize: json['vehicle_size'] != null
           ? VehicleSize.fromJson(json['vehicle_size'])
           : null,
+      signatureImage: json['signature_image'],
+      bankName: json['bank_name'],
+      accountNumber: json['account_number'],
+      ibanNumber: json['iban_number'],
     );
   }
 
@@ -123,6 +141,11 @@ class Driver {
       'last_activity_at': lastActivityAt?.toIso8601String(),
       'team': team?.toJson(),
       'vehicle_size': vehicleSize?.toJson(),
+      'signature_image': signatureImage,
+      'bank_name': bankName,
+      'account_number': accountNumber,
+      'iban_number': ibanNumber,
+      'driver_code': driverCode,
     };
   }
 
@@ -133,6 +156,7 @@ class Driver {
     String? username,
     String? phone,
     String? phoneCode,
+    String? driverCode,
     String? image,
     String? status,
     bool? online,
@@ -151,6 +175,10 @@ class Driver {
     DateTime? lastActivityAt,
     Team? team,
     VehicleSize? vehicleSize,
+    String? signatureImage,
+    String? bankName,
+    String? accountNumber,
+    String? ibanNumber,
   }) {
     return Driver(
       id: id ?? this.id,
@@ -159,6 +187,7 @@ class Driver {
       username: username ?? this.username,
       phone: phone ?? this.phone,
       phoneCode: phoneCode ?? this.phoneCode,
+      driverCode: driverCode ?? this.driverCode,
       image: image ?? this.image,
       status: status ?? this.status,
       online: online ?? this.online,
@@ -178,6 +207,10 @@ class Driver {
       lastActivityAt: lastActivityAt ?? this.lastActivityAt,
       team: team ?? this.team,
       vehicleSize: vehicleSize ?? this.vehicleSize,
+      signatureImage: signatureImage ?? this.signatureImage,
+      bankName: bankName ?? this.bankName,
+      accountNumber: accountNumber ?? this.accountNumber,
+      ibanNumber: ibanNumber ?? this.ibanNumber,
     );
   }
 

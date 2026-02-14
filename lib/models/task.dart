@@ -25,6 +25,9 @@ class Task {
   final String? specialInstructions;
   final Map<String, dynamic>? additionalData;
   final String? conditions;
+  final double? distancePickupToDelivery;
+  final double? distanceDriverToPickup;
+  final double? distanceDriverToDelivery;
 
   // حساب مستحقات السائق (السعر - العمولة)
   double get driverEarnings => totalPrice - commission;
@@ -52,6 +55,9 @@ class Task {
     this.specialInstructions,
     this.additionalData,
     this.conditions,
+    this.distancePickupToDelivery,
+    this.distanceDriverToPickup,
+    this.distanceDriverToDelivery,
   });
 
   factory Task.fromJson(Map<String, dynamic> json) {
@@ -102,6 +108,9 @@ class Task {
                   : null))
           : null,
       conditions: _parseToString(json['conditions']),
+      distancePickupToDelivery: _parseToDouble(json['distances']?['pickup_to_delivery']),
+      distanceDriverToPickup: _parseToDouble(json['distances']?['driver_to_pickup']),
+      distanceDriverToDelivery: _parseToDouble(json['distances']?['driver_to_delivery']),
     );
   }
 
@@ -163,6 +172,11 @@ class Task {
       'special_instructions': specialInstructions,
       'additional_data': additionalData,
       'conditions': conditions,
+      'distances': {
+        'pickup_to_delivery': distancePickupToDelivery,
+        'driver_to_pickup': distanceDriverToPickup,
+        'driver_to_delivery': distanceDriverToDelivery,
+      },
     };
   }
 
@@ -187,6 +201,9 @@ class Task {
     String? specialInstructions,
     Map<String, dynamic>? additionalData,
     String? conditions,
+    double? distancePickupToDelivery,
+    double? distanceDriverToPickup,
+    double? distanceDriverToDelivery,
   }) {
     return Task(
       id: id ?? this.id,
@@ -209,6 +226,9 @@ class Task {
       specialInstructions: specialInstructions ?? this.specialInstructions,
       additionalData: additionalData ?? this.additionalData,
       conditions: conditions ?? this.conditions,
+      distancePickupToDelivery: distancePickupToDelivery ?? this.distancePickupToDelivery,
+      distanceDriverToPickup: distanceDriverToPickup ?? this.distanceDriverToPickup,
+      distanceDriverToDelivery: distanceDriverToDelivery ?? this.distanceDriverToDelivery,
     );
   }
 
@@ -222,11 +242,13 @@ class Customer {
   final String name;
   final String? phone;
   final String? email;
+  final String? policyFileName;
 
   Customer({
     required this.name,
     this.phone,
     this.email,
+    this.policyFileName,
   });
 
   factory Customer.fromJson(Map<String, dynamic> json) {
@@ -234,6 +256,7 @@ class Customer {
       name: Task._parseToString(json['name']) ?? 'Unknown',
       phone: Task._parseToString(json['phone']),
       email: Task._parseToString(json['email']),
+      policyFileName: Task._parseToString(json['policy_file_name']),
     );
   }
 
@@ -242,6 +265,7 @@ class Customer {
       'name': name,
       'phone': phone,
       'email': email,
+      'policy_file_name': policyFileName,
     };
   }
 }

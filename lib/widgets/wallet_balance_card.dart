@@ -33,7 +33,7 @@ class WalletBalanceCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.account_balance_wallet,
                     color: Colors.white,
                     size: 28,
@@ -47,10 +47,15 @@ class WalletBalanceCard extends StatelessWidget {
                         ),
                   ),
                   const Spacer(),
-                  Icon(
-                    Icons.visibility,
-                    color: Colors.white.withOpacity(0.8),
-                    size: 20,
+                  IconButton(
+                    icon: Icon(
+                      walletController.isBalanceVisible.value
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: Colors.white.withOpacity(0.8),
+                      size: 24,
+                    ),
+                    onPressed: walletController.toggleBalanceVisibility,
                   ),
                 ],
               ),
@@ -58,22 +63,58 @@ class WalletBalanceCard extends StatelessWidget {
               const SizedBox(height: 20),
 
               // Main Balance
-              Text(
-                '${wallet?.balance.toStringAsFixed(2) ?? '0.00'} ${wallet?.currency ?? 'sar'.tr}',
-                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          walletController.isBalanceVisible.value
+                              ? '${wallet?.balance.toStringAsFixed(2) ?? '0.00'} ${wallet?.currency ?? 'sar'.tr}'
+                              : '****',
+                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'availableBalance'.tr,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Colors.white.withOpacity(0.8),
+                              ),
+                        ),
+                      ],
                     ),
+                  ),
+                ],
               ),
 
-              const SizedBox(height: 8),
-
-              Text(
-                'availableBalance'.tr,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.white.withOpacity(0.8),
-                    ),
-              ),
+              if (walletController.isBalanceVisible.value &&
+                  wallet != null &&
+                  (wallet.pendingWithdrawal ?? 0) > 0) ...[
+                const SizedBox(height: 12),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.timer_outlined, color: Colors.white, size: 16),
+                      const SizedBox(width: 8),
+                      Text(
+                        '${'pending'.tr}: ${wallet.pendingWithdrawal.toStringAsFixed(2)} ${wallet.currency}',
+                        style: const TextStyle(color: Colors.white, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
 
               const SizedBox(height: 24),
 
@@ -84,7 +125,9 @@ class WalletBalanceCard extends StatelessWidget {
                     child: _buildBalanceInfo(
                       context,
                       'withdrawals'.tr,
-                      '${wallet?.pendingAmount.toStringAsFixed(2) ?? '0.00'}',
+                      walletController.isBalanceVisible.value
+                          ? '${wallet?.pendingAmount.toStringAsFixed(2) ?? '0.00'}'
+                          : '****',
                       Icons.trending_up,
                     ),
                   ),
@@ -97,7 +140,9 @@ class WalletBalanceCard extends StatelessWidget {
                     child: _buildBalanceInfo(
                       context,
                       'income'.tr,
-                      '${wallet?.totalEarnings.toStringAsFixed(2) ?? '0.00'}',
+                      walletController.isBalanceVisible.value
+                          ? '${wallet?.totalEarnings.toStringAsFixed(2) ?? '0.00'}'
+                          : '****',
                       Icons.trending_down,
                     ),
                   ),
@@ -109,6 +154,7 @@ class WalletBalanceCard extends StatelessWidget {
       );
     });
   }
+
 
   Widget _buildBalanceInfo(
     BuildContext context,

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:get/get.dart';
 import '../Helpers/TaskHelper.dart';
 import '../models/task.dart';
+import '../models/task_claim.dart';
 import '../models/api_response.dart';
 
 class TaskController extends GetxController {
@@ -15,10 +16,18 @@ class TaskController extends GetxController {
   final Rxn<Task> currentTask = Rxn<Task>();
   final Rxn<Task> pendingTask = Rxn<Task>();
 
+  // Task Claims Reactive State
+  final RxList<AvailableTask> broadcastTasks = <AvailableTask>[].obs;
+  final RxList<TaskClaim> myClaims = <TaskClaim>[].obs;
+
   final RxBool _isLoading = false.obs;
+  final RxBool _isBroadcastLoading = false.obs;
+  final RxBool _isClaimsLoading = false.obs;
   final RxString _errorMessage = "".obs;
 
   RxBool get isLoading => _isLoading;
+  RxBool get isBroadcastLoading => _isBroadcastLoading;
+  RxBool get isClaimsLoading => _isClaimsLoading;
   RxString get errorMessage => _errorMessage;
   bool get hasError => _errorMessage.value.isNotEmpty;
 
@@ -103,6 +112,48 @@ class TaskController extends GetxController {
       }
     } finally {
       if (page == 1) isLoading.value = false;
+    }
+  }
+
+  // Fetch available tasks (broadcast)
+  Future<void> fetchBroadcastTasks({bool refresh = false}) async {
+    _isBroadcastLoading.value = true;
+    try {
+      final response = await _taskHelper.getAvailableTasks();
+      if (response.isSuccess && response.data != null) {
+        broadcastTasks.assignAll(response.data!);
+      }
+    } finally {
+      _isBroadcastLoading.value = false;
+    }
+  }
+
+  // Fetch my claims
+  Future<void> fetchMyClaims({bool refresh = false}) async {
+    _isClaimsLoading.value = true;
+    try {
+      final response = await _taskHelper.getMyClaims();
+      if (response.isSuccess && response.data != null) {
+        myClaims.assignAll(response.data!);
+      }
+    } finally {
+      _isClaimsLoading.value = false;
+    }
+  }
+
+  // Claim a task
+  Future<ApiResponse<bool>> claimTask(int taskId, {String? note}) async {
+    _isLoading.value = true;
+    try {
+      final response = await _taskHelper.claimTask(taskId, note: note);
+      if (response.isSuccess) {
+        // Update local state if needed
+        fetchBroadcastTasks();
+        fetchMyClaims();
+      }
+      return response;
+    } finally {
+      _isLoading.value = false;
     }
   }
 

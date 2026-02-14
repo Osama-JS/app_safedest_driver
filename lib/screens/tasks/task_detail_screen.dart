@@ -10,6 +10,7 @@ import '../../services/mapbox_service.dart';
 import '../../Controllers/LocationController.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../services/api_service.dart';
 
 class TaskDetailScreen extends StatefulWidget {
   final Task task;
@@ -52,7 +53,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
       final response = await _taskController.getTaskDetails(widget.task.id);
       if (response.isSuccess && response.data != null) {
         _currentTask.value = response.data;
-        _calculateDistances();
+        // _calculateDistances(); // Removed: distances now come from API
       }
     } catch (e) {
       Get.snackbar(
@@ -255,6 +256,10 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                     _buildActionButtons(),
                     const SizedBox(height: 16),
 
+                    // Documents Card
+                    _buildDocumentsCard(),
+                    const SizedBox(height: 16),
+
                     // Pickup Point Card
                     if (task.pickupPoint != null) _buildPickupPointCard(),
 
@@ -293,6 +298,108 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         ),
       );
     });
+  }
+
+  Future<void> _downloadDocument(String action) async {
+    final task = _currentTask.value;
+    if (task == null) return;
+
+    final token = ApiService().authToken;
+    final endpoint = AppConfig.getTaskEndpoint(task.id, action);
+    final url = '${AppConfig.getApiUrl(endpoint)}?token=$token';
+
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      Get.snackbar(
+        'error'.tr,
+        'couldNotOpenDocument'.tr,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  Widget _buildDocumentsCard() {
+    final task = _currentTask.value!;
+    final hasCustomerPolicy = task.customer?.policyFileName != null &&
+        task.customer!.policyFileName!.isNotEmpty;
+
+    return Card(
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.purple[100],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    Icons.description,
+                    color: Colors.purple[700],
+                    size: 24,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  'taskDocuments'.tr,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () => _downloadDocument('waybill'),
+                    icon: const Icon(Icons.download, size: 20),
+                    label: Text('downloadWaybill'.tr),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.purple[700],
+                      side: BorderSide(color: Colors.purple[200]!),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ),
+                if (hasCustomerPolicy) ...[
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () => _downloadDocument('customer-policy'),
+                      icon: const Icon(Icons.policy, size: 20),
+                      label: Text('customerPolicy'.tr),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.indigo[700],
+                        side: BorderSide(color: Colors.indigo[200]!),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildQuickActionsCard() {
@@ -1549,44 +1656,6 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     }
   }
 
-  Future<void> _calculateDistances() async {
-    final task = _currentTask.value;
-    if (task == null) return;
-
-    // 1. Pickup to Delivery
-    if (task.pickupPoint != null && task.deliveryPoint != null) {
-      final distance = await MapboxService.getDrivingDistance(
-        task.pickupPoint!.latitude,
-        task.pickupPoint!.longitude,
-        task.deliveryPoint!.latitude,
-        task.deliveryPoint!.longitude,
-      );
-      _distancePickupToDelivery.value = distance;
-    }
-
-    // 2. Driver to Pickup
-    final currentPos = _locationController.currentPosition.value;
-    if (currentPos != null && task.pickupPoint != null) {
-      final distance = await MapboxService.getDrivingDistance(
-        currentPos.latitude,
-        currentPos.longitude,
-        task.pickupPoint!.latitude,
-        task.pickupPoint!.longitude,
-      );
-      _distanceDriverToPickup.value = distance;
-    }
-
-    // 3. Driver to Delivery
-    if (currentPos != null && task.deliveryPoint != null) {
-      final distance = await MapboxService.getDrivingDistance(
-        currentPos.latitude,
-        currentPos.longitude,
-        task.deliveryPoint!.latitude,
-        task.deliveryPoint!.longitude,
-      );
-      _distanceDriverToDelivery.value = distance;
-    }
-  }
 
   Widget _buildConditionsCard() {
     return Card(
@@ -1644,17 +1713,17 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
             const SizedBox(height: 16),
             _buildDistanceRow(
               'distancePickupToDelivery'.tr,
-              _distancePickupToDelivery.value,
+              _currentTask.value?.distancePickupToDelivery,
             ),
             const Divider(),
             _buildDistanceRow(
               'distanceDriverToPickup'.tr,
-              _distanceDriverToPickup.value,
+              _currentTask.value?.distanceDriverToPickup,
             ),
             const Divider(),
             _buildDistanceRow(
               'distanceDriverToDelivery'.tr,
-              _distanceDriverToDelivery.value,
+              _currentTask.value?.distanceDriverToDelivery,
             ),
           ],
         ),

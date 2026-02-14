@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import '../../Controllers/AuthController.dart';
-import '../../Controllers/NotificationController.dart';
-import '../../l10n/generated/app_localizations.dart';
 import 'home_screen.dart';
 import 'tasks_screen.dart';
+import 'available_tasks_screen.dart';
 import 'wallet_screen.dart';
 import 'profile_screen.dart';
+import '../../Controllers/AuthController.dart';
+import '../../Controllers/NotificationController.dart';
+import '../../widgets/support_fab.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -73,22 +74,21 @@ class _MainScreenState extends State<MainScreen> {
       child: Scaffold(
         body: IndexedStack(
           index: _currentIndex,
-          // children: _screens,
           children: [
             const HomeScreen(),
-            _currentIndex == 1 ? const TasksScreen() : const SizedBox.shrink(),
-            _currentIndex == 2 ? const WalletScreen() : const SizedBox.shrink(),
-            _currentIndex == 3 ? const ProfileScreen() : const SizedBox.shrink(),],
+            _currentIndex == 1 ? const AvailableTasksScreen() : const SizedBox.shrink(),
+            _currentIndex == 2 ? const TasksScreen() : const SizedBox.shrink(),
+            _currentIndex == 3 ? const WalletScreen() : const SizedBox.shrink(),
+            _currentIndex == 4 ? const ProfileScreen() : const SizedBox.shrink(),
+          ],
         ),
         bottomNavigationBar: _buildBottomNavigationBar(),
+        floatingActionButton: const SupportFAB(),
       ),
     );
   }
 
   Widget _buildBottomNavigationBar() {
-    final l10n = AppLocalizations.of(context);
-    if (l10n == null) return const SizedBox.shrink();
-
     return GetBuilder<NotificationController>(
       builder: (controller) {
         return BottomNavigationBar(
@@ -103,22 +103,27 @@ class _MainScreenState extends State<MainScreen> {
             BottomNavigationBarItem(
               icon: const Icon(Icons.home_outlined),
               activeIcon: const Icon(Icons.home),
-              label: l10n.home,
+              label: 'home'.tr,
+            ),
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.gps_fixed_outlined),
+              activeIcon: const Icon(Icons.gps_fixed),
+              label: 'broadcastTasks'.tr,
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.assignment_outlined),
               activeIcon: const Icon(Icons.assignment),
-              label: l10n.tasks,
+              label: 'tasks'.tr,
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.account_balance_wallet_outlined),
               activeIcon: const Icon(Icons.account_balance_wallet),
-              label: l10n.wallet,
+              label: 'wallet'.tr,
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.person_outlined),
               activeIcon: const Icon(Icons.person),
-              label: l10n.profile,
+              label: 'profile'.tr,
             ),
           ],
         );
@@ -127,7 +132,6 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<void> _showExitDialog(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -144,22 +148,22 @@ class _MainScreenState extends State<MainScreen> {
               child: Icon(Icons.exit_to_app, color: Colors.orange[600], size: 24),
             ),
             const SizedBox(width: 12),
-            Text(l10n.exitConfirmation),
+            Text('exitConfirmation'.tr),
           ],
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(l10n.exitConfirmMessage, style: const TextStyle(fontSize: 16)),
+            Text('exitConfirmMessage'.tr, style: const TextStyle(fontSize: 16)),
             const SizedBox(height: 8),
-            Text(l10n.exitConfirmDescription, style: const TextStyle(fontSize: 14, color: Colors.grey)),
+            Text('exitConfirmDescription'.tr, style: const TextStyle(fontSize: 14, color: Colors.grey)),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(l10n.cancel, style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.w500)),
+            child: Text('cancel'.tr, style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.w500)),
           ),
           ElevatedButton(
             onPressed: () {
@@ -167,7 +171,7 @@ class _MainScreenState extends State<MainScreen> {
               SystemNavigator.pop();
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.orange[600], foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-            child: Text(l10n.exit, style: const TextStyle(fontWeight: FontWeight.w600)),
+            child: Text('exit'.tr, style: const TextStyle(fontWeight: FontWeight.w600)),
           ),
         ],
       ),

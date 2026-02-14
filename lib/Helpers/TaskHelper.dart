@@ -3,6 +3,7 @@ import '../services/api_service.dart';
 import '../config/app_config.dart';
 import '../models/api_response.dart';
 import '../models/task.dart';
+import '../models/task_claim.dart';
 
 class TaskHelper {
   final ApiService _apiService = ApiService();
@@ -40,7 +41,7 @@ class TaskHelper {
   Future<ApiResponse<Task>> getTaskDetails(int taskId) async {
     return await _apiService.get<Task>(
       '${AppConfig.taskDetailsEndpoint}/$taskId',
-      fromJson: (data) => Task.fromJson(data['data']['task']),
+      fromJson: (data) => Task.fromJson(data['task']),
     );
   }
 
@@ -188,5 +189,88 @@ class TaskHelper {
         fromJson: (data) => data['success'] == true,
       );
     }
+  }
+
+  // Get available tasks for claiming
+  Future<ApiResponse<List<AvailableTask>>> getAvailableTasks({int page = 1}) async {
+    return await _apiService.get<List<AvailableTask>>(
+      AppConfig.availableTasksEndpoint,
+      queryParams: {'page': page.toString()},
+      fromJson: (data) {
+        // Try to find tasks at different levels
+        List? tasksList;
+        if (data is Map) {
+          if (data['tasks'] != null) {
+            tasksList = data['tasks'] as List?;
+          } else if (data['data'] != null && data['data']['tasks'] != null) {
+            tasksList = data['data']['tasks'] as List?;
+          } else if (data['data'] is List) {
+            tasksList = data['data'] as List?;
+          }
+        } else if (data is List) {
+          tasksList = data;
+        }
+
+        if (tasksList != null) {
+          return tasksList
+              .map((item) {
+                try {
+                  return AvailableTask.fromJson(item);
+                } catch (e) {
+                  return null;
+                }
+              })
+              .whereType<AvailableTask>()
+              .toList();
+        }
+        return <AvailableTask>[];
+      },
+    );
+  }
+
+  // Claim a task
+  Future<ApiResponse<bool>> claimTask(int taskId, {String? note}) async {
+    return await _apiService.post<bool>(
+      '${AppConfig.availableTasksEndpoint}/$taskId/claim',
+      body: {if (note != null) 'note': note},
+      fromJson: (data) => data['success'] == true,
+    );
+  }
+
+  // Get my claims history
+  Future<ApiResponse<List<TaskClaim>>> getMyClaims({int page = 1}) async {
+    return await _apiService.get<List<TaskClaim>>(
+      AppConfig.myClaimsEndpoint,
+      queryParams: {'page': page.toString()},
+      fromJson: (data) {
+        // Try to find claims at different levels
+        List? claimsList;
+        if (data is Map) {
+          if (data['claims'] != null) {
+            claimsList = data['claims'] as List?;
+          } else if (data['data'] != null && data['data']['claims'] != null) {
+            claimsList = data['data']['claims'] as List?;
+          } else if (data['data'] is List) {
+            claimsList = data['data'] as List?;
+          }
+        } else if (data is List) {
+          claimsList = data;
+        }
+
+        if (claimsList != null) {
+          return claimsList
+              .map((item) {
+                try {
+                  return TaskClaim.fromJson(item);
+                } catch (e) {
+                  return null;
+                }
+              })
+              .whereType<TaskClaim>()
+              .toList();
+        }
+        return <TaskClaim>[];
+      },
+    );
   }
 }

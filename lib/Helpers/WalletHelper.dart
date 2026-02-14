@@ -51,4 +51,65 @@ class WalletHelper {
       fromJson: (data) => EarningsStatsResponse.fromJson(data['data'] ?? data),
     );
   }
+
+  // Request withdrawal
+  Future<ApiResponse<Map<String, dynamic>>> requestWithdrawal({
+    required double amount,
+    String? paymentMethod,
+    String? notes,
+  }) async {
+    return await _apiService.post<Map<String, dynamic>>(
+      AppConfig.withdrawEndpoint,
+      body: {
+        'amount': amount,
+        if (paymentMethod != null) 'payment_method': paymentMethod,
+        if (notes != null) 'notes': notes,
+      },
+      fromJson: (data) => data['data'] ?? data,
+    );
+  }
+
+  // Get withdrawal history
+  Future<ApiResponse<WithdrawalHistoryResponse>> getWithdrawalHistory({
+    int page = 1,
+    int perPage = 20,
+  }) async {
+    final queryParams = <String, String>{
+      'page': page.toString(),
+      'per_page': perPage.toString(),
+    };
+
+    return await _apiService.get<WithdrawalHistoryResponse>(
+      AppConfig.withdrawalHistoryEndpoint,
+      queryParams: queryParams,
+      fromJson: (data) => WithdrawalHistoryResponse.fromJson(data['data'] ?? data),
+    );
+  }
+}
+
+class WithdrawalHistoryResponse {
+  final List<WithdrawalRequest> withdrawals;
+  final int currentPage;
+  final int lastPage;
+  final int total;
+
+  WithdrawalHistoryResponse({
+    required this.withdrawals,
+    required this.currentPage,
+    required this.lastPage,
+    required this.total,
+  });
+
+  factory WithdrawalHistoryResponse.fromJson(Map<String, dynamic> json) {
+    return WithdrawalHistoryResponse(
+      withdrawals: json['withdrawals'] != null && json['withdrawals'] is List
+          ? (json['withdrawals'] as List)
+              .map((item) => WithdrawalRequest.fromJson(item))
+              .toList()
+          : [],
+      currentPage: (json['pagination']?['current_page'] as int?) ?? 1,
+      lastPage: (json['pagination']?['last_page'] as int?) ?? 1,
+      total: (json['pagination']?['total'] as int?) ?? 0,
+    );
+  }
 }

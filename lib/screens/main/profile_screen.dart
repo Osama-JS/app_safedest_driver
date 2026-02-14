@@ -9,6 +9,8 @@ import '../../config/app_config.dart';
 import '../../utils/debug_helper.dart';
 import '../profile/edit_profile_screen.dart';
 import '../profile/additional_data_screen.dart';
+import '../../widgets/signature_bottom_sheet.dart';
+import '../../widgets/bank_details_bottom_sheet.dart';
 import '../../l10n/generated/app_localizations.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -160,7 +162,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(height: 24),
 
                   // Settings Section
-                  Container(key: _settingsKey, child: _buildSettingsSection(l10n)),
+                  Container(key: _settingsKey, child: _buildSettingsSection(driver, l10n)),
 
                   const SizedBox(height: 24),
 
@@ -205,6 +207,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
 
             const SizedBox(height: 16),
+
+            // Driver Code
+            if (driver.driverCode != null && driver.driverCode!.isNotEmpty)
+              Container(
+                margin: const EdgeInsets.only(bottom: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                    width: 1,
+                  ),
+                ),
+                child: Text(
+                  driver.driverCode!,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.0,
+                      ),
+                ),
+              ),
 
             // Driver Name
             Text(
@@ -333,7 +358,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildSettingsSection(AppLocalizations l10n) {
+  Widget _buildSettingsSection(Driver driver, AppLocalizations l10n) {
     return Card(
       child: Column(
         children: [
@@ -348,6 +373,65 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   builder: (context) => const AdditionalDataScreen(),
                 ),
               );
+            },
+          ),
+
+          _buildSettingsTile(
+            icon: Icons.draw,
+            title: 'signature'.tr,
+            subtitle: 'manage_signature'.tr,
+            trailing: driver.signatureImage != null
+                ? SizedBox(
+                    width: 60,
+                    height: 40,
+                    child: Image.network(
+                      driver.signatureImage!,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const Icon(Icons.error, color: Colors.red),
+                    ),
+                  )
+                : null,
+            onTap: () async {
+              // Proactively refresh to get latest signature status/URL
+              final authService = Provider.of<AuthService>(context, listen: false);
+              await authService.refreshDriverData();
+
+              if (!mounted) return;
+              final freshDriver = authService.currentDriver;
+
+              final result = await Get.bottomSheet(
+                SignatureBottomSheet(
+                  currentSignatureUrl: freshDriver?.signatureImage,
+                ),
+                isScrollControlled: true,
+              );
+
+              if (result == true && mounted) {
+                authService.refreshDriverData();
+              }
+            },
+          ),
+
+          _buildSettingsTile(
+            icon: Icons.account_balance,
+            title: 'bank_details'.tr,
+            subtitle: 'manage_bank_details'.tr,
+            onTap: () async {
+              // Proactively refresh to get latest bank details
+              final authService = Provider.of<AuthService>(context, listen: false);
+              await authService.refreshDriverData();
+
+              if (!mounted) return;
+
+              final result = await Get.bottomSheet(
+                const BankDetailsBottomSheet(),
+                isScrollControlled: true,
+              );
+
+               if (result == true && mounted) {
+                authService.refreshDriverData();
+              }
             },
           ),
 
@@ -371,12 +455,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     required String title,
     required String subtitle,
     required VoidCallback onTap,
+    Widget? trailing,
   }) {
     return ListTile(
       leading: Icon(icon, color: Theme.of(context).colorScheme.primary),
       title: Text(title),
       subtitle: Text(subtitle),
-      trailing: const Icon(Icons.chevron_right),
+      trailing: trailing ?? const Icon(Icons.chevron_right),
       onTap: onTap,
     );
   }

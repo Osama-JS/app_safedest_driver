@@ -508,7 +508,11 @@ class AuthService extends ChangeNotifier {
         oldData.walletBalance != newData.walletBalance ||
         oldData.address != newData.address ||
         oldData.commissionValue != newData.commissionValue ||
-        oldData.appVersion != newData.appVersion;
+        oldData.appVersion != newData.appVersion ||
+        oldData.bankName != newData.bankName ||
+        oldData.accountNumber != newData.accountNumber ||
+        oldData.ibanNumber != newData.ibanNumber ||
+        oldData.signatureImage != newData.signatureImage;
   }
 
   // Check driver status with server
@@ -717,6 +721,79 @@ class AuthService extends ChangeNotifier {
       return ApiResponse<Map<String, dynamic>>(
         success: false,
         message: 'فشل في جلب البيانات الإضافية: $e',
+      );
+    }
+  }
+
+  // Update signature
+  Future<ApiResponse<void>> updateSignature(File signatureFile) async {
+    try {
+      debugPrint('Updating signature...');
+
+      final response = await _apiService.postWithFile<Map<String, dynamic>>(
+        AppConfig.updateSignatureEndpoint,
+        body: {},
+        files: {'signature_image': signatureFile},
+        fromJson: (data) => data,
+      );
+
+      if (response.isSuccess) {
+        debugPrint('Signature updated successfully');
+        // Refresh profile data to get the new signature URL
+        await refreshDriverData();
+      } else {
+        debugPrint('Failed to update signature: ${response.errorMessage}');
+      }
+
+      return ApiResponse<void>(
+        success: response.success,
+        message: response.message,
+      );
+    } catch (e) {
+      debugPrint('Error updating signature: $e');
+      return ApiResponse<void>(
+        success: false,
+        message: 'فشل في تحديث التوقيع: $e',
+      );
+    }
+  }
+
+  // Update bank details
+  Future<ApiResponse<void>> updateBankDetails({
+    required String bankName,
+    required String accountNumber,
+    required String ibanNumber,
+  }) async {
+    try {
+      debugPrint('Updating bank details...');
+
+      final response = await _apiService.post<Map<String, dynamic>>(
+        AppConfig.updateBankDetailsEndpoint,
+        body: {
+          'bank_name': bankName,
+          'account_number': accountNumber,
+          'iban_number': ibanNumber,
+        },
+        fromJson: (data) => data,
+      );
+
+      if (response.isSuccess) {
+        debugPrint('Bank details updated successfully');
+        // Refresh profile data to update local state
+        await refreshDriverData();
+      } else {
+        debugPrint('Failed to update bank details: ${response.errorMessage}');
+      }
+
+      return ApiResponse<void>(
+        success: response.success,
+        message: response.message,
+      );
+    } catch (e) {
+      debugPrint('Error updating bank details: $e');
+      return ApiResponse<void>(
+        success: false,
+        message: 'فشل في تحديث البيانات البنكية: $e',
       );
     }
   }

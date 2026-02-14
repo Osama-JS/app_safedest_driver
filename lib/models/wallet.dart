@@ -3,6 +3,7 @@ class Wallet {
   final double debtCeiling;
   final double pendingAmount;
   final double totalEarnings;
+  final double pendingWithdrawal;
   final String currency;
   final Commission commission;
 
@@ -11,6 +12,7 @@ class Wallet {
     required this.debtCeiling,
     required this.pendingAmount,
     required this.totalEarnings,
+    required this.pendingWithdrawal,
     required this.currency,
     required this.commission,
   });
@@ -21,6 +23,7 @@ class Wallet {
       debtCeiling: _parseToDouble(json['debt_ceiling']) ?? 0.0,
       pendingAmount: _parseToDouble(json['pending_amount']) ?? 0.0,
       totalEarnings: _parseToDouble(json['total_earnings']) ?? 0.0,
+      pendingWithdrawal: _parseToDouble(json['pending_withdrawal']) ?? 0.0,
       currency: _parseToString(json['currency']) ?? 'SAR',
       commission: json['commission'] != null &&
               json['commission'] is Map<String, dynamic>
@@ -51,6 +54,7 @@ class Wallet {
       'debt_ceiling': debtCeiling,
       'pending_amount': pendingAmount,
       'total_earnings': totalEarnings,
+      'pending_withdrawal': pendingWithdrawal,
       'currency': currency,
       'commission': commission.toJson(),
     };
@@ -58,7 +62,69 @@ class Wallet {
 
   @override
   String toString() {
-    return 'Wallet(balance: $balance, currency: $currency, totalEarnings: $totalEarnings)';
+    return 'Wallet(balance: $balance, currency: $currency, totalEarnings: $totalEarnings, pendingWithdrawal: $pendingWithdrawal)';
+  }
+}
+
+class WithdrawalRequest {
+  final int id;
+  final double amountRequested;
+  final double? amountPaid;
+  final String status;
+  final String? paymentMethod;
+  final String? adminNotes;
+  final String? receiptImage;
+  final DateTime createdAt;
+  final DateTime? processedAt;
+
+  WithdrawalRequest({
+    required this.id,
+    required this.amountRequested,
+    this.amountPaid,
+    required this.status,
+    this.paymentMethod,
+    this.adminNotes,
+    this.receiptImage,
+    required this.createdAt,
+    this.processedAt,
+  });
+
+  factory WithdrawalRequest.fromJson(Map<String, dynamic> json) {
+    return WithdrawalRequest(
+      id: WalletTransaction._parseToInt(json['id']) ?? 0,
+      amountRequested: Wallet._parseToDouble(json['amount_requested']) ?? 0.0,
+      amountPaid: Wallet._parseToDouble(json['amount_paid']),
+      status: Wallet._parseToString(json['status']) ?? 'pending',
+      paymentMethod: Wallet._parseToString(json['payment_method']),
+      adminNotes: Wallet._parseToString(json['admin_notes']),
+      receiptImage: Wallet._parseToString(json['receipt_image']),
+      createdAt: WalletTransaction._parseToDateTime(json['created_at']) ?? DateTime.now(),
+      processedAt: WalletTransaction._parseToDateTime(json['processed_at']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'amount_requested': amountRequested,
+      'amount_paid': amountPaid,
+      'status': status,
+      'payment_method': paymentMethod,
+      'admin_notes': adminNotes,
+      'receipt_image': receiptImage,
+      'created_at': createdAt.toIso8601String(),
+      'processed_at': processedAt?.toIso8601String(),
+    };
+  }
+
+  String get statusDisplay {
+    switch (status) {
+      case 'pending': return 'قيد الانتظار';
+      case 'completed': return 'تم الصرف';
+      case 'rejected': return 'مرفوض';
+      case 'cancelled': return 'ملغى';
+      default: return status;
+    }
   }
 }
 

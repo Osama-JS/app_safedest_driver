@@ -2,22 +2,24 @@ class AppConfig {
   // API Configuration
   //static const String baseUrl =
   // static const String baseUrl = 'http://192.168.0.186/safedestssss/public/api'; // For Devlober
-  // static const String baseUrl = 'https://o.safedest.com/api'; // For Tester
-  static const String baseUrl = 'https://tester.safedest.com/api'; // For Tester
+   static const String baseUrl = 'https://o.safedest.com/api'; // For Tester
+  //static const String baseUrl = 'https://tester.safedest.com/api'; // For Tester
   //  static const String baseUrl = 'http://192.168.8.23/safedestssss/public/api'; // For Production
 
   // App Information
   static const String appName = 'SafeDests Driver';
-  static const String appVersion = '1.0.3';
+  static const String appVersion = '1.0.6';
 
   // Mapbox Access Token
-  static const String mapboxAccessToken = 'pk.eyJ1Ijoib3NhbWExOTk4IiwiYSI6ImNtZ280cmw1YjFwNHQya3FxZnY2cjV5cmkifQ.gugWvJf_2VRFnk-3LVaI1w';
+  static const String mapboxAccessToken = '';
 
   // API Endpoints
   static const String loginEndpoint = '/driver/login';
   static const String logoutEndpoint = '/driver/logout';
   static const String profileEndpoint = '/driver/profile';
   static const String updateProfileEndpoint = '/driver/profile';
+  static const String updateSignatureEndpoint = '/driver/profile/signature';
+  static const String updateBankDetailsEndpoint = '/driver/profile/bank-details';
   static const String additionalDataEndpoint =
       '/driver/profile/additional-data';
   static const String changePasswordEndpoint = '/driver/change-password';
@@ -37,6 +39,8 @@ class AppConfig {
   static const String rejectTaskEndpoint = '/driver/tasks';
   static const String updateTaskStatusEndpoint = '/driver/tasks';
   static const String taskHistoryEndpoint = '/driver/tasks/history/completed';
+  static const String availableTasksEndpoint = '/driver/tasks/available';
+  static const String myClaimsEndpoint = '/driver/tasks/my-claims';
 
   // Location Endpoints
   static const String updateLocationEndpoint = '/driver/location';
@@ -48,6 +52,8 @@ class AppConfig {
   static const String walletEndpoint = '/driver/wallet';
   static const String transactionsEndpoint = '/driver/wallet/transactions';
   static const String earningsStatsEndpoint = '/driver/wallet/earnings/stats';
+  static const String withdrawEndpoint = '/driver/wallet/withdraw';
+  static const String withdrawalHistoryEndpoint = '/driver/wallet/withdrawals';
 
   // Notifications Endpoints
   static const String notificationsEndpoint = '/driver/notifications';

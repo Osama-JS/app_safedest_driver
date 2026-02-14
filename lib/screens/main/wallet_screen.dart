@@ -5,6 +5,8 @@ import '../../widgets/wallet_balance_card.dart';
 import '../../widgets/earnings_chart_card.dart';
 import '../../widgets/transaction_list_card.dart';
 import '../wallet/advanced_transactions_screen.dart';
+import '../wallet/withdrawal_history_screen.dart';
+import '../../widgets/withdraw_bottom_sheet.dart';
 import '../../l10n/generated/app_localizations.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -61,6 +63,11 @@ class _WalletScreenState extends State<WalletScreen> {
             onPressed: () => Get.to(() => const TransactionsScreen()),
           ),
           IconButton(
+            icon: const Icon(Icons.history_edu),
+            tooltip: 'تاريخ السحوبات',
+            onPressed: () => Get.to(() => const WithdrawalHistoryScreen()),
+          ),
+          IconButton(
             key: _helpKey,
             icon: const Icon(Icons.help_outline),
             tooltip: 'help'.tr,
@@ -85,8 +92,10 @@ class _WalletScreenState extends State<WalletScreen> {
 
                 const SizedBox(height: 16),
 
-                // Earnings Chart
-                Container(key: _chartKey, child: const EarningsChartCard()),
+                // Professional Withdrawal Section
+                _buildWithdrawalSection(context),
+
+                const SizedBox(height: 16),
 
                 const SizedBox(height: 16),
 
@@ -212,6 +221,80 @@ class _WalletScreenState extends State<WalletScreen> {
     );
 
     return targets;
+  }
+
+  Widget _buildWithdrawalSection(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(15),
+          onTap: () => Get.bottomSheet(
+            const WithdrawBottomSheet(),
+            isScrollControlled: true,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    Icons.payments_outlined,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'request_cash_withdrawal'.tr,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'withdrawal_desc'.tr,
+                        style: TextStyle(
+                          color: Colors.grey.shade600,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: Colors.grey.shade400,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildTutorialItem({required String title, required String description}) {
