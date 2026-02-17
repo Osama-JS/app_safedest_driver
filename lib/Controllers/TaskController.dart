@@ -203,6 +203,34 @@ class TaskController extends GetxController {
     return await rejectTask(id, reason: reason);
   }
 
+  // Cancel task (request cancellation)
+  Future<ApiResponse<void>> cancelTask(int taskId, String reason) async {
+    _isLoading.value = true;
+    try {
+      final response = await _taskHelper.cancelTask(taskId, reason);
+      if (response.isSuccess) {
+        // Update local task state instead of removing it
+        int index = activeTasks.indexWhere((t) => t.id == taskId);
+        if (index != -1) {
+          activeTasks[index] = activeTasks[index].copyWith(
+            driverCancel: true,
+            driverCancelReason: reason,
+          );
+        }
+
+        if (currentTask.value?.id == taskId) {
+          currentTask.value = currentTask.value?.copyWith(
+            driverCancel: true,
+            driverCancelReason: reason,
+          );
+        }
+      }
+      return response;
+    } finally {
+      _isLoading.value = false;
+    }
+  }
+
   // Update status
   Future<ApiResponse<Task>> updateStatus(int taskId, String status, {String? notes}) async {
     isLoading.value = true;

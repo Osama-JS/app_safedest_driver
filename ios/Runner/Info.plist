@@ -57,5 +57,12 @@
 
     <key>NSCameraUsageDescription</key>
     <string>يحتاج التطبيق للكاميرا لالتقاط صور المستندات</string>
+
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>https</string>
+        <string>mailto</string>
+        <string>tel</string>
+    </array>
 </dict>
 </plist>

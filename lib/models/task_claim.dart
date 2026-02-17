@@ -1,3 +1,5 @@
+import 'package:get/get.dart';
+
 class TaskClaim {
   final int id;
   final int taskId;
@@ -77,6 +79,8 @@ class AvailableTask {
   final DateTime? createdAt;
   final String? claimStatus;
   final String? vehicleSize;
+  final Map<String, dynamic>? additionalData;
+  final String? conditions;
 
   AvailableTask({
     required this.id,
@@ -90,6 +94,8 @@ class AvailableTask {
     this.createdAt,
     this.claimStatus,
     this.vehicleSize,
+    this.additionalData,
+    this.conditions,
   });
 
   factory AvailableTask.fromJson(Map<String, dynamic> json) {
@@ -105,6 +111,18 @@ class AvailableTask {
       createdAt: TaskClaim._parseToDateTime(json['created_at']),
       claimStatus: TaskClaim._parseToString(json['claim_status']),
       vehicleSize: TaskClaim._parseToString(json['vehicle_size']),
+      additionalData: json['additional_data'] != null
+          ? (json['additional_data'] is Map
+              ? Map<String, dynamic>.from(json['additional_data'])
+              : (json['additional_data'] is List
+                  ? Map.fromEntries((json['additional_data'] as List)
+                      .whereType<Map<String, dynamic>>()
+                      .map((e) => MapEntry(
+                          TaskClaim._parseToString(e['label']) ?? 'unspecified'.tr,
+                          TaskClaim._parseToString(e['value']) ?? '')))
+                  : null))
+          : null,
+      conditions: TaskClaim._parseToString(json['conditions']),
     );
   }
 

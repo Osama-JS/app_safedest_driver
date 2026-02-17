@@ -28,6 +28,8 @@ class Task {
   final double? distancePickupToDelivery;
   final double? distanceDriverToPickup;
   final double? distanceDriverToDelivery;
+  final bool? driverCancel;
+  final String? driverCancelReason;
 
   // حساب مستحقات السائق (السعر - العمولة)
   double get driverEarnings => totalPrice - commission;
@@ -58,6 +60,8 @@ class Task {
     this.distancePickupToDelivery,
     this.distanceDriverToPickup,
     this.distanceDriverToDelivery,
+    this.driverCancel,
+    this.driverCancelReason,
   });
 
   factory Task.fromJson(Map<String, dynamic> json) {
@@ -111,6 +115,8 @@ class Task {
       distancePickupToDelivery: _parseToDouble(json['distances']?['pickup_to_delivery']),
       distanceDriverToPickup: _parseToDouble(json['distances']?['driver_to_pickup']),
       distanceDriverToDelivery: _parseToDouble(json['distances']?['driver_to_delivery']),
+      driverCancel: json['driver_cancel'] is bool ? json['driver_cancel'] : (json['driver_cancel'] == 1 || json['driver_cancel'] == '1'),
+      driverCancelReason: _parseToString(json['driver_cancel_reason']),
     );
   }
 
@@ -177,6 +183,8 @@ class Task {
         'driver_to_pickup': distanceDriverToPickup,
         'driver_to_delivery': distanceDriverToDelivery,
       },
+      'driver_cancel': driverCancel,
+      'driver_cancel_reason': driverCancelReason,
     };
   }
 
@@ -204,6 +212,8 @@ class Task {
     double? distancePickupToDelivery,
     double? distanceDriverToPickup,
     double? distanceDriverToDelivery,
+    bool? driverCancel,
+    String? driverCancelReason,
   }) {
     return Task(
       id: id ?? this.id,
@@ -229,6 +239,8 @@ class Task {
       distancePickupToDelivery: distancePickupToDelivery ?? this.distancePickupToDelivery,
       distanceDriverToPickup: distanceDriverToPickup ?? this.distanceDriverToPickup,
       distanceDriverToDelivery: distanceDriverToDelivery ?? this.distanceDriverToDelivery,
+      driverCancel: driverCancel ?? this.driverCancel,
+      driverCancelReason: driverCancelReason ?? this.driverCancelReason,
     );
   }
 

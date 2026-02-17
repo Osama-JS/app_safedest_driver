@@ -240,6 +240,47 @@ class TaskService extends ChangeNotifier {
     }
   }
 
+  // Cancel task (request cancellation)
+  Future<ApiResponse<void>> cancelTask(int taskId, String reason) async {
+    try {
+      final response = await _apiService.post<void>(
+        AppConfig.getTaskEndpoint(taskId, 'cancel'),
+        body: {
+          'reason': reason,
+        },
+        fromJson: null,
+      );
+
+      if (response.isSuccess) {
+        // Update local task state instead of removing it
+        int index = _activeTasks.indexWhere((task) => task.id == taskId);
+        if (index != -1) {
+          _activeTasks[index] = _activeTasks[index].copyWith(
+            driverCancel: true,
+            driverCancelReason: reason,
+          );
+        }
+
+        if (_currentTask?.id == taskId) {
+          _currentTask = _currentTask?.copyWith(
+            driverCancel: true,
+            driverCancelReason: reason,
+          );
+        }
+
+        debugPrint('Task $taskId cancellation requested');
+        notifyListeners();
+      }
+
+      return response;
+    } catch (e) {
+      return ApiResponse<void>(
+        success: false,
+        message: 'فشل في طلب إلغاء المهمة: $e',
+      );
+    }
+  }
+
   // Update task status
   Future<ApiResponse<Task>> updateTaskStatus(
     int taskId,

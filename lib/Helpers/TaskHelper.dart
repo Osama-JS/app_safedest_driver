@@ -76,6 +76,15 @@ class TaskHelper {
     );
   }
 
+  // Cancel task (request cancellation)
+  Future<ApiResponse<void>> cancelTask(int taskId, String reason) async {
+    return await _apiService.post<void>(
+      AppConfig.getTaskEndpoint(taskId, 'cancel'),
+      body: {'reason': reason},
+      fromJson: (data) => null,
+    );
+  }
+
   // Update task status
   Future<ApiResponse<Task>> updateTaskStatus(
     int taskId,

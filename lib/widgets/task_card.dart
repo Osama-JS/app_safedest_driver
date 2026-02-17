@@ -89,6 +89,21 @@ class TaskCard extends StatelessWidget {
             ),
           ),
         ),
+        if (task.driverCancel == true) ...[
+          const SizedBox(width: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.orange,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: const Icon(
+              Icons.warning_amber_rounded,
+              color: Colors.white,
+              size: 16,
+            ),
+          ),
+        ],
       ],
     );
   }

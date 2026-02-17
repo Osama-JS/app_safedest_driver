@@ -41,7 +41,7 @@ class SupportHelper {
       'driverName': driverName,
     });
 
-    String cleanNumber = phoneNumber;
+    String cleanNumber = phoneNumber.replaceAll(RegExp(r'[^0-9]'), '');
     if (cleanNumber.startsWith('0')) {
       cleanNumber = '966${cleanNumber.substring(1)}';
     } else if (!cleanNumber.startsWith('966')) {

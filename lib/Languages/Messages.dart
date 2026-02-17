@@ -588,7 +588,11 @@ class Messages extends Translations {
       'enter_iban': 'Enter IBAN',
       'bank_details_saved': 'Bank details saved successfully',
       'field_required': 'This field is required',
-
+      'requestCancellation': 'Request Cancellation',
+      'cancellationReasonHint': 'Please enter the reason for cancellation request',
+      'reason': 'Reason',
+      'reasonRequired': 'Reason is required',
+      'cancellationRequested': 'Cancellation request submitted successfully',
     },
     'ar_SA': {
       'bg_location_title': 'تتبع الموقع نشط',
@@ -1173,7 +1177,11 @@ class Messages extends Translations {
       'enter_iban': 'أدخل رقم الآيبان',
       'bank_details_saved': 'تم حفظ بيانات البنك بنجاح',
       'field_required': 'هذا الحقل مطلوب',
-
+      'requestCancellation': 'طلب إلغاء المهمة',
+      'cancellationReasonHint': 'يرجى إدخال سبب طلب الإلغاء',
+      'reason': 'السبب',
+      'reasonRequired': 'السبب مطلوب',
+      'cancellationRequested': 'تم إرسال طلب الإلغاء بنجاح',
     },
     'zh_CN': {
       'appName': 'SafeDests - 司机',
@@ -1182,6 +1190,11 @@ class Messages extends Translations {
       'wallet': '钱包',
       'profile': '个人资料',
       'settings': '设置',
+      'requestCancellation': '请求取消任务',
+      'cancellationReasonHint': '请输入申请取消的原因',
+      'reason': '原因',
+      'reasonRequired': '需要填写原因',
+      'cancellationRequested': '取消申请已成功提交',
       'appSettings': '应用设置',
       'language': '应用语言',
       'chooseLanguage': '选择应用界面语言',
@@ -2154,6 +2167,11 @@ class Messages extends Translations {
       'enter_iban': 'آئی بی اے این درج کریں',
       'bank_details_saved': 'بینک کی تفصیلات کامیابی سے محفوظ ہو گئیں',
       'field_required': 'یہ خانہ پر کرنا ضروری ہے',
+      'requestCancellation': 'ٹاسک منسوخ کرنے کی درخواست کریں',
+      'cancellationReasonHint': 'براہ کرم منسوخی کی درخواست کی وجہ درج کریں',
+      'reason': 'وجہ',
+      'reasonRequired': 'وجہ درکار ہے',
+      'cancellationRequested': 'منسوخی کی درخواست کامیابی کے ساتھ جمع کر دی گئی',
     },
   };
 }

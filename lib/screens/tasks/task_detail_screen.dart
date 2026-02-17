@@ -117,6 +117,28 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                   tooltip: 'help'.tr,
                   onPressed: _viewTutorial,
                 ),
+                if (!['completed', 'canceled', 'cancelled', 'closed', 'refund'].contains(task.status))
+                  PopupMenuButton<String>(
+                    icon: const Icon(Icons.more_vert, color: Colors.white),
+                    onSelected: (value) {
+                      if (value == 'cancel') {
+                        _showCancelDialog();
+                      }
+                    },
+                    itemBuilder: (context) => [
+                      if (task.driverCancel != true)
+                        PopupMenuItem(
+                          value: 'cancel',
+                          child: Row(
+                            children: [
+                              const Icon(Icons.cancel_outlined, color: Colors.red),
+                              const SizedBox(width: 8),
+                              Text('requestCancellation'.tr),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
               ],
               flexibleSpace: FlexibleSpaceBar(
                 title: Text(
@@ -202,6 +224,21 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
+                                  if (task.driverCancel == true) ...[
+                                    const SizedBox(width: 8),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                                      decoration: BoxDecoration(
+                                        color: Colors.orange,
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      child: const Icon(
+                                        Icons.warning_amber_rounded,
+                                        color: Colors.white,
+                                        size: 16,
+                                      ),
+                                    ),
+                                  ],
                                 ],
                               ),
                             ),
@@ -242,6 +279,10 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
+                    if (task.driverCancel == true) ...[
+                      _buildCancellationRequestBanner(),
+                      const SizedBox(height: 16),
+                    ],
                     // Quick Actions Card
                     Container(key: _navigationKey, child: _buildQuickActionsCard()),
 
@@ -253,8 +294,10 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                     const SizedBox(height: 16),
 
                     // Action Buttons
-                    _buildActionButtons(),
-                    const SizedBox(height: 16),
+                    if (task.driverCancel != true) ...[
+                      _buildActionButtons(),
+                      const SizedBox(height: 16),
+                    ],
 
                     // Documents Card
                     _buildDocumentsCard(),
@@ -320,6 +363,49 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         colorText: Colors.white,
       );
     }
+  }
+
+  Widget _buildCancellationRequestBanner() {
+    final task = _currentTask.value!;
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.orange.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.orange.withOpacity(0.3)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 28),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'cancellationRequested'.tr,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.orange,
+                    fontSize: 16,
+                  ),
+                ),
+                if (task.driverCancelReason != null && task.driverCancelReason!.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    '${'reason'.tr}: ${task.driverCancelReason}',
+                    style: TextStyle(
+                      color: Colors.orange[800],
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildDocumentsCard() {
@@ -756,6 +842,85 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
       TaskHistorySheet(task: _currentTask.value!),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
+    );
+  }
+
+  void _showCancelDialog() {
+    final task = _currentTask.value!;
+    final TextEditingController reasonController = TextEditingController();
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+    Get.dialog(
+      AlertDialog(
+        title: Text('requestCancellation'.tr.isNotEmpty ? 'requestCancellation'.tr : 'طلب إلغاء المهمة'),
+        content: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('cancellationReasonHint'.tr.isNotEmpty
+                ? 'cancellationReasonHint'.tr
+                : 'يرجى إدخال سبب طلب الإلغاء'),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: reasonController,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  hintText: 'reason'.tr,
+                  border: const OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'reasonRequired'.tr.isNotEmpty ? 'reasonRequired'.tr : 'السبب مطلوب';
+                  }
+                  return null;
+                },
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text('cancel'.tr),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              if (formKey.currentState!.validate()) {
+                Get.back(); // Close dialog
+                final response = await _taskController.cancelTask(
+                  task.id,
+                  reasonController.text.trim()
+                );
+
+                if (response.isSuccess) {
+                  Get.back(); // Go back from detail screen
+                  Get.snackbar(
+                    'success'.tr,
+                    'cancellationRequested'.tr.isNotEmpty
+                      ? 'cancellationRequested'.tr
+                      : 'تم إرسال طلب الإلغاء بنجاح',
+                    backgroundColor: Colors.green,
+                    colorText: Colors.white,
+                  );
+                } else {
+                  Get.snackbar(
+                    'error'.tr,
+                    response.message ?? 'فشل في إرسال الطلب',
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white,
+                  );
+                }
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            child: Text('confirm'.tr),
+          ),
+        ],
+      ),
     );
   }
 
