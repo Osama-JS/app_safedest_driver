@@ -1,6 +1,7 @@
 class Wallet {
   final double balance;
   final double debtCeiling;
+  final double maxWithdrawableAmount;
   final double pendingAmount;
   final double totalEarnings;
   final double pendingWithdrawal;
@@ -10,6 +11,7 @@ class Wallet {
   Wallet({
     required this.balance,
     required this.debtCeiling,
+    required this.maxWithdrawableAmount,
     required this.pendingAmount,
     required this.totalEarnings,
     required this.pendingWithdrawal,
@@ -21,6 +23,8 @@ class Wallet {
     return Wallet(
       balance: _parseToDouble(json['balance']) ?? 0.0,
       debtCeiling: _parseToDouble(json['debt_ceiling']) ?? 0.0,
+      maxWithdrawableAmount: _parseToDouble(json['max_withdrawable_amount']) ??
+                             ((_parseToDouble(json['balance']) ?? 0.0) + (_parseToDouble(json['debt_ceiling']) ?? 0.0)),
       pendingAmount: _parseToDouble(json['pending_amount']) ?? 0.0,
       totalEarnings: _parseToDouble(json['total_earnings']) ?? 0.0,
       pendingWithdrawal: _parseToDouble(json['pending_withdrawal']) ?? 0.0,

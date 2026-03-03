@@ -26,6 +26,8 @@ class WalletController extends GetxController {
   double get totalEarnings => wallet.value?.totalEarnings ?? 0.0;
   double get pendingAmount => wallet.value?.pendingAmount ?? 0.0;
   double get pendingWithdrawal => wallet.value?.pendingWithdrawal ?? 0.0;
+  double get maxWithdrawableAmount => wallet.value?.maxWithdrawableAmount ?? 0.0;
+  double get debtCeiling => wallet.value?.debtCeiling ?? 0.0;
 
   @override
   void onInit() {

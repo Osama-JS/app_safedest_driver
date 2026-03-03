@@ -8,7 +8,7 @@ class AppConfig {
 
   // App Information
   static const String appName = 'SafeDests Driver';
-  static const String appVersion = '1.0.7';
+  static const String appVersion = '1.0.8';
 
   // Mapbox Access Token
   static const String mapboxAccessToken = '';

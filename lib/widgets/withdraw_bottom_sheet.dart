@@ -93,9 +93,27 @@ class _WithdrawBottomSheetState extends State<WithdrawBottomSheet> {
 
               const SizedBox(height: 25),
 
-              Text(
-                '${'current_balance'.tr}: ${_walletController.currentBalance.toStringAsFixed(2)} ${_walletController.currency}',
-                style: const TextStyle(fontWeight: FontWeight.bold),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${'current_balance'.tr}: ${_walletController.currentBalance.toStringAsFixed(2)} ${_walletController.currency}',
+                    style: const TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  if (_walletController.debtCeiling > 0)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Text(
+                        '${'debt_ceiling'.tr}: ${_walletController.debtCeiling.toStringAsFixed(2)} ${_walletController.currency}',
+                        style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+                      ),
+                    ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '${'max_withdrawal_limit'.tr}: ${_walletController.maxWithdrawableAmount.toStringAsFixed(2)} ${_walletController.currency}',
+                    style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                  ),
+                ],
               ),
 
               const SizedBox(height: 20),
@@ -116,7 +134,7 @@ class _WithdrawBottomSheetState extends State<WithdrawBottomSheet> {
                   if (value == null || value.isEmpty) return 'enter_amount'.tr;
                   final amount = double.tryParse(value);
                   if (amount == null || amount <= 0) return 'enter_valid_price'.tr;
-                  if (amount > _walletController.currentBalance) return 'insufficient_balance'.tr;
+                  if (amount > _walletController.maxWithdrawableAmount) return 'insufficient_balance'.tr;
                   return null;
                 },
               ),
